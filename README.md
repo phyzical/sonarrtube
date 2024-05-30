@@ -1,10 +1,10 @@
 # sonarrtube
 Adapter using sonarr + youtube + tvdb
 
-In the past i would download a channel, then run a (custom app using puppteer)[https://github.com/phyzical/infrastructure/blob/master/scripts/unraid/showSubmitter/src/ShowSubmitter.ts] once in a blue moon to take all the youtube scraped info to update tvdb, then sonarr would jsut listen for new files of tvdb updated and scanned the local dir.
+In the past i would download a channel, then run a [custom app using puppteer](https://github.com/phyzical/infrastructure/blob/master/scripts/unraid/showSubmitter/src/ShowSubmitter.ts) once in a blue moon to take all the youtube scraped info to update tvdb, then sonarr would jsut listen for new files of tvdb updated and scanned the local dir.
 This worked but was iffy around how to match up existing entries as authors love to change the title of their videos. Also the manually managed channels required intervention form time to time.
 
-I then stumbled across another approuch to the problem (RandomNinjaAtk/arr-scripts YoutubeSeriesDownloader)[https://github.com/RandomNinjaAtk/arr-scripts/blob/main/sonarr/YoutubeSeriesDownloader.service] 
+I then stumbled across another approuch to the problem [RandomNinjaAtk/arr-scripts YoutubeSeriesDownloader](https://github.com/RandomNinjaAtk/arr-scripts/blob/main/sonarr/YoutubeSeriesDownloader.service)
 this made me relise jeez im doing this backwards.
 
 So instead this repo will rework the above mentioned custom library to instead pre-add/sync youtube to tvdb Then run the core logic of this script to handle the downloads. 
