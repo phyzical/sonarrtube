@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "types": ["jest", "node"]
+  },
+  "include": [
+    "tests/**/*",
+    "src/**/*"
+  ]
+}

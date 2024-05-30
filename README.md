@@ -24,3 +24,13 @@ NOTE!!!!!!
 * It can just fail sometimes.
 * I suggested just running once a day at most.
 * If you find that a show is being kept up to date, i.e there is someone else already automating/manually managing it then simply exlude it from the sync.
+
+# Local
+`yarn build` or `npm run build` or `make build`
+then
+`yarn install` or `make install`
+then
+BLAHBLH
+# Docker
+`make build-image`
+`make run-image`
