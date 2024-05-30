@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+scriptVersion="2.0"
+ytdlpExtraOpts="--user-agent facebookexternalhit/1.1"
+scriptName="YoutubeSeriesDownloader"
+
+#### Import Settings
+source /config/extended.conf
+#### Import Functions
+source /config/extended/functions
+#### Create Log File
+logfileSetup
+#### Check Arr App
+getArrAppInfo
+verifyApiAccess
+
+verifyConfig() {
+    if [ "$enableYoutubeSeriesDownloader" != "true" ]; then
+        log "Script is not enabled, enable by setting enableYoutubeSeriesDownloader to \"true\" by modifying the \"/config/extended.conf\" config file..."
+        log "Sleeping (infinity)"
+        sleep infinity
+    fi
+
+    if [ -z "$youtubeSeriesDownloaderScriptInterval" ]; then
+        youtubeSeriesDownloaderScriptInterval="1h"
+    fi
+}
+
+CookiesCheck() {
+    # Check for cookies file
+    if [ -f /config/cookies.txt ]; then
+        cookiesFile="/config/cookies.txt"
+        log "Cookies File Found!"
+    else
+        log "Cookies File Not Found!"
+        cookiesFile=""
+    fi
+}
+
+NotifySonarrForImport() {
+    sonarrProcessIt=$(curl -s "$arrUrl/api/v3/command" --header "X-Api-Key:"${arrApiKey} -H "Content-Type: application/json" --data "{\"name\":\"DownloadedEpisodesScan\", \"path\":\"$1\"}")
+}
+
+SonarrTaskStatusCheck() {
+    alerted=no
+    until false; do
+        taskCount=$(curl -s "$arrUrl/api/v3/command?apikey=${arrApiKey}" | jq -r '.[] | select(.status=="started") | .name' | grep -v "RescanFolders" | wc -l)
+        if [ "$taskCount" -ge "1" ]; then
+            if [ "$alerted" == "no" ]; then
+                alerted=yes
+                log "STATUS :: SONARR BUSY :: Pausing/waiting for all active Sonarr tasks to end..."
+            fi
+            sleep 2
+        else
+            break
+        fi
+    done
+}
+
+YoutubeSeriesDownloaderProcess() {
+
+    CookiesCheck
+
+    sonarrSeriesList=$(curl -s --header "X-Api-Key:"${arrApiKey} --request GET "$arrUrl/api/v3/series")
+    sonarrSeriesIds=$(echo "${sonarrSeriesList}" | jq -r '.[] | select(.network=="YouTube") |.id')
+    sonarrSeriesTotal=$(echo "${sonarrSeriesIds}" | wc -l)
+
+    loopCount=0
+    for id in $(echo $sonarrSeriesIds); do
+        loopCount=$(($loopCount + 1))
+
+        seriesId=$id
+        seriesData=$(curl -s "$arrUrl/api/v3/series/$seriesId?apikey=$arrApiKey")
+        seriesTitle=$(echo "$seriesData" | jq -r .title)
+        seriesTitleDots=$(echo "$seriesTitle" | sed s/\ /./g)
+        seriesTvdbTitleSlug=$(echo "$seriesData" | jq -r .titleSlug)
+        seriesNetwork=$(echo "$seriesData" | jq -r .network)
+        seriesEpisodeData=$(curl -s "$arrUrl/api/v3/episode?seriesId=$seriesId&apikey=$arrApiKey")
+        seriesEpisodeTvdbIds=$(echo $seriesEpisodeData | jq -r ".[] | select(.monitored==true) | select(.hasFile==false) | .tvdbId")
+        seriesEpisodeTvdbIdsCount=$(echo "$seriesEpisodeTvdbIds" | wc -l)
+
+        currentLoopIteration=0
+        for episodeId in $(echo $seriesEpisodeTvdbIds); do
+            currentLoopIteration=$(($currentLoopIteration + 1))
+            seriesEpisdodeData=$(echo $seriesEpisodeData | jq -r ".[] | select(.tvdbId==$episodeId)")
+            episodeSeasonNumber=$(echo $seriesEpisdodeData | jq -r .seasonNumber)
+            episodeNumber=$(echo $seriesEpisdodeData | jq -r .episodeNumber)
+            tvdbPageData=$(curl -s "https://thetvdb.com/series/$seriesTvdbTitleSlug/episodes/$episodeId")
+            downloadUrl=$(echo "$tvdbPageData" | grep -i youtube.com | grep -i watch | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
+
+            if [ -z $downloadUrl ]; then
+                network="$(echo "$tvdbPageData" | grep -i "/companies/youtube")"
+                if [ ! -z "$network" ]; then
+                    downloadUrl=$(echo "$tvdbPageData" | grep -iws "production code" -A 2 | sed 's/\ //g' | tail -n1)
+                    if [ ! -z $downloadUrl ]; then
+                        downloadUrl="https://www.youtube.com/watch?v=$downloadUrl"
+                    fi
+                fi
+            fi
+
+            if [ -z $downloadUrl ]; then
+                log "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: ERROR :: No Download URL found, skipping"
+                continue
+            fi
+            downloadLocation="/config/temp"
+            if [ ! -d $downloadLocation ]; then
+                mkdir $downloadLocation
+            else
+                rm -rf $downloadLocation
+                mkdir $downloadLocation
+            fi
+            fileName="$seriesTitleDots.S${episodeSeasonNumber}E${episodeNumber}.WEB-DL-SonarrExtended"
+            log "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: Downloading via yt-dlp ($videoFormat)..."
+            if [ ! -z "$cookiesFile" ]; then
+                yt-dlp -f "$videoFormat" --no-video-multistreams --cookies "$cookiesFile" -o "$downloadLocation/$fileName" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass $ytdlpExtraOpts "$downloadUrl" 2>&1 | tee -a /config/logs/$scriptName.txt
+            else
+                yt-dlp -f "$videoFormat" --no-video-multistreams -o "$downloadLocation/$fileName" --write-sub --sub-lang $videoLanguages --embed-subs --merge-output-format mkv --no-mtime --geo-bypass $ytdlpExtraOpts "$downloadUrl" 2>&1 | tee -a /config/logs/$scriptName.txt
+            fi
+
+            if python3 /config/extended/sma/manual.py --config "/config/extended/sma.ini" -i "$downloadLocation/$fileName.mkv" -nt; then
+                sleep 0.01
+                log "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: Processed with SMA..."
+                rm /usr/local/sma/config/*log*
+            else
+                og "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: ERROR :: SMA Processing Error"
+                rm "$downloadLocation/$fileName.mkv"
+                log "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: INFO: deleted: $downloadLocation/$fileName.mkv"
+            fi
+            if [ -f "$downloadLocation/$fileName.mkv" ]; then
+                chmod -R 777 $downloadLocation
+                NotifySonarrForImport "$downloadLocation/$fileName.mkv"
+                log "$loopCount/$sonarrSeriesTotal :: $currentLoopIteration/$seriesEpisodeTvdbIdsCount :: $seriesTitle :: S${episodeSeasonNumber}E${episodeNumber} :: Notified Sonarr to import \"$fileName.mkv\""
+            fi
+            SonarrTaskStatusCheck
+        done
+    done
+}
+
+for (( ; ; )); do
+    let i++
+    logfileSetup
+    log "Script starting..."
+    verifyConfig
+    getArrAppInfo
+    verifyApiAccess
+    YoutubeSeriesDownloaderProcess
+    log "Script sleeping for $youtubeSeriesDownloaderScriptInterval..."
+    sleep $youtubeSeriesDownloaderScriptInterval
+done
+exit
