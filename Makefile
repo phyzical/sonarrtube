@@ -5,6 +5,6 @@ install:
 run:
 	yarn run
 build-image:
-	docker build
+	docker build . -t phyzical/sonarrtube
 run-image:
-	docker run
+	docker run phyzical/sonarrtube
