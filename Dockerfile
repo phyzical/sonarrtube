@@ -13,9 +13,6 @@ RUN yum -y update \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
-RUN mkdir /opt/.rbenv \
-    && chown app ${RBENV_ROOT}
-
 USER app
 
 WORKDIR ${APP_DIR}
