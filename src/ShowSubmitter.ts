@@ -2,8 +2,13 @@ import { TvdbSubmitter } from './models/submitter/TvdbSubmitter.js';
 import { BaseSubmitter } from './models/submitter/BaseSubmitter.js';
 import { Episode } from './models/Episode.js';
 import { FileHandler } from './models/file/FileHandler.js';
-import { log } from './helpers/LogHelper.js';
-import { delay } from './helpers/PuppeteerHelper.js';
+import { log } from './helpers/Log.js';
+import { delay } from './helpers/Puppeteer.js';
+import { youtubeChannels as sonarrYoutubeChannels } from './models/api/Sonarr.js';
+import { youtubeChannels as tvdbYoutubeChannels } from './models/api/Tvdb.js';
+import { Series as sonarrSeries } from './types/sonarr/Series.js';
+import { Series as tvdbSeries } from './types/tvdb/Series.js';
+import { channels } from './models/api/Youtube.js';
 
 class ShowSubmitter {
   static folder: string = '/tmp/episodes';
@@ -13,6 +18,9 @@ class ShowSubmitter {
   password: string;
   renameOnly: boolean;
   submitters: Array<BaseSubmitter>;
+  youtubeSonarrSeries: sonarrSeries[];
+  youtubeTvdbSeries: tvdbSeries[];
+  youtubeSeries: [];
 
   constructor() {
     this.renameOnly = false;
@@ -49,7 +57,7 @@ class ShowSubmitter {
   }
 
   private async finishSubmitters(saveScreenshot: boolean = false): Promise<void> {
-    for (const submitter of this.submitters) await submitter.finish(saveScreenshot);
+    for (const submitter of this.submitters) { await submitter.finish(saveScreenshot); }
   }
 
   private async addEpisode(fileToRename: string, series: string, season: string, episode: Episode): Promise<void> {
@@ -75,7 +83,7 @@ class ShowSubmitter {
         await submitter.openSeriesSeasonPage(series, season);
         episodeTextIdentifier = await submitter.getEpisodeIdentifier(fileToRename);
         // if we cant find it on a source something went wrong
-        if (episodeTextIdentifier.length == 0) throw new Error();
+        if (episodeTextIdentifier.length == 0) { throw new Error(); }
       }
     } catch (e) {
       log(`Didnt add episode for ${fileToRename} something went horribly wrong!`);
@@ -89,7 +97,7 @@ class ShowSubmitter {
     await this.initSubmitters();
     const fileHandler = new FileHandler(ShowSubmitter.folder);
     const shows = fileHandler.getFilesToProcess();
-    for (const [series, seasons] of Object.entries(shows))
+    for (const [series, seasons] of Object.entries(shows)) {
       for (const [season, episodes] of Object.entries(seasons)) {
         log(`Starting ${series} - ${season}`);
         log(`Processing ${episodes.length} episodes`);
@@ -101,18 +109,25 @@ class ShowSubmitter {
         }
         log(`Finished ${series} - ${season}`);
       }
+    }
 
     await this.finishSubmitters(false);
   }
 
-  start(): void {
-    this.addEpisodes().catch(async (e) => {
-      log(e);
-      await this.finishSubmitters(true).catch((e2) => {
-        log(e2);
-      });
-      throw e;
-    });
+  async start(): Promise<void> {
+    this.youtubeSonarrSeries = await sonarrYoutubeChannels();
+    this.youtubeTvdbSeries = await tvdbYoutubeChannels(this.youtubeSonarrSeries);
+    this.youtubeSeries = await channels(this.youtubeTvdbSeries);
+
+    //  TODO do a diff between
+
+    // this.addEpisodes().catch(async (e) => {
+    //   log(e);
+    //   await this.finishSubmitters(true).catch((e2) => {
+    //     log(e2);
+    //   });
+    //   throw e;
+    // });
   }
 }
 
