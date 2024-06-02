@@ -1,0 +1,68 @@
+name: PR housekeeping
+on:
+  pull_request:
+    types: [opened, reopened]
+jobs:
+  pr_housekeeping:
+    runs-on: ubuntu-latest
+    name: 'PR housekeeping'
+    steps:
+      - name: wait for labels
+        run: |
+          sleep 30
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const {
+                payload: {
+                    pull_request: {
+                        number: pull_number,
+                        user: { login: actor, id: actor_id },
+                        labels,
+                        title,
+                        node_id
+                    },
+                },
+                repo: {
+                    owner,
+                    repo
+                }
+            } = context
+            const labelNames = labels.map(x => x.name)
+            const allowedLabels = "development,test,devDependencies,testDependencies,dockerDependencies".split(",")
+
+            // Assign to author
+            await github.rest.issues.addAssignees({
+                owner,
+                repo,
+                issue_number: pull_number,
+                assignees: [actor]
+            });
+
+            console.log(actor_id)
+
+            const titleRegex = new RegExp(/.*upgrade|updating.*/,"i")
+            if (actor_id == "118229371" && actor == "phyzical" && titleRegex.test(title)) {
+                // Sadly the rest api does not support enableAutomerge
+                const mutation = `mutation($pullRequestId:ID!, $mergeMethod:PullRequestMergeMethod) {
+                    enablePullRequestAutoMerge(input: {pullRequestId: $pullRequestId, mergeMethod: $mergeMethod}) {
+                        clientMutationId
+                    }
+                }`
+                // Automerge
+                await github.graphql(mutation, {
+                    pullRequestId: node_id, mergeMethod: "SQUASH"
+                })
+
+                //If anything is common between the two list of labels auto approve
+                if (labelNames.some(item => allowedLabels.includes(item))) {
+                    // Autoapprove
+                    await github.rest.pulls.createReview({
+                        owner,
+                        repo,
+                        pull_number,
+                        event: "APPROVE"
+                    })
+                }
+            }
