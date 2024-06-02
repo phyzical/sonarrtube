@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Episode } from '../Episode.js';
-import { log } from '../../helpers/LogHelper.js';
+import { log } from '../../helpers/Log.js';
 
 class FileHandler {
   folder: string;

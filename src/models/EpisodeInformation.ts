@@ -1,10 +1,9 @@
-import { EpisodeInformationInterface } from '../interfaces/submitter/EpisodeInformationInterface.js';
-import { InformationInterface } from '../interfaces/youtube/InformationInterface.js';
+import { VideoInformation } from '../types/video/VideoInformation.js';
 
-class EpisodeInformation implements EpisodeInformationInterface {
-  informationJson: InformationInterface;
+class EpisodeInformation {
+  informationJson: VideoInformation;
 
-  constructor(informationJson: InformationInterface) {
+  constructor(informationJson: VideoInformation) {
     this.informationJson = informationJson;
   }
 

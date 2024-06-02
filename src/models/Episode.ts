@@ -1,8 +1,7 @@
 import { EpisodeInformation } from './EpisodeInformation.js';
-import { EpisodeInterface } from '../interfaces/EpisodeInterface.js';
 import fs from 'fs';
 
-class Episode implements EpisodeInterface {
+class Episode {
   informationFile: string;
   thumbnailFile: string;
   thumbnailFileTile: string;
