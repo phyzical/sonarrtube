@@ -12,7 +12,7 @@ RUN yum -y update \
     epel-release-9-7.el9 \
     && yum -y install \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    chromium-123.0.6312.105-1.el9 \
+    chromium-125.0.6422.76-1.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     git-2.43.0-1.el9 \
     && yum -y clean all \
@@ -90,10 +90,11 @@ RUN yarn lint && \
 #     && rm -rf /var/cache/yum
 
 FROM base as final
+
 USER app
 
 COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
-COPY --from=build --chown=app ./build ./build
+COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
 COPY --chown=app ./main.js ./main.js
 
 USER root
