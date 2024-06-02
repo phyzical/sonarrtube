@@ -43,7 +43,7 @@ jobs:
             });
 
             const titleRegex = new RegExp(/.*upgrade|updating.*/,"i")
-            if (actor_id == "5182053" && actor == "phyzical" && titleRegex.test(title)) {
+            if (actor_id == "5182053" && actor == "phyzical" && titleRegex.test(title) && labelNames.some(item => allowedLabels.includes(item))) {
                 // Sadly the rest api does not support enableAutomerge
                 const mutation = `mutation($pullRequestId:ID!, $mergeMethod:PullRequestMergeMethod) {
                     enablePullRequestAutoMerge(input: {pullRequestId: $pullRequestId, mergeMethod: $mergeMethod}) {
