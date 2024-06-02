@@ -90,10 +90,11 @@ RUN yarn lint && \
 #     && rm -rf /var/cache/yum
 
 FROM base as final
+
 USER app
 
 COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
-COPY --from=build --chown=app ./build ./build
+COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
 COPY --chown=app ./main.js ./main.js
 
 USER root
