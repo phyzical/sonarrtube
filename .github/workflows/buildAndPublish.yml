@@ -1,8 +1,6 @@
 name: 'Build and Publish'
 on:
   push:
-    branches:
-      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,6 +9,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Get branch name
+        run: |
+          if [ "${GITHUB_REF#refs/heads/}" == "main" ]; then
+            IS_MAIN=true
+          else
+            IS_MAIN=false
+          fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -27,8 +33,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          push: true
+          push: $IS_MAIN
           tags: phyzical/sonarrtube
+
       # - name: Test
       #   run: |
       #     echo "Testing..."

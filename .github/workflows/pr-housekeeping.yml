@@ -56,13 +56,13 @@ jobs:
                 })
 
                 //If anything is common between the two list of labels auto approve
-                if (labelNames.some(item => allowedLabels.includes(item))) {
-                    // Autoapprove
-                    await github.rest.pulls.createReview({
-                        owner,
-                        repo,
-                        pull_number,
-                        event: "APPROVE"
-                    })
-                }
+                # if (labelNames.some(item => allowedLabels.includes(item))) {
+                #     // Autoapprove
+                #     await github.rest.pulls.createReview({
+                #         owner,
+                #         repo,
+                #         pull_number,
+                #         event: "APPROVE"
+                #     })
+                # }
             }
