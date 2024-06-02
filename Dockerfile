@@ -7,11 +7,18 @@ RUN groupadd -g 10001 app \
     && useradd -u 10001 -g 10001 --home ${APP_DIR} -ms /bin/bash app
 
 RUN yum -y update \
-    && yum install -y \
+    && yum -y install \
+    # renovate: datasource=yum repo=rocky-9-extras-x86_64
+    epel-release-9-7.el9 \
+    && yum -y install \
+    # renovate: datasource=yum repo=epel-9-everything-x86_64
+    chromium-123.0.6312.105-1.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    git-2.39.3-1.el9_2 \
+    git-2.43.0-1.el9 \
     && yum -y clean all \
     && rm -rf /var/cache/yum
+
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 USER app
 
@@ -26,9 +33,6 @@ FROM base as build
 USER root
 
 RUN yum -y update \
-    && yum install -y \
-    # renovate: datasource=yum repo=rocky-9-extras-x86_64
-    epel-release-9-7.el9 \
     && dnf module install -y nodejs:20 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
