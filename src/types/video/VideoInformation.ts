@@ -1,0 +1,46 @@
+import { VideoThumbnail } from './VideoThumbnail.js';
+import { VideoFormat } from './VideoFormat.js';
+
+export type VideoInformation = {
+  upload_date: string;
+  vcodec: string;
+  subscriber_count: number;
+  extractor: string;
+  height: number;
+  like_count: number;
+  duration: number;
+  fulltitle: string;
+  id: string;
+  view_count: number;
+  playlist: string;
+  title: string;
+  _filename: string;
+  playlist_index: number;
+  dislike_count: number;
+  playlist_id: string;
+  abr: number;
+  tags: Array<string>;
+  uploader_url: string;
+  fps: number;
+  webpage_url_basename: string;
+  acodec: string;
+  display_id: string;
+  description: string;
+  format: string;
+  average_rating: number;
+  uploader: string;
+  format_id: string;
+  uploader_id: string;
+  categories: Array<string>;
+  thumbnails: Array<VideoThumbnail>;
+  extractor_key: string;
+  channel_id: string;
+  thumbnail: string;
+  ext: string;
+  webpage_url: string;
+  formats: Array<VideoFormat>;
+  channel_url: string;
+  width: number;
+  n_entries: number;
+  age_limit: number;
+}
