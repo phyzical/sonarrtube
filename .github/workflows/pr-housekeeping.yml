@@ -42,10 +42,8 @@ jobs:
                 assignees: [actor]
             });
 
-            console.log(actor_id)
-
             const titleRegex = new RegExp(/.*upgrade|updating.*/,"i")
-            if (actor_id == "118229371" && actor == "phyzical" && titleRegex.test(title)) {
+            if (actor_id == "5182053" && actor == "phyzical" && titleRegex.test(title)) {
                 // Sadly the rest api does not support enableAutomerge
                 const mutation = `mutation($pullRequestId:ID!, $mergeMethod:PullRequestMergeMethod) {
                     enablePullRequestAutoMerge(input: {pullRequestId: $pullRequestId, mergeMethod: $mergeMethod}) {
