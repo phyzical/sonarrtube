@@ -17,6 +17,7 @@ jobs:
           else
             IS_MAIN=false
           fi
+          echo "IS_MAIN=$IS_MAIN" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -33,7 +34,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          push: $IS_MAIN
+          push: ${{ env.IS_MAIN }}
           tags: phyzical/sonarrtube
 
       # - name: Test
