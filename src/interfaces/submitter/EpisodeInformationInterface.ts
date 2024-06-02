@@ -1,4 +1,4 @@
-import { InformationInterface } from "../youtube/InformationInterface.js";
+import { InformationInterface } from '../youtube/InformationInterface.js';
 
 interface EpisodeInformationInterface {
   informationJson: InformationInterface;

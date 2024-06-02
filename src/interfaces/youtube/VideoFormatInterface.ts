@@ -18,11 +18,11 @@ interface VideoFormatInterface {
   format_id: string;
   height: number;
   http_headers: {
-    "Accept-Charset": string;
-    "Accept-Language": string;
-    "Accept-Encoding": string;
+    'Accept-Charset': string;
+    'Accept-Language': string;
+    'Accept-Encoding': string;
     Accept: string;
-    "User-Agent": string;
+    'User-Agent': string;
   };
   acodec: string;
 }

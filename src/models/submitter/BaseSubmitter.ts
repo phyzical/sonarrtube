@@ -1,11 +1,11 @@
-import fs from "fs";
-import puppeteer, { Browser, Page } from "puppeteer";
+import fs from 'fs';
+import puppeteer, { Browser, Page } from 'puppeteer';
 
-import { Episode } from "../Episode.js";
-import { GenericSubmitterInterface } from "../../interfaces/submitter/GenericSubmitterInterface.js";
-import { ShowSubmitter } from "../../ShowSubmitter.js";
-import { log } from "../../helpers/LogHelper.js";
-import { currentFileTimestamp } from "../../helpers/GenericHelper.js";
+import { Episode } from '../Episode.js';
+import { GenericSubmitterInterface } from '../../interfaces/submitter/GenericSubmitterInterface.js';
+import { ShowSubmitter } from '../../ShowSubmitter.js';
+import { log } from '../../helpers/LogHelper.js';
+import { currentFileTimestamp } from '../../helpers/GenericHelper.js';
 
 class BaseSubmitter implements GenericSubmitterInterface {
   browser: Browser;
@@ -21,38 +21,43 @@ class BaseSubmitter implements GenericSubmitterInterface {
   }
 
   doLogin(): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   openSeriesSeasonPage(series: string, season: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   addSeriesSeason(series: string, season: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   openSeriesPage(series: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   addEpisode(episode: Episode, series: string, season: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   getEpisodeIdentifier(episodeTitle: string): Promise<string> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   async init(): Promise<void> {
     this.browser = await puppeteer.launch({
       args: [
         // Required for Docker version of Puppeteer
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
         // This will write shared memory files into /tmp instead of /dev/shm,
         // because Docker’s default for /dev/shm is 64MB
-        "--disable-dev-shm-usage",
+        '--disable-dev-shm-usage',
       ],
     });
 
@@ -72,9 +77,7 @@ class BaseSubmitter implements GenericSubmitterInterface {
   async saveHtml(): Promise<void> {
     try {
       const html = await this.page.content();
-      const filename = `${
-        ShowSubmitter.folder
-      }/html-${currentFileTimestamp()}-${this.constructor.name}`;
+      const filename = `${ShowSubmitter.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
       const htmlPath = `${filename}.html`;
       fs.writeFileSync(htmlPath, html);
       log(`html can be found at ${htmlPath}`);
@@ -84,9 +87,7 @@ class BaseSubmitter implements GenericSubmitterInterface {
   }
 
   async takeScreenshot(): Promise<void> {
-    const filename = `${
-      ShowSubmitter.folder
-    }/screen-${currentFileTimestamp()}-${this.constructor.name}`;
+    const filename = `${ShowSubmitter.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
     const screenshotPath = `${filename}.png`;
     try {
       await this.page.screenshot({

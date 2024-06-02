@@ -53,7 +53,9 @@ RUN yarn install
 
 COPY --chown=app ./ ./
 
-RUN yarn build
+# RUN yarn test
+RUN yarn lint && \
+    yarn build
 
 # FROM base as dependencies
 # # This layer gets discarded to reduce the production image size. Only the dependencies

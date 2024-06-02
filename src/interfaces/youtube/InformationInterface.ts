@@ -1,5 +1,5 @@
-import { ThumbnailInterface } from "./ThumbnailInterface.js";
-import { VideoFormatInterface } from "./VideoFormatInterface.js";
+import { ThumbnailInterface } from './ThumbnailInterface.js';
+import { VideoFormatInterface } from './VideoFormatInterface.js';
 
 interface InformationInterface {
   upload_date: string;

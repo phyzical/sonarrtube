@@ -40,19 +40,21 @@ module.exports = {
       fileMatch: ['Dockerfile'],
       datasourceTemplate: 'github-releases',
       matchStrings: [
-        '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)\\s*depName=(?<depName>.*?)\\s*ARG\\s.*?_VERSION\\s*=\\s*"*(?<currentValue>.*)"*',
+        '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)' +
+        '\\s*depName=(?<depName>.*?)\\s*ARG\\s.*?_VERSION\\s*=\\s*"*(?<currentValue>.*)"*',
       ],
     },
     {
       customType: 'regex',
       fileMatch: ['Dockerfile'],
       matchStrings: [
-        '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)\\s*repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)',
+        '\\s*#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)' +
+        '\\s*repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)',
       ],
       datasourceTemplate: 'npm',
       depTypeTemplate: 'yum',
       versioningTemplate: 'loose',
-      registryUrlTemplate: "https://yum2npm.io/repos/{{replace '/' '/modules/' registryUrl}}/packages",
+      registryUrlTemplate: 'https://yum2npm.io/repos/{{replace \'/\' \'/modules/\' registryUrl}}/packages',
     },
   ],
   packageRules: [

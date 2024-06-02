@@ -1,9 +1,7 @@
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default [
-  eslintPluginPrettierRecommended,
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -18,6 +16,7 @@ export default [
         Element: true,
         HTMLInputElement: true,
         HTMLFormElement: true,
+        module: true,
       },
       parserOptions: {
         ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
@@ -35,19 +34,20 @@ export default [
       'import/extensions': 'off',
       'import/first': 'off',
       'import/no-unresolved': 'off',
-      'prettier/prettier': [
-        'error',
-        {
-          printWidth: 120,
-          tabWidth: 2,
-          useTabs: false,
-          semi: true,
-          singleQuote: true,
-          trailingComma: 'es5',
-          bracketSpacing: true,
-          endOfLine: 'lf',
-        },
-      ],
+      // 'prettier/prettier': [
+      //   'error',
+      //   {
+      //     printWidth: 120,
+      //     tabWidth: 2,
+      //     useTabs: false,
+      //     semi: true,
+      //     singleQuote: true,
+      //     trailingComma: 'es5',
+      //     bracketSpacing: true,
+      //     endOfLine: 'lf',
+      //   },
+      // ],
+      quotes: ['error', 'single'],
       curly: ['error', 'multi'],
       'import/prefer-default-export': 'off',
       // semi: ["error", "always"],
@@ -55,7 +55,7 @@ export default [
       '@typescript-eslint/semi': ['off'],
       '@typescript-eslint/explicit-function-return-type': ['error'],
       '@typescript-eslint/explicit-module-boundary-types': 'error',
-      'no-restricted-syntax': ['error', 'FunctionExpression', 'FunctionDeclaration'],
+      'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
       'prefer-arrow-callback': 'error',
       'func-style': ['error', 'expression', { allowArrowFunctions: true }],
       'arrow-body-style': 'error',

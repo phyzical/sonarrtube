@@ -1,4 +1,4 @@
-import { EpisodeInformationInterface } from "./submitter/EpisodeInformationInterface.js";
+import { EpisodeInformationInterface } from './submitter/EpisodeInformationInterface.js';
 
 interface EpisodeInterface {
   informationFile: string;
