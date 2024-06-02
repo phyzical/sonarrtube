@@ -6,6 +6,10 @@ jobs:
   pr_housekeeping:
     runs-on: ubuntu-latest
     name: 'PR housekeeping'
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: wait for labels
         run: |
