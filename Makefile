@@ -1,9 +1,9 @@
-build:
+builds:
 	yarn build
 install:
 	yarn install
 run:
-	yarn run
+	yarn run start
 lint:
 	yarn run lint-fix
 build-image:
