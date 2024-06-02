@@ -7,16 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     name: 'PR housekeeping'
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: read
     steps:
       - name: wait for labels
         run: |
           sleep 30
       - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{secrets.REPO_SCOPED_TOKEN}}
           script: |
             const {
                 payload: {
