@@ -17,6 +17,7 @@ export type Episode = {
     image: string
     imageType: number
     isMovie: number
+    productionCode: string
     lastUpdated: string
     linkedMovie: number
     name: string

@@ -6,6 +6,10 @@ export type Config = {
     tvdb: TVDBConfig
     youtube: YoutubeConfig,
     sonarr: SonarrConfig
+    cacheDir: string
+    preview: boolean
+    outputDir: string
+    verbose: boolean
 }
 
 

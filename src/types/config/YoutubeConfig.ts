@@ -1,3 +1,3 @@
 export type YoutubeConfig = {
-    apiKey: string
+    cookieFile: string
 }
