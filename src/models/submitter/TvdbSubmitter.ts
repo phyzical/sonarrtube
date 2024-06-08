@@ -62,7 +62,7 @@ class TvdbSubmitter extends BaseSubmitter {
     log(`opening ${showSeasonURL}`, true);
     await this.page.goto(showSeasonURL);
     let seasonSelector = `//*[contains(text(), "Season ${seasonClean}")]`;
-    if (seasonClean == '0') seasonSelector = '//*[contains(text(), "Specials")]';
+    if (seasonClean == '0') {seasonSelector = '//*[contains(text(), "Specials")]';}
 
     await this.page.waitForXPath(seasonSelector);
     log(`opened ${showSeasonURL}`, true);

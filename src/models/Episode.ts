@@ -18,7 +18,7 @@ class Episode {
 
   thumbnailFilePath(): string {
     let thumbnailPath = this.thumbnailFile;
-    if (!thumbnailPath) thumbnailPath = this.thumbnailFileTile;
+    if (!thumbnailPath) {thumbnailPath = this.thumbnailFileTile;}
 
     return [this.folder, thumbnailPath].join('/');
   }

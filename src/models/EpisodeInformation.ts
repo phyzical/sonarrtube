@@ -12,7 +12,7 @@ class EpisodeInformation {
     const crappyDescriptionRegex = new RegExp(/(sponsor)+|(download)+/i);
 
     if (!description || description.length > 100 || crappyDescriptionRegex.test(description))
-      description = this.title();
+      {description = this.title();}
 
     return description;
   }
