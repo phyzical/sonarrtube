@@ -1,33 +1,35 @@
-import { Series as SonarrSeries } from './../../types/sonarr/Series';
+import { Episode as SonarrEpisode } from './../../types/sonarr/Episode.js';
+import { Series as SonarrSeries } from './../../types/sonarr/Series.js';
 import { config } from '../../helpers/Config.js';
 import { log } from '../../helpers/Log.js';
-import { Series } from '../../types/tvdb/Series';
+import { Episode } from '../../types/tvdb/Episode.js';
+import { doRequest } from '../../helpers/Requests.js';
+import { Series } from '../../types/tvdb/Series.js';
 
 const host = 'https://api4.thetvdb.com/v4';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const doReq = async (url: string, method: string, body = '', headers = {}): Promise<any> => {
-    const request = await fetch(url, {
-        method,
-        headers,
-        body
-    });
-
-    return (await request.json()).data;
-};
-
+let token = '';
 
 const login = async (apiKey: string): Promise<string> => {
+    if (token) {
+        return token;
+    }
+
     log('Logging into tvdb');
-    const responseData = await doReq(`${host}/login`, 'POST', JSON.stringify({ apiKey }), {
-        'Content-Type': 'application/json',
-    });
+    const responseData = (
+        await doRequest(`${host}/login`, 'POST', {
+            'Content-Type': 'application/json',
+        }, null, JSON.stringify({ apiKey }))
+    ).data;
     log('Logged in');
 
-    return responseData.token;
+    token = responseData.token;
+
+    return token;
 };
 
-export const youtubeChannels = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> => {
+
+export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> => {
     const {
         tvdb: {
             apiKey,
@@ -35,37 +37,44 @@ export const youtubeChannels = async (sonarrSeries: SonarrSeries[]): Promise<Ser
     } = config();
 
     const token = await login(apiKey);
-    const total = [];
+    const serieses = [];
 
-    for (const show of sonarrSeries) {
-        total.push((await series(token, show)) as Series);
-    }
+    for (const series of sonarrSeries) {
+        log(`Fetching Series ${series.title} (${series.tvdbId}) from tvdb`);
 
-    return total;
-};
-
-const series = async (token: string, show: SonarrSeries): Promise<Series> => {
-    log(`Fetching tvdb info for ${show.title}`);
-
-    const seriesUrl = `${host}/series/${show.tvdbId}/extended?meta=episodes&short=true`;
-
-    const seriesResponse = await doReq(seriesUrl, 'GET', null, {
-        'accept': 'application/json,text/json',
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-    });
-    const newEpisodes = [];
-    for (const episode of seriesResponse.episodes) {
-        const episodeUrl = `${host}/episodes/${episode.id}/extended`;
-
-        const episodeResponse = await doReq(episodeUrl, 'GET', null, {
+        const tvdbSeries = (await doRequest(`${host}/series/${series.tvdbId}/extended`, 'GET', {
             'accept': 'application/json,text/json',
             'content-type': 'application/json',
             'Authorization': `Bearer ${token}`,
-        });
-        newEpisodes.push(episodeResponse);
-    }
-    seriesResponse.episodes = newEpisodes;
+        }, `/tvdb/${series.tvdbId}.json`)).data;
 
-    return seriesResponse;
+        tvdbSeries.episodes = await episodes(series.tvdbId, series.episodes);
+
+        serieses.push(tvdbSeries);
+    }
+
+
+    return serieses;
+};
+
+const episodes = async (seriesTvdbId: number, sonarrEpisodes: SonarrEpisode[]): Promise<Episode[]> => {
+    const {
+        tvdb: {
+            apiKey,
+        }
+    } = config();
+
+    const token = await login(apiKey);
+    const episodes = [];
+
+    for (const episode of sonarrEpisodes) {
+        log(`Fetching Episode ${episode.tvdbId} from tvdb`, true);
+        episodes.push((await doRequest(`${host}/episodes/${episode.tvdbId}/extended`, 'GET', {
+            'accept': 'application/json,text/json',
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        }, `/tvdb/${seriesTvdbId}/${episode.tvdbId}.json`)).data);
+    }
+
+    return episodes;
 };
