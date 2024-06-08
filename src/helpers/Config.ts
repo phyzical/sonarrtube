@@ -10,12 +10,20 @@ export const config = (): Config => {
         TVDB_PASSWORD,
         TVDB_EMAIL,
         TVDB_API,
-        YOUTUBE_API,
+        YOUTUBE_COOKIE_FILE,
         SONARR_API,
-        SONARR_HOST
+        SONARR_HOST,
+        CACHE_DIR,
+        PREVIEW_ONLY,
+        OUTPUT_DIR,
+        VERBOSE_LOGS
     } = process.env as unknown as Environment;
 
     return {
+        cacheDir: CACHE_DIR || './cache',
+        outputDir: OUTPUT_DIR || './downloads',
+        verbose: VERBOSE_LOGS == 'true',
+        preview: PREVIEW_ONLY == 'true',
         tvdb: {
             username: TVDB_USERNAME,
             password: TVDB_PASSWORD,
@@ -23,7 +31,7 @@ export const config = (): Config => {
             apiKey: TVDB_API
         },
         youtube: {
-            apiKey: YOUTUBE_API
+            cookieFile: YOUTUBE_COOKIE_FILE,
         },
         sonarr: {
             apiKey: SONARR_API,
