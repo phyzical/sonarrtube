@@ -1,8 +1,7 @@
 import { EpisodeInformation } from './EpisodeInformation.js';
-import { EpisodeInterface } from '../interfaces/EpisodeInterface.js';
 import fs from 'fs';
 
-class Episode implements EpisodeInterface {
+class Episode {
   informationFile: string;
   thumbnailFile: string;
   thumbnailFileTile: string;
@@ -19,7 +18,7 @@ class Episode implements EpisodeInterface {
 
   thumbnailFilePath(): string {
     let thumbnailPath = this.thumbnailFile;
-    if (!thumbnailPath) thumbnailPath = this.thumbnailFileTile;
+    if (!thumbnailPath) {thumbnailPath = this.thumbnailFileTile;}
 
     return [this.folder, thumbnailPath].join('/');
   }

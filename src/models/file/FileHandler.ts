@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Episode } from '../Episode.js';
-import { log } from '../../helpers/LogHelper.js';
+import { log } from '../../helpers/Log.js';
 
 class FileHandler {
   folder: string;
@@ -23,7 +23,7 @@ class FileHandler {
     // if first letter is a number assume its an unproccessed episode this means that
     // if we ever have shows that start with numbers we are screwed TODO check all chars before first . is numbers
     // this still wont work if the whole show is numbers though
-    if (!isNaN(firstCharToNum) && file.includes('.mp4')) acc.push(file.replace('.mp4', ''));
+    if (!isNaN(firstCharToNum) && file.includes('.mp4')) {acc.push(file.replace('.mp4', ''));}
 
     return acc;
   }
@@ -33,22 +33,22 @@ class FileHandler {
     const seasonFolder = [this.folder, series, season].join('/');
     const files = fs.readdirSync(seasonFolder);
     if (episodeText.length > 0)
-      files.forEach((file) => {
+      {files.forEach((file) => {
         if (file.includes(`${fileToRename}.`) || file.includes(`${fileToRename}-`)) {
           const filePath = [seasonFolder, file].join('/');
-          if (file.includes('.description') || file.includes('.json')) fs.unlinkSync(filePath);
+          if (file.includes('.description') || file.includes('.json')) {fs.unlinkSync(filePath);}
           else {
             const newName = `${series.replace(/-/g, '.')}.${episodeText}${file.substring(file.indexOf('.'))}`;
             fs.renameSync(filePath, [seasonFolder, newName].join('/'));
           }
         }
-      });
+      });}
     else {
       log('renaming failed probably means it didn\'t get added correctly?');
       files.forEach((file) => {
         if (file.includes(fileToRename)) {
           const errorDir = [seasonFolder, 'errored'].join('/');
-          if (!fs.existsSync(errorDir)) fs.mkdirSync(errorDir);
+          if (!fs.existsSync(errorDir)) {fs.mkdirSync(errorDir);}
 
           fs.renameSync([seasonFolder, file].join('/'), [errorDir, file].join('/'));
         }
@@ -73,7 +73,7 @@ class FileHandler {
             );
             const thumbnailFileTile = files.find((file) => file.includes(key) && file.includes('.jpg'));
 
-            if (!thumbnailFile) thumbnailFile = thumbnailFileTile;
+            if (!thumbnailFile) {thumbnailFile = thumbnailFileTile;}
 
             const episode = new Episode();
             episode.folder = seasonPath;

@@ -1,2 +1,7 @@
 node_modules
 build
+.env
+cache
+cookies.txt
+downloads
+.DS_STORE

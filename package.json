@@ -6,7 +6,8 @@
   "preferGlobal": true,
   "type": "module",
   "dependencies": {
-    "puppeteer": "^13.3.2"
+    "puppeteer": "^13.3.2",
+    "dotenv": "16.4.5"
   },
   "scripts": {
     "build": "tsc --p tsconfig.build.json",
@@ -14,7 +15,8 @@
     "test": "jest",
     "coverage": "jest --coverage",
     "lint": "eslint .",
-    "lint-fix": "eslint . --fix"
+    "lint-fix": "eslint . --fix",
+    "start": "node main.js"
   },
   "devDependencies": {
     "typescript": "5.4.5",

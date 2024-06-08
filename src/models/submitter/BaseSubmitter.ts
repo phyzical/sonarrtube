@@ -2,12 +2,11 @@ import fs from 'fs';
 import puppeteer, { Browser, Page } from 'puppeteer';
 
 import { Episode } from '../Episode.js';
-import { GenericSubmitterInterface } from '../../interfaces/submitter/GenericSubmitterInterface.js';
 import { ShowSubmitter } from '../../ShowSubmitter.js';
-import { log } from '../../helpers/LogHelper.js';
-import { currentFileTimestamp } from '../../helpers/GenericHelper.js';
+import { log } from '../../helpers/Log.js';
+import { currentFileTimestamp } from '../../helpers/Generic.js';
 
-class BaseSubmitter implements GenericSubmitterInterface {
+class BaseSubmitter {
   browser: Browser;
   page: Page;
   username: string;

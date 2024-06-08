@@ -1,7 +1,7 @@
 import { BaseSubmitter } from './BaseSubmitter.js';
 import { Episode } from '../Episode.js';
-import { setHtmlInput, submitHtmlForm, clickHtmlElement, delay } from '../../helpers/PuppeteerHelper.js';
-import { log } from '../../helpers/LogHelper.js';
+import { setHtmlInput, submitHtmlForm, clickHtmlElement, delay } from '../../helpers/Puppeteer.js';
+import { log } from '../../helpers/Log.js';
 
 class TvdbSubmitter extends BaseSubmitter {
   #baseURL = 'https://thetvdb.com';
@@ -62,7 +62,7 @@ class TvdbSubmitter extends BaseSubmitter {
     log(`opening ${showSeasonURL}`, true);
     await this.page.goto(showSeasonURL);
     let seasonSelector = `//*[contains(text(), "Season ${seasonClean}")]`;
-    if (seasonClean == '0') seasonSelector = '//*[contains(text(), "Specials")]';
+    if (seasonClean == '0') {seasonSelector = '//*[contains(text(), "Specials")]';}
 
     await this.page.waitForXPath(seasonSelector);
     log(`opened ${showSeasonURL}`, true);
