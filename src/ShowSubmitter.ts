@@ -1,19 +1,19 @@
-import { Episode as TvdbEpisode } from './types/tvdb/Episode.js';
+import { Episode as TvdbEpisode } from './models/api/tvdb/Episode.js';
 import { TvdbSubmitter } from './models/submitter/TvdbSubmitter.js';
 import { BaseSubmitter } from './models/submitter/BaseSubmitter.js';
 import { Episode } from './models/Episode.js';
 import { FileHandler } from './models/file/FileHandler.js';
 import { log } from './helpers/Log.js';
 import { delay } from './helpers/Puppeteer.js';
-import { series as getSonarrSeries } from './models/api/Sonarr.js';
-import { series as getTvdbSeries } from './models/api/Tvdb.js';
-import { Episode as SonarrEpisode } from './types/sonarr/Episode.js';
-import { channels as getYoutubeChannels } from './models/api/Youtube.js';
-import { Video as YoutubeVideo } from './types/youtube/Video.js';
+import { series as getSonarrSeries } from './api/Sonarr.js';
+import { series as getTvdbSeries } from './api/Tvdb.js';
+import { Episode as SonarrEpisode } from './models/api/sonarr/Episode.js';
+import { channels as getYoutubeChannels } from './api/Youtube.js';
+import { Video as YoutubeVideo } from './models/api/youtube/Video.js';
 import { config } from './helpers/Config.js';
 import { Config } from './types/config/Config.js';
-import { downloadVideos } from './models/api/Ytdlp.js';
-import { DownloadableVideo } from './types/DownloadableVideo.js';
+import { downloadVideos } from './api/Ytdlp.js';
+import { DownloadableVideo } from './models/api/DownloadableVideo.js';
 
 class ShowSubmitter {
   static folder: string = '/tmp/episodes';
@@ -179,11 +179,11 @@ class ShowSubmitter {
             return null;
           }
 
-          return {
+          return new DownloadableVideo(
             youtubeVideo,
-            tvdbEpisode,
             sonarrEpisode,
-          } as DownloadableVideo;
+            tvdbEpisode,
+          );
         }).filter(Boolean);
 
       if (episodesForDownload.length != sonarrUnDownloaded.length) {

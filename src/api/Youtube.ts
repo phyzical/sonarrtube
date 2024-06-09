@@ -1,16 +1,16 @@
-import { log } from '../../helpers/Log.js';
-import { Series } from '../../types/tvdb/Series.js';
-import { Channel } from '../../types/youtube/Channel.js';
+import { Channel } from './../models/api/youtube/Channel.js';
+import { log } from '../helpers/Log.js';
+import { Series } from '../models/api/tvdb/Series.js';
 import { getChannelVideoInfos, getVideoInfos } from './Ytdlp.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const channels = async (tvdbSeries: Series[]): Promise<any[]> => {
+export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
 
     const channels = [];
 
     for (const series of tvdbSeries) {
         log(`Fetching Episodes from youtube for ${series.name}`);
-        const channel = { tvdbId: series.id } as Channel;
+        const channel = new Channel({ tvdbId: series.id });
 
         //search for a youtube link containing /videos or /playlist first
         channel.videos = getVideoInfos(

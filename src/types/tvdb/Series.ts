@@ -7,73 +7,11 @@ import { Tag } from './Tag.js';
 import { Trailer } from './Trailer.js';
 import { Translations } from './Translations.js';
 import { Company } from './Company.js';
-
-type Genre = {
-    id: number
-    name: string
-    slug: string
-}
-
-type Artwork = {
-    episodeId: number
-    height: number
-    id: number
-    image: string
-    includesText: true
-    language: string
-    movieId: number
-    networkId: number
-    peopleId: number
-    score: number
-    seasonId: number
-    seriesId: number
-    seriesPeopleId: number
-    status: {
-        id: number
-        name: string
-    }
-    tagOptions: Tag[]
-    thumbnail: string
-    thumbnailHeight: number
-    thumbnailWidth: number
-    type: number
-    updatedAt: number
-    width: number
-}
-
-
-type SeasonType = {
-    alternateName: string
-    id: number
-    name: string
-    type: string
-}
-
-
-type RemoteID = {
-    id: string
-    type: number
-    sourceName: string
-}
-
-type List = {
-    aliases: Alias[]
-    id: number
-    image: string
-    imageIsFallback: true
-    isOfficial: true
-    name: string
-    nameTranslations: string[]
-    overview: string
-    overviewTranslations: string[]
-    remoteIds: RemoteID[]
-    tags: Tag[]
-    score: number
-    url: string
-}
-
-
-
+import { Artwork } from './Artwork.js';
+import { List } from './List.js';
+import { Genre } from './Genre.js';
+import { RemoteID } from './RemoteID.js';
+import { SeasonType } from './SeasonType.js';
 
 export type Series = {
     abbreviation: string

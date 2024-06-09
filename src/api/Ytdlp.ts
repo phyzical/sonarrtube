@@ -1,11 +1,11 @@
 import { readdirSync, readFileSync, renameSync } from 'fs';
 import { execSync } from 'child_process';
-import { cachePath } from '../../helpers/Cache.js';
-import { Video } from '../../types/youtube/Video.js';
+import { cachePath } from '../helpers/Cache.js';
 import path from 'path';
-import { config } from '../../helpers/Config.js';
-import { DownloadableVideo } from '../../types/DownloadableVideo.js';
-import { log } from '../../helpers/Log.js';
+import { config } from '../helpers/Config.js';
+import { DownloadableVideo } from '../models/api/DownloadableVideo.js';
+import { log } from '../helpers/Log.js';
+import { Video } from '../models/api/youtube/Video.js';
 
 const cacheKeyBase = (cacheKey: string): string => cachePath(`youtube/${cacheKey}`);
 const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
@@ -107,8 +107,7 @@ export const downloadVideos = (videos: DownloadableVideo[]): void => {
         const {
             seasonNumber,
             episodeNumber,
-            seriesTitle,
-            seriesPath
+            series: { title: seriesTitle, path: seriesPath }
         } = sonarrEpisode;
         const fileName = `${seriesTitle}.s${seasonNumber}e${episodeNumber}`;
         const subPath = `Season ${seasonNumber}`;

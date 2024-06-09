@@ -1,8 +1,10 @@
-import { config } from '../../helpers/Config.js';
-import { log } from '../../helpers/Log.js';
-import { doRequest } from '../../helpers/Requests.js';
-import { Episode } from '../../types/sonarr/Episode.js';
-import { Series } from '../../types/sonarr/Series.js';
+import { config } from '../helpers/Config.js';
+import { log } from '../helpers/Log.js';
+import { doRequest } from '../helpers/Requests.js';
+import { Episode } from '../models/api/sonarr/Episode.js';
+import { Series } from '../models/api/sonarr/Series.js';
+import { Episode as EpisodeType } from '../types/sonarr/Episode.js';
+import { Series as SeriesType } from '../types/sonarr/Series.js';
 
 export const series = async (): Promise<Series[]> => {
     const { sonarr: {
@@ -15,16 +17,16 @@ export const series = async (): Promise<Series[]> => {
     //  TODO: add cache
     // expire on env default to a day?
 
-    const seriesResponseData = await doRequest(`${host}/api/v3/series`,
+    const youtubeSeries = (await doRequest(`${host}/api/v3/series`,
         'GET',
         {
             'accept': 'application/json,text/json',
             'content-type': 'application/json',
             'x-api-key': apiKey,
         }
-    );
-
-    const youtubeSeries = (seriesResponseData as Series[]).filter(x => x.network == 'YouTube');
+    ))
+        .map((series: SeriesType) => new Series(series))
+        .filter(x => x.network == 'YouTube');
 
     log(`Found: ${youtubeSeries.map(x => x.title).join(', ')}`);
 
@@ -37,17 +39,9 @@ export const series = async (): Promise<Series[]> => {
                 'content-type': 'application/json',
                 'x-api-key': apiKey
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        )).map((episode: Episode) => {
-            // TODO: add flag to allow special season? 
-            if (episode.seasonNumber == 0) {
-                return null;
-            }
-            episode.seriesPath = series.path.replace(series.rootFolderPath, '');
-            episode.seriesTitle = series.title;
-
-            return episode;
-        }).filter(Boolean);
+        ))
+            .map((episode: EpisodeType) => new Episode(episode, series))
+            .filter((episode: Episode) => episode.seasonNumber != 0);
     }
 
     return youtubeSeries;

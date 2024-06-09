@@ -14,6 +14,4 @@ export type Episode = {
     unverifiedSceneNumbering: boolean
     grabbed: boolean
     id: number
-    seriesPath: string
-    seriesTitle: string
 }
