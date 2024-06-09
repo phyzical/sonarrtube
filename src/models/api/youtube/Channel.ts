@@ -6,6 +6,5 @@ export class Channel {
     tvdbId: number;
     constructor(payload: ChannelType) {
         this.tvdbId = payload.tvdbId;
-        this.videos = payload.videos;
     }
 }
