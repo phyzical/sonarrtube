@@ -3,9 +3,9 @@ import { execSync } from 'child_process';
 import { cachePath } from '../helpers/Cache.js';
 import path from 'path';
 import { config } from '../helpers/Config.js';
-import { DownloadableVideo } from '../models/api/DownloadableVideo.js';
 import { log } from '../helpers/Log.js';
 import { Video } from '../models/api/youtube/Video.js';
+import { ActionableVideo } from '../models/api/ActionableVideo.js';
 
 const cacheKeyBase = (cacheKey: string): string => cachePath(`youtube/${cacheKey}`);
 const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
@@ -41,7 +41,11 @@ const processVideoInfos = (cacheKey: string): Video[] => {
             readFileSync(path.join(cachePath, file)).toString()
         );
 
-        return {
+        if (videoInfo._type != 'video') {
+            return;
+        }
+
+        return new Video({
             title: videoInfo.title,
             fulltitle: videoInfo.fulltitle,
             thumbnail: videoInfo.thumbnail,
@@ -55,7 +59,7 @@ const processVideoInfos = (cacheKey: string): Video[] => {
             id: videoInfo.id,
             timestamp: videoInfo.timestamp,
             upload_date: videoInfo.upload_date,
-        };
+        });
     }).filter(Boolean);
 };
 
@@ -100,7 +104,7 @@ export const channelIdByAlias = (alias: string): string => {
     );
 };
 
-export const downloadVideos = (videos: DownloadableVideo[]): void => {
+export const downloadVideos = (videos: ActionableVideo[]): void => {
     const { youtube: { cookieFile }, outputDir, preview, verbose } = config();
 
     for (const { sonarrEpisode, youtubeVideo } of videos) {
