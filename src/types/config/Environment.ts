@@ -10,4 +10,5 @@ export type Environment = {
     PREVIEW_ONLY: string
     OUTPUT_DIR: string
     VERBOSE_LOGS: string
+    DOWNLOAD_ONLY: string
 }
