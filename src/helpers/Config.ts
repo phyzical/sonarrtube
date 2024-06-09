@@ -16,13 +16,15 @@ export const config = (): Config => {
         CACHE_DIR,
         PREVIEW_ONLY,
         OUTPUT_DIR,
-        VERBOSE_LOGS
+        VERBOSE_LOGS,
+        DOWNLOAD_ONLY
     } = process.env as unknown as Environment;
 
     return {
         cacheDir: CACHE_DIR || './cache',
         outputDir: OUTPUT_DIR || './downloads',
         verbose: VERBOSE_LOGS == 'true',
+        downloadOnly: DOWNLOAD_ONLY == 'true',
         preview: PREVIEW_ONLY == 'true',
         tvdb: {
             username: TVDB_USERNAME,

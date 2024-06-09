@@ -10,6 +10,7 @@ export type Config = {
     preview: boolean
     outputDir: string
     verbose: boolean
+    downloadOnly: boolean
 }
 
 
