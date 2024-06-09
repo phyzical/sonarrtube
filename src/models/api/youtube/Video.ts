@@ -1,9 +1,9 @@
 import { Video as VideoType } from './../../../types/youtube/Video';
 export class Video {
-    title: string;
+    theTitle: string;
     fulltitle: string;
     thumbnail: string;
-    description: string;
+    theDescription: string;
     channel_id: string;
     channel_url: string;
     channel: string;
@@ -14,10 +14,10 @@ export class Video {
     timestamp: number;
     upload_date: string;
     constructor(payload: VideoType) {
-        this.title = payload.title;
+        this.theTitle = payload.title;
         this.fulltitle = payload.fulltitle;
         this.thumbnail = payload.thumbnail;
-        this.description = payload.description;
+        this.theDescription = payload.description;
         this.channel_id = payload.channel_id;
         this.channel_url = payload.channel_url;
         this.channel = payload.channel;
@@ -27,5 +27,38 @@ export class Video {
         this.timestamp = payload.timestamp;
         this.upload_date = payload.upload_date;
         this.id = payload.id;
+    }
+
+    description(): string {
+        let description = this.theDescription;
+        const crappyDescriptionRegex = new RegExp(/(sponsor)+|(download)+/i);
+
+        if (!description || description.length > 100 || crappyDescriptionRegex.test(description)) {
+            description = this.title();
+        }
+
+        return description;
+    }
+
+    title(): string {
+        return this.fulltitle;
+    }
+
+    runTime(): string {
+        const runtime = Math.floor(this.duration / 60);
+
+        return runtime > 1 ? runtime.toString() : '1';
+    }
+
+    airedDate(): string {
+        const airDate = this.upload_date; //'01/02/2020'
+
+        return airDate.slice(0, 4) + '-' + airDate.slice(4, 6) + '-' + airDate.slice(6, 8);
+    }
+
+    season(): number {
+        const dateSplits = this.airedDate().split('-');
+
+        return parseInt(dateSplits[dateSplits.length - 1]);
     }
 }
