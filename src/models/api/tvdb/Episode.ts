@@ -19,6 +19,7 @@ export class Episode {
     seasonName: string;
     year: string;
     series: Series;
+    aired: string;
     constructor(payload: EpisodeType, series: Series) {
         this.absoluteNumber = payload.absoluteNumber;
         this.id = payload.id;
@@ -36,5 +37,6 @@ export class Episode {
         this.seasonName = payload.seasonName;
         this.year = payload.year;
         this.series = series;
+        this.aired = payload.aired;
     }
 }
