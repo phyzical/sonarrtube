@@ -6,8 +6,9 @@
   "preferGlobal": true,
   "type": "module",
   "dependencies": {
-    "puppeteer": "^22.0.0",
-    "dotenv": "16.4.5"
+    "puppeteer": "22.10.0",
+    "dotenv": "16.4.5",
+    "node-fetch": "3.3.2"
   },
   "scripts": {
     "build": "tsc --p tsconfig.build.json",
