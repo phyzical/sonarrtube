@@ -7,6 +7,8 @@ import { log } from '../helpers/Log.js';
 import { Video } from '../models/api/youtube/Video.js';
 import { ActionableVideo } from '../models/api/ActionableVideo.js';
 
+const { youtube: { cookieFile }, outputDir, preview, verbose } = config();
+
 const cacheKeyBase = (cacheKey: string): string => cachePath(`youtube/${cacheKey}`);
 const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
     const cacheBase = cacheKeyBase(cacheKey);
@@ -105,7 +107,6 @@ export const channelIdByAlias = (alias: string): string => {
 };
 
 export const downloadVideos = (videos: ActionableVideo[]): void => {
-    const { youtube: { cookieFile }, outputDir, preview, verbose } = config();
 
     for (const { sonarrEpisode, youtubeVideo } of videos) {
         const {

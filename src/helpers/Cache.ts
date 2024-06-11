@@ -1,7 +1,9 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { config } from './Config.js';
 import path from 'path';
 import { log } from './Log.js';
+
+const { cacheDir } = config();
 
 export const getCache = (cacheKey: string): string | void => {
     if (!cacheKey) {
@@ -28,8 +30,16 @@ export const setCache = (cacheKey: string, data: string): void => {
     return;
 };
 
+export const clearCache = (cacheKey: string): void => {
+    if (!cacheKey) {
+        return;
+    }
+    unlinkSync(cachePath(cacheKey));
+
+    return;
+};
+
 export const cachePath = (cacheKey: string): string => {
-    const { cacheDir } = config();
     const cacheKeySplits = cacheKey.split(path.sep);
     const cacheKeyFile = cacheKeySplits.pop();
     const dir = path.join(process.cwd(), cacheDir, ...cacheKeySplits);

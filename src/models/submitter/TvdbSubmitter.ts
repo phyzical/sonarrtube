@@ -1,4 +1,4 @@
-import { setHtmlInput, submitHtmlForm, clickHtmlElement, delay } from '../../helpers/Puppeteer.js';
+import { delay, click, find, type, loaded, goto, submitForm } from '../../helpers/Puppeteer.js';
 import { log } from '../../helpers/Log.js';
 import { setTimeout } from 'node:timers/promises';
 import { createWriteStream, writeFileSync } from 'node:fs';
@@ -49,7 +49,7 @@ export class TvdbSubmitter {
   async getEpisodeIdentifier(): Promise<string> {
     const episodeTitle = this.video.youtubeVideo.title();
     log(`Looking for episode for ${episodeTitle}`, true);
-    const episodeTextElement = await this.page.waitForSelector(this.getEpisodeXpath(episodeTitle));
+    const episodeTextElement = await find(this.page, this.getEpisodeXpath(episodeTitle));
     let episodeIdentifier = '';
     try {
       episodeIdentifier = await this.page.evaluate((element: Element) => element.textContent, episodeTextElement[0]);
@@ -63,17 +63,16 @@ export class TvdbSubmitter {
 
   async doLogin(): Promise<void> {
     log('starting login', true);
-
-    const loginURL = [this.#baseURL, 'auth', 'login'].join('/');
-    await this.page.goto(loginURL);
+    await goto(this.page, [this.#baseURL, 'auth', 'login'].join('/'));
     const loginFormSelector = 'form[action="/auth/login"]';
-    await this.page.waitForSelector(loginFormSelector);
-    await this.page.type('[name="email"]', this.email);
-    await this.page.type('[name="password"]', this.password);
-    await this.page.$eval(loginFormSelector, (form: Element) => (<HTMLFormElement>form).submit());
-
-    const didLogInSelector = 'xpath///*[contains(text(),"Logout")]';
-    await this.page.waitForSelector(didLogInSelector);
+    await find(this.page, loginFormSelector);
+    await type(this.page, '[name="email"]', this.email);
+    await type(this.page, '[name="password"]', this.password);
+    await submitForm(this.page, loginFormSelector);
+    await loaded(this.page);
+    await goto(this.page, [this.#baseURL, 'dashboard'].join('/'));
+    await find(this.page, `xpath///*[contains(text(),"${this.email}")]`);
+    await goto(this.page, [this.#baseURL].join('/'));
     log('finishing login', true);
   }
 
@@ -82,11 +81,11 @@ export class TvdbSubmitter {
     const series = this.video.tvdbSeries.slug;
     const showSeasonURL = [this.#baseURL, 'series', series, 'seasons', 'official', season].join('/');
     log(`opening ${showSeasonURL}`, true);
-    await this.page.goto(showSeasonURL);
+    await goto(this.page, showSeasonURL);
     let seasonSelector = `xpath///*[contains(text(), "Season ${season}")]`;
     if (season == 0) { seasonSelector = 'xpath///*[contains(text(), "Specials")]'; }
 
-    await this.page.waitForSelector(seasonSelector);
+    await find(this.page, seasonSelector);
     log(`opened ${showSeasonURL}`, true);
   }
 
@@ -94,57 +93,43 @@ export class TvdbSubmitter {
     const season = this.video.season();
     const series = this.video.tvdbSeries.slug;
     log(`Adding ${series} - ${season}`, true);
-
     await this.openSeriesPage();
-
-    const openSeasonsButton = await this.page.waitForSelector('xpath///a[text()="Seasons"]');
-    await openSeasonsButton[0].click();
-
+    await click(this.page, 'xpath///a[text()="Seasons"]');
     await delay(1500);
-    const addSeasonButton = await this.page.waitForSelector('xpath///button[@title="Add Season"]');
-    await addSeasonButton[0].click();
-
-    await this.page.$eval('[name="season_number"]', setHtmlInput, season);
-
-    const saveSeasonsButton = await this.page.waitForSelector('xpath///button[text()="Add Season"]');
-    await saveSeasonsButton[0].click();
-
-    await this.page.waitForSelector(`xpath///*[contains(text(), "Season ${season}")]`);
-
+    await click(this.page, 'xpath///button[@title="Add Season"]');
+    await type(this.page, '[name="season_number"]', season.toString());
+    await click(this.page, 'xpath///button[text()="Add Season"]');
+    await find(this.page, `xpath///*[contains(text(), "Season ${season}")]`);
     log(`Added ${series} - ${season}`, true);
   }
 
   async openSeriesPage(): Promise<void> {
     const series = this.video.tvdbSeries.slug;
-
     const showSeriesURL = [this.#baseURL, 'series', series].join('/');
     log(`opening ${showSeriesURL}`, true);
-    await this.page.goto(showSeriesURL);
-    await this.page.waitForSelector(this.getSeriesXpath(series));
+    await goto(this.page, showSeriesURL);
+    await find(this.page, this.getSeriesXpath(series));
     log(`opened ${showSeriesURL}`, true);
   }
 
   async openEditEpisodePage(): Promise<void> {
     const episodeTitle = this.video.youtubeVideo.title();
     const series = this.video.tvdbSeries.slug;
-
     log(`opening editEpisodePage ${episodeTitle}`, true);
     if (!this.video.missingFromTvdb()) {
       const showSeriesURL = [
         this.#baseURL, 'series', series, 'episodes', this.video.tvdbEpisode.id, '0', 'edit'
       ].join('/');
-      await this.page.goto(showSeriesURL);
-      await this.page.waitForSelector(this.getSeriesXpath(series));
+      log(`opening ${showSeriesURL}`, true);
+      await goto(this.page, showSeriesURL);
+      await find(this.page, `xpath///*[contains(text(), "Episode ${this.video.tvdbEpisode.number}")]`);
+      await find(this.page, `xpath///*[contains(text(), "Season ${this.video.tvdbEpisode.seasonNumber}")]`);
     } else {
       await delay(500);
       await this.openSeriesSeasonPage();
-      const episodeLink = await this.page.waitForSelector(this.getEpisodeXpath(episodeTitle));
-      await episodeLink[0].click();
-      const editEpisodeButtonSelector = 'xpath///*[contains(text(),"Edit Episode")]';
-      const editEpisodeButton = await this.page.waitForSelector(editEpisodeButtonSelector);
-      await editEpisodeButton[0].click();
+      await click(this.page, this.getEpisodeXpath(episodeTitle));
+      await click(this.page, 'xpath///*[contains(text(),"Edit Episode")]');
     }
-
     log(`opened editEpisodePage ${episodeTitle}`, true);
   }
 
@@ -165,10 +150,7 @@ export class TvdbSubmitter {
   private async openAddEpisodePage(): Promise<void> {
     log('opening addEpisodePage', true);
     await this.openSeriesSeasonPage();
-    const addEpisodeSelector = 'xpath///*[contains(text(),"Add Episode")]';
-    await this.page.waitForSelector(addEpisodeSelector, { visible: true });
-    const addEpisodeButton = await this.page.waitForSelector(addEpisodeSelector);
-    await addEpisodeButton[0].click();
+    await click(this.page, 'xpath///*[contains(text(),"Add Episode")]');
     log('opened addEpisodePage', true);
   }
 
@@ -176,33 +158,36 @@ export class TvdbSubmitter {
     const episode = this.video.youtubeVideo;
     log('starting adding', true);
     const addEpisodeFormSelector = 'xpath///h3[text()=\'Episodes\']/ancestor::form';
-    await this.page.waitForSelector(addEpisodeFormSelector);
+    await find(this.page, addEpisodeFormSelector);
     await delay(500);
-    await this.page.$eval('[name="name[]"]', setHtmlInput, episode.title());
-    await this.page.$eval('[name="overview[]"]', setHtmlInput, episode.description());
-    await this.page.$eval('[name="runtime[]"]', setHtmlInput, episode.runTime());
-    await this.page.$eval('[name="date[]"]', setHtmlInput, episode.airedDate());
+    await type(this.page, '[name="name"]', episode.title());
+    await type(this.page, '[name="overview"]', episode.description());
+    await type(this.page, '[name="runtime"]', episode.runTime());
+    await type(this.page, '[name="date"]', episode.airedDate());
     await delay(500);
-    const addEpisodeFormElement = await this.page.waitForSelector(addEpisodeFormSelector);
-    await this.page.evaluate(submitHtmlForm, addEpisodeFormElement[0]);
+    await click(this.page, addEpisodeFormSelector);
     log('finished adding', true);
   }
 
   private async updateEpisode(): Promise<void> {
-    const episode = this.video.youtubeVideo;
+    const video = this.video.youtubeVideo;
+    const episode = this.video.tvdbEpisode;
     log('updating episode', true);
-    const editEpisodeFormSelector = 'form.episode-edit-form';
-    await this.page.waitForSelector(editEpisodeFormSelector);
+    await find(this.page, 'form.episode-edit-form');
     await delay(500);
-    await this.page.$eval('[name=productioncode]', setHtmlInput, episode.id);
+    await type(this.page, '[name="productioncode"]', video.id);
     await delay(500);
-    const saveButtonSelector = 'xpath///button[text()=\'Save\']';
-    await this.page.waitForSelector(saveButtonSelector);
-    const saveButton = await this.page.waitForSelector(saveButtonSelector);
-    await this.page.evaluate(clickHtmlElement, saveButton[0]);
-
-    const episodeAddedSuccessfully = `xpath///*[contains(text(),"${episode.title()}")]`;
-    await this.page.waitForSelector(episodeAddedSuccessfully);
+    await click(this.page, 'xpath///button[text()=\'Save\']');
+    try {
+      await find(this.page, `xpath///*[contains(text(),"${video.title()}")]`);
+    } catch (e) {
+      //  fall back to tvdb title if it exists
+      if (episode.name) {
+        await find(this.page, `xpath///*[contains(text(),"${episode.name}")]`);
+      } else {
+        throw e;
+      }
+    }
     log('updated episode', true);
   }
 
@@ -215,23 +200,14 @@ export class TvdbSubmitter {
       res.body.pipe(createWriteStream(thumbnailPath))
     );
 
-    const addArtworkSelector = 'xpath///a[text()=\'Add Artwork\']';
-    await this.page.waitForSelector(addArtworkSelector);
-    const addArtworkButton = await this.page.waitForSelector(addArtworkSelector);
-    await this.page.evaluate(clickHtmlElement, addArtworkButton[0]);
+    await click(this.page, 'xpath///a[text()=\'Add Artwork\']');
     try {
       const fileSelector = 'input[name=\'file\']';
-      await this.page.waitForSelector(fileSelector);
-      const elementHandle = await this.page.$(fileSelector);
-      await elementHandle.uploadFile(thumbnailPath);
-      const continueButtonSelector = 'xpath///button[text()=\'Continue\']';
-      await this.page.waitForSelector(continueButtonSelector);
+      const elementHandle = await find(this.page, fileSelector);
+      await elementHandle[0].uploadFile(thumbnailPath);
       await setTimeout(3000);
-      const continueButton = await this.page.waitForSelector(continueButtonSelector);
-      await this.page.evaluate(clickHtmlElement, continueButton[0]);
-
-      const thumbnailAddedSelector = `xpath///*[contains(text(),"${episode.title()}")]`;
-      await this.page.waitForSelector(thumbnailAddedSelector);
+      await click(this.page, 'xpath///button[text()=\'Continue\']');
+      await find(this.page, `xpath///*[contains(text(),"${episode.title()}")]`);
       log('Successfully uploaded image', true);
     } catch (e) {
       log(e);
@@ -256,7 +232,7 @@ export class TvdbSubmitter {
       await this.addInitialEpisode();
       try {
         const addEpisodeSelector = 'xpath///*[contains(text(),"Whoops, looks like something went wrong")]';
-        await this.page.waitForSelector(addEpisodeSelector);
+        await find(this.page, addEpisodeSelector);
         try {
           await this.openEditEpisodePage();
         } catch (e) {
