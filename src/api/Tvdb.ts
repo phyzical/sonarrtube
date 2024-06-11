@@ -6,6 +6,12 @@ import { doRequest } from '../helpers/Requests.js';
 import { Episode } from '../models/api/tvdb/Episode.js';
 import { Series } from '../models/api/tvdb/Series.js';
 
+const {
+    tvdb: {
+        apiKey,
+    }
+} = config();
+
 const host = 'https://api4.thetvdb.com/v4';
 
 let token = '';
@@ -30,11 +36,7 @@ const login = async (apiKey: string): Promise<string> => {
 
 
 export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> => {
-    const {
-        tvdb: {
-            apiKey,
-        }
-    } = config();
+
 
     const token = await login(apiKey);
     const serieses = [];
@@ -47,7 +49,7 @@ export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> =>
                 'accept': 'application/json,text/json',
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${token}`,
-            }, `/tvdb/${series.tvdbId}.json`)).data
+            }, series.tvdbCacheKey())).data
         );
 
         tvdbSeries.episodes = await episodes(series.episodes, tvdbSeries);
@@ -60,12 +62,6 @@ export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> =>
 };
 
 const episodes = async (sonarrEpisodes: SonarrEpisode[], series: Series): Promise<Episode[]> => {
-    const {
-        tvdb: {
-            apiKey,
-        }
-    } = config();
-
     const token = await login(apiKey);
     const episodes = [];
 
@@ -77,7 +73,7 @@ const episodes = async (sonarrEpisodes: SonarrEpisode[], series: Series): Promis
                     'accept': 'application/json,text/json',
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                }, `/tvdb/${series.id}/${episode.tvdbId}.json`)).data,
+                }, episode.tvdbCacheKey())).data,
                 series
             )
         );

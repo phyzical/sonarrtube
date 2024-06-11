@@ -32,4 +32,8 @@ export class Series {
         this.rootFolderPath = payload.rootFolderPath;
         this.id = payload.id;
     }
+
+    tvdbCacheKey(): string {
+        return `/tvdb/${this.tvdbId}.json`;
+    }
 }

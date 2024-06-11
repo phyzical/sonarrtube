@@ -1,4 +1,8 @@
-import { Video as VideoType } from './../../../types/youtube/Video';
+import { config } from '../../../helpers/Config.js';
+import { Video as VideoType } from './../../../types/youtube/Video.js';
+
+const { titleCleanerRegex } = config();
+
 export class Video {
     theTitle: string;
     fulltitle: string;
@@ -41,7 +45,7 @@ export class Video {
     }
 
     title(): string {
-        return this.fulltitle;
+        return this.fulltitle.replace(titleCleanerRegex, '');
     }
 
     runTime(): string {

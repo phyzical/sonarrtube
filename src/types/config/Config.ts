@@ -11,6 +11,7 @@ export type Config = {
     outputDir: string
     verbose: boolean
     downloadOnly: boolean
+    titleCleanerRegex: RegExp
 }
 
 

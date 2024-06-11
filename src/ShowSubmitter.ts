@@ -10,9 +10,10 @@ import { Config } from './types/config/Config.js';
 import { downloadVideos } from './api/Ytdlp.js';
 import { ActionableVideo } from './models/api/ActionableVideo.js';
 import { Video } from './models/api/youtube/Video.js';
+import { cachePath, clearCache } from './helpers/Cache.js';
 
 export class ShowSubmitter {
-  static folder: string = '/tmp/episodes';
+  static folder: string = cachePath('screenshots/');
 
   config: Config;
   submitter: TvdbSubmitter;
@@ -22,44 +23,43 @@ export class ShowSubmitter {
     this.submitter;
   }
 
-  private async initSubmitters(): Promise<void> {
+  private async initSubmitter(): Promise<void> {
+    //  TODO: rework to need to init less
+    // TODO: add alias functions to remove the need to pass this.page everywhere
     this.submitter = new TvdbSubmitter(this.config.tvdb);
     await this.submitter.init();
-    await this.submitter.doLogin();
+    await this.submitter.doLogin().catch(e => this.error(e));
   }
 
   private async addEpisodes(videos: ActionableVideo[]): Promise<void> {
-    await this.initSubmitters();
+    await this.initSubmitter();
     const seriesName = videos[0].youtubeVideo.channel;
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
     for (const video of videos) {
       this.submitter.video = video;
-      await this.submitter.addEpisode().catch(async (e) => {
-        log(e);
-        await this.submitter.finish(true).catch((e2) => {
-          log(e2);
-        });
-        throw e;
-      });
-      await this.submitter.verifyAddedEpisode();
+      await this.submitter.addEpisode().catch(e => this.error(e));
+      await this.submitter.verifyAddedEpisode().catch(e => this.error(e));
     }
     log(`Finished ${seriesName}`);
 
     this.submitter.finish(false);
   }
 
-  private async backfillEpisode(video: ActionableVideo): Promise<void> {
-    await this.initSubmitters();
-    this.submitter.video = video;
-    await this.submitter.backfillEpisode().catch(async (e) => {
-      log(e);
-      await this.submitter.finish(true).catch((e2) => {
-        log(e2);
-      });
-      throw e;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async error(e: any): Promise<void> {
+    await this.submitter.finish(true).catch((e2) => {
+      log(e2);
     });
+    throw e;
+  }
+
+  private async backfillEpisode(video: ActionableVideo): Promise<void> {
+    await this.initSubmitter();
+    this.submitter.video = video;
+    await this.submitter.backfillEpisode().catch(e => this.error(e));
     this.submitter.finish(false);
+    clearCache(video.sonarrEpisode.tvdbCacheKey());
   }
 
   async start(): Promise<void> {
@@ -119,9 +119,11 @@ export class ShowSubmitter {
                 episode.tvdbEpisode.name.includes(video.title())
             );
           if (episode.youtubeVideo) {
-            // await this.backfillEpisode(episode);
-            // TODO: verify this is correct
-            log(`found a backfill match! ${episode.youtubeVideo.title()} -> ${episode.tvdbEpisode.name}`);
+            log(
+              'found a backfill match, Attempting backfill! ' +
+              `youtube: ${episode.youtubeVideo.title()} -> tvdb: ${episode.tvdbEpisode.name}`
+            );
+            await this.backfillEpisode(episode);
           }
         }
       }

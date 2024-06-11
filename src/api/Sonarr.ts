@@ -6,12 +6,12 @@ import { Series } from '../models/api/sonarr/Series.js';
 import { Episode as EpisodeType } from '../types/sonarr/Episode.js';
 import { Series as SeriesType } from '../types/sonarr/Series.js';
 
-export const series = async (): Promise<Series[]> => {
-    const { sonarr: {
-        apiKey,
-        host
-    } } = config();
+const { sonarr: {
+    apiKey,
+    host
+} } = config();
 
+export const series = async (): Promise<Series[]> => {
     log(`Fetching Youtube Channel Ids from ${host} (sonarr)`);
 
     //  TODO: add cache

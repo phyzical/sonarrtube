@@ -30,4 +30,8 @@ export class Episode {
         this.id = payload.id;
         this.series = series;
     }
+
+    tvdbCacheKey(): string {
+        return `/tvdb/${this.series.tvdbId}/${this.tvdbId}.json`;
+    }
 }
