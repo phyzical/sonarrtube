@@ -17,10 +17,13 @@ export const config = (): Config => {
         PREVIEW_ONLY,
         OUTPUT_DIR,
         VERBOSE_LOGS,
-        DOWNLOAD_ONLY
+        DOWNLOAD_ONLY,
+        TITLE_CLEANER_REGEX,
+        SKIP_FROM_SYNC_TVDB_SERIES_IDS
     } = process.env as unknown as Environment;
 
     return {
+        titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || 'SomeRandomRegexTextThatShouldntMatchAnything'),
         cacheDir: CACHE_DIR || './cache',
         outputDir: OUTPUT_DIR || './downloads',
         verbose: VERBOSE_LOGS == 'true',
@@ -30,7 +33,8 @@ export const config = (): Config => {
             username: TVDB_USERNAME,
             password: TVDB_PASSWORD,
             email: TVDB_EMAIL,
-            apiKey: TVDB_API
+            apiKey: TVDB_API,
+            skippedIds: SKIP_FROM_SYNC_TVDB_SERIES_IDS.split(',')
         },
         youtube: {
             cookieFile: YOUTUBE_COOKIE_FILE,
