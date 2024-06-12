@@ -6,7 +6,7 @@
   "preferGlobal": true,
   "type": "module",
   "dependencies": {
-    "puppeteer": "22.10.1",
+    "puppeteer": "22.11.0",
     "dotenv": "16.4.5",
     "node-fetch": "3.3.2"
   },
