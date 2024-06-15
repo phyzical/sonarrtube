@@ -39,4 +39,12 @@ export class Episode {
         this.series = series;
         this.aired = payload.aired;
     }
+
+    airedSeason(): Season {
+        return this.seasons.find(season => season.type.name.toLowerCase() == 'aired order');
+    }
+
+    cacheKey(): string {
+        return `/tvdb/${this.seriesId}/${this.id}.json`;
+    }
 }

@@ -39,7 +39,19 @@ export class ActionableVideo {
     }
 
     missingFromTvdb(): boolean {
-        return !this.tvdbEpisode;
+        if (this.tvdbEpisode) {
+            return false;
+        }
+
+        return true;
+    }
+
+    missingYoutube(): boolean {
+        if (this.youtubeVideo) {
+            return false;
+        }
+
+        return true;
     }
 
     missingProductionCode(): boolean {
@@ -52,15 +64,20 @@ export class ActionableVideo {
             log(
                 [
                     '',
-                    `Warning! Could not find episode on youtube for ${this.tvdbEpisode.name}`,
-                    'this means an invalid production code or the video is no longer in the context',
                     // eslint-disable-next-line max-len
-                    `https://www.thetvdb.com/series/${encodeURIComponent(this.tvdbEpisode.series.slug)}/episodes/${this.tvdbEpisode.id}/0/edit`
+                    `Warning! Could not find episode on youtube for ${this.tvdbEpisode.name} in season ${this.tvdbEpisode.seasonNumber}`,
+                    'this means an invalid production code or the video is no longer in the context',
+                    `${this.tvdbEditUrl()}`
                 ].join('\n') + '\n'
             );
         }
 
         return res;
+    }
+
+    tvdbEditUrl(): string {
+        // eslint-disable-next-line max-len
+        return `https://www.thetvdb.com/series/${encodeURIComponent(this.tvdbEpisode.series.slug)}/episodes/${this.tvdbEpisode.id}/0/edit`;
     }
 
     tvdbContextFromYoutube(): TvdbEpisode {
@@ -77,5 +94,17 @@ export class ActionableVideo {
 
     season(): number {
         return this.tvdbEpisode?.seasonNumber || this.tvdbEpisodeFromContext.seasonNumber;
+    }
+
+    aired(): string {
+        return this.tvdbEpisode?.aired || this.youtubeVideo.airedDate();
+    }
+
+    youtubeURL(): string {
+        const productionCode = this.tvdbEpisode?.productionCode ||
+            this.youtubeVideo?.id ||
+            this.tvdbEpisodeFromContext?.productionCode;
+
+        return `https://youtube.com/watch?v=${productionCode}`;
     }
 }
