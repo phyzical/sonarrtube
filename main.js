@@ -1,5 +1,6 @@
 import { install } from 'source-map-support';
+install();
+
 import { ShowSubmitter } from './build/ShowSubmitter.js';
 
-install();
 new ShowSubmitter().start();
