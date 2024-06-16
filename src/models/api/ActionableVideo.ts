@@ -4,6 +4,7 @@ import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Series as TvdbSeries } from './tvdb/Series.js';
 import { Series as SonarrSeries } from './sonarr/Series.js';
 import { Video } from './youtube/Video.js';
+import { cachePath } from '../../helpers/Cache.js';
 
 type ActionableVideoType = {
     youtubeVideo: Video,
@@ -59,25 +60,23 @@ export class ActionableVideo {
             return false;
         }
 
-        const res = !this.tvdbEpisode.productionCode;
-        if (res) {
-            log(
-                [
-                    '',
-                    // eslint-disable-next-line max-len
-                    `Warning! Could not find episode on youtube for ${this.tvdbEpisode.name} in season ${this.tvdbEpisode.seasonNumber}`,
-                    'this means an invalid production code or the video is no longer in the context',
-                    `${this.tvdbEditUrl()}`
-                ].join('\n') + '\n'
-            );
-        }
-
-        return res;
+        return !this.tvdbEpisode.productionCode;
     }
 
     tvdbEditUrl(): string {
-        // eslint-disable-next-line max-len
-        return `https://www.thetvdb.com/series/${encodeURIComponent(this.tvdbEpisode.series.slug)}/episodes/${this.tvdbEpisode.id}/0/edit`;
+        if (!this.tvdbEpisode) {
+            return '';
+        }
+
+        return this.tvdbEpisode.editURL();
+    }
+
+    tvdbInfoCache(): string {
+        if (!this.tvdbEpisode) {
+            return '';
+        }
+
+        return cachePath(this.tvdbEpisode.cacheKey());
     }
 
     tvdbContextFromYoutube(): TvdbEpisode {
@@ -101,10 +100,27 @@ export class ActionableVideo {
     }
 
     youtubeURL(): string {
-        const productionCode = this.tvdbEpisode?.productionCode ||
-            this.youtubeVideo?.id ||
-            this.tvdbEpisodeFromContext?.productionCode;
+        return this.tvdbEpisode?.youtubeURL() ||
+            this.youtubeVideo?.url() ||
+            this.tvdbEpisodeFromContext?.youtubeURL();
+    }
 
-        return `https://youtube.com/watch?v=${productionCode}`;
+    overviewLog(): void {
+        log(
+            'Overview:' +
+            [
+                '',
+                `Youtube url: ${this.youtubeURL()}`,
+                `Tvdb url: ${this.tvdbEditUrl()}`,
+                `Tvdb cache: ${this.tvdbInfoCache()}`,
+                `Aired date: ${this.aired()}`,
+                `Title: ${this.name()}`,
+                `Season: ${this.season()}`,
+            ].join('\n  ')
+        );
+    }
+
+    name(): string {
+        return this.tvdbEpisode?.name || this.youtubeVideo?.title() || this.tvdbEpisodeFromContext?.name || '';
     }
 }

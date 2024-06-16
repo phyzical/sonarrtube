@@ -36,8 +36,6 @@ const login = async (apiKey: string): Promise<string> => {
 
 
 export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> => {
-
-
     const token = await login(apiKey);
     const serieses = [];
 

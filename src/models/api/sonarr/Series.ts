@@ -13,7 +13,7 @@ export class Series {
     path: string;
     seasonFolder: boolean;
     monitored: boolean;
-    tvdbId: number;
+    tvdbId: string;
     titleSlug: string;
     rootFolderPath: string;
     id: number;

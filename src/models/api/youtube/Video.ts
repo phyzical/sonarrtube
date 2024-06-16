@@ -65,4 +65,8 @@ export class Video {
 
         return parseInt(dateSplits[0]);
     }
+
+    url(): string {
+        return `https://youtube.com/watch?v=${this.id}`;
+    }
 }

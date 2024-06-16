@@ -23,6 +23,7 @@ export class ActionableSeries {
     constructor({ sonarrSeries, tvdbSeries, youtubeContext }: ActionableSeriesType) {
         this.youtubeContext = youtubeContext;
         this.tvdbSeries = tvdbSeries;
+        this.tvdbSeries.episodes = tvdbSeries.filterEpisodes();
         this.sonarrSeries = sonarrSeries;
         this.videos = [];
 
@@ -54,10 +55,10 @@ export class ActionableSeries {
                 new ActionableVideo({ youtubeVideo: null, sonarrEpisode, tvdbEpisode, tvdbSeries, sonarrSeries })
             );
         }
-        this.videos = this.videos
-            .sort((x, y) => parseInt(y.aired().replace(/-/g, '')) - parseInt(x.aired().replace(/-/g, '')));
-    }
 
+        this.videos = this.videos
+            .sort((x, y) => parseInt(x.aired().replace(/-/g, '')) - parseInt(y.aired().replace(/-/g, '')));
+    }
 
     unDownloadedVideosCached: ActionableVideo[] = [];
     unDownloadedVideos(): ActionableVideo[] {
@@ -65,23 +66,27 @@ export class ActionableSeries {
             return this.unDownloadedVideosCached;
         }
 
-        return this.videos.filter(actionableVideo => actionableVideo.unDownloaded());
+        this.unDownloadedVideosCached = this.videos.filter(actionableVideo => actionableVideo.unDownloaded());
+
+        return this.unDownloadedVideosCached;
     }
 
     missingFromTvdbVideosCached: ActionableVideo[] = [];
     missingFromTvdbVideos(): ActionableVideo[] {
         if (this.missingFromTvdbVideosCached.length) {
-            //  TODO: can we rejig to put back on uncached side to avoid infinite loops?
-            return this.missingFromTvdbVideosCached.filter(
-                video => !this.backfillableVideos()
-                    .find(backfillVideo => video.youtubeVideo.id === backfillVideo.youtubeVideo.id)
-            );
+            return this.missingFromTvdbVideosCached;
+            //  TODO: can we rejig to put this logic in ehre?
+            // .filter(
+            //     video => !this.backfillableVideos()
+            //         .find(backfillVideo => video.youtubeVideo.id === backfillVideo.youtubeVideo.id)
+            // );
         }
 
-        return this
+        this.missingFromTvdbVideosCached = this
             .videos
             .filter(actionableVideo => actionableVideo.missingFromTvdb());
 
+        return this.missingFromTvdbVideosCached;
     }
 
     missingFromYoutubeVideosCached: ActionableVideo[] = [];
@@ -90,7 +95,9 @@ export class ActionableSeries {
             return this.missingFromYoutubeVideosCached;
         }
 
-        return this.videos.filter(actionableVideo => actionableVideo.missingYoutube());
+        this.missingFromYoutubeVideosCached = this.videos.filter(actionableVideo => actionableVideo.missingYoutube());
+
+        return this.missingFromYoutubeVideosCached;
     }
 
     missingProductionCodeTvdbVideosCached: ActionableVideo[] = [];
@@ -99,7 +106,10 @@ export class ActionableSeries {
             return this.missingProductionCodeTvdbVideosCached;
         }
 
-        return this.videos.filter(actionableVideo => actionableVideo.missingProductionCode());
+        this.missingProductionCodeTvdbVideosCached = this.videos
+            .filter(actionableVideo => actionableVideo.missingProductionCode());
+
+        return this.missingProductionCodeTvdbVideosCached;
     }
 
     backfillableVideosCached: ActionableVideo[] = [];
@@ -139,32 +149,49 @@ export class ActionableSeries {
             }
         }
 
-        return backfillVideos.filter((video, index, self) =>
+        this.backfillableVideosCached = backfillVideos.filter((video, index, self) =>
             index === self.findIndex((v) => v.youtubeVideo.id === video.youtubeVideo.id)
         );
+
+        return this.backfillableVideosCached;
     }
 
     futureTotal(): number {
-        return this.tvdbSeries.episodes.length +
-            this.missingFromTvdbVideos().length -
-            this.missingFromYoutubeVideos().length;
+        return this.tvdbSeries.episodes.length + this.missingFromTvdbVideos().length;
     }
 
     hasMissing(): boolean {
         const missing = this.futureTotal() != this.youtubeContext.videos.length;
+        const separator = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n';
         if (missing) {
             log(
-                // eslint-disable-next-line max-len
-                `\nWarning: tvdb count (${this.tvdbSeries.episodes.length}) + to be added (${this.missingFromYoutubeVideos().length}) ` +
-                `- missing production code (${this.missingProductionCodeTvdbVideos().length}) ${this.futureTotal()} ` +
-                `!= ${this.youtubeContext.videos.length} current youtube list\n` +
-                'This means there is probably some items that still require action');
-
-            log('Missing videos: \n' +
-                this.missingFromYoutubeVideos()
-                    .map(video => `${video.youtubeURL()} ${video.tvdbEditUrl()}`)
-                    .join('\n')
+                `\n${separator}` +
+                `Warning: tvdb count (${this.tvdbSeries.episodes.length}) + ` +
+                `to be added (${this.missingFromTvdbVideos().length}) ${this.futureTotal()} ` +
+                `!= ${this.youtubeContext.videos.length} current youtube list\n`
             );
+
+            log(`The following are affected (${this.youtubeContext.url});\n(You may need to add these to ignore)\n`);
+            this
+                .tvdbSeries
+                .episodes
+                .map(episode => new ActionableVideo(
+                    {
+                        tvdbEpisode: episode,
+                        youtubeVideo: null,
+                        sonarrEpisode: null,
+                        tvdbSeries: this.tvdbSeries,
+                        sonarrSeries: null
+                    }
+                ))
+                .filter(video => !
+                    this
+                        .youtubeContext
+                        .videos
+                        .find(youtubeVideo => youtubeVideo.id == video.tvdbEpisode.productionCode)
+                )
+                .forEach(video => video.overviewLog());
+            log(`\n${separator}`);
         }
 
         return missing;

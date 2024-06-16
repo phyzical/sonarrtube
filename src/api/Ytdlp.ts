@@ -65,25 +65,13 @@ const processVideoInfos = (cacheKey: string): Video[] => {
     }).filter(Boolean);
 };
 
-export const getChannelVideoInfos = (seriesName: string, channelID: string): Video[] | null => {
-    if (!channelID) {
-        return null;
-    }
-    execSync(
-        getAllVideoInfoCommand(seriesName, 'https://www.youtube.com/channel/${channelID}/videos'),
-        { encoding: 'utf8' }
-    );
-
-    return processVideoInfos(channelID);
-};
-
-export const getVideoInfos = (seriesName: string, playlistURL: string): Video[] | null => {
-    if (!playlistURL) {
+export const getVideoInfos = (seriesName: string, url: string): Video[] | null => {
+    if (!url) {
         return null;
     }
 
     execSync(
-        getAllVideoInfoCommand(seriesName, playlistURL),
+        getAllVideoInfoCommand(seriesName, url),
         { encoding: 'utf8' }
     );
 

@@ -3,7 +3,8 @@ import { Video } from './Video.js';
 export class Channel {
     videos: Video[];
     id: string;
-    tvdbId: number;
+    tvdbId: string;
+    url?: string;
     constructor(payload: ChannelType) {
         this.tvdbId = payload.tvdbId;
     }

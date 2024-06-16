@@ -33,14 +33,14 @@ export class ShowSubmitter {
     const seriesName = videos[0].youtubeVideo.channel;
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
+    const preview = this.config.preview || backfillOnly;
+    if (preview) {
+      log(
+        `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added; `);
+    }
     for (const video of videos) {
       if (this.config.preview || backfillOnly) {
-        log(
-          `\n ${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added ` +
-          `(${video.youtubeURL()}) ` +
-          `(${video.youtubeVideo.airedDate()}) ` +
-          `${video.tvdbEpisodeFromContext.name} to season ${video.season()}`
-        );
+        video.overviewLog();
       } else {
         this.submitter.video = video;
         await this.submitter.addEpisode().catch(e => this.error(e));
@@ -76,17 +76,17 @@ export class ShowSubmitter {
     const tvdbSerieses = await getTvdbSeries(sonarrSerieses);
     const youtubeChannels = await getYoutubeChannels(tvdbSerieses);
 
-    const actionableSeries = [];
+    const actionableSerieses = [];
 
     for (const tvdbSeries of tvdbSerieses) {
       const sonarrSeries = sonarrSerieses
         .find(series => series.tvdbId === tvdbSeries.id);
       const youtubeChannel = youtubeChannels.find(channel => channel.tvdbId == tvdbSeries.id);
 
-      actionableSeries.push(new ActionableSeries({ sonarrSeries, tvdbSeries, youtubeContext: youtubeChannel }));
+      actionableSerieses.push(new ActionableSeries({ sonarrSeries, tvdbSeries, youtubeContext: youtubeChannel }));
     }
 
-    return actionableSeries;
+    return actionableSerieses;
   }
 
   async start(): Promise<void> {
@@ -101,7 +101,16 @@ export class ShowSubmitter {
       }
 
       if (!this.config.downloadOnly) {
-        await this.addEpisodes(actionableSeries.missingFromTvdbVideos(), actionableSeries.hasMissing());
+        await this.addEpisodes(
+          actionableSeries
+            .missingFromTvdbVideos()
+            // TODO: can we move this up into the missing function?
+            .filter(video => !actionableSeries
+              .backfillableVideos()
+              .find(backfillVideo => video.youtubeVideo.id === backfillVideo.youtubeVideo.id)
+            ),
+          actionableSeries.hasMissing()
+        );
       }
     }
 

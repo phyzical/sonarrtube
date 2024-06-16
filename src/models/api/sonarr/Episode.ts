@@ -3,7 +3,7 @@ import { Episode as EpisodeType } from './../../../types/sonarr/Episode.js';
 
 export class Episode {
     seriesId: number;
-    tvdbId: number;
+    tvdbId: string;
     seasonNumber: number;
     episodeNumber: number;
     title: string;
