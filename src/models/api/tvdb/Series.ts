@@ -1,14 +1,15 @@
+import { config } from '../../../helpers/Config.js';
+import { log } from '../../../helpers/Log.js';
 import { RemoteID } from '../../../types/tvdb/RemoteID.js';
 import { Season } from '../../../types/tvdb/Season.js';
 import { SeasonType } from '../../../types/tvdb/SeasonType.js';
 import { Series as SeriesType } from './../../../types/tvdb/Series.js';
 import { Episode } from './Episode.js';
 
-
 export class Series {
     defaultSeasonType: number;
     episodes: Episode[];
-    id: number;
+    id: string;
     image: string;
     name: string;
     overview: string;
@@ -28,5 +29,23 @@ export class Series {
         this.seasonTypes = payload.seasonTypes;
         this.slug = payload.slug;
         this.year = payload.year;
+    }
+
+    filterEpisodes(): Episode[] {
+        return this
+            .episodes
+            .filter(video => !config()
+                .tvdb
+                .skippedEpisodeIds
+                .find(id => {
+                    const found = id && id == video.id;
+                    if (found) {
+                        log('Skipping');
+                        video.overviewLog();
+                    }
+
+                    return found;
+                })
+            );
     }
 }

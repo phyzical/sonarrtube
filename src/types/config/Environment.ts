@@ -4,6 +4,8 @@ export type Environment = {
     TVDB_EMAIL: string
     TVDB_API: string
     YOUTUBE_COOKIE_FILE: string
+    YOUTUBE_ENABLE_SPONSORBLOCK: string,
+    YOUTUBE_DOWNLOAD_DELAY_MONTHS: string,
     SONARR_API: string
     SONARR_HOST: string
     CACHE_DIR: string
@@ -13,4 +15,6 @@ export type Environment = {
     DOWNLOAD_ONLY: string
     TITLE_CLEANER_REGEX: string
     SKIP_FROM_SYNC_TVDB_SERIES_IDS: string
+    SKIP_FROM_SYNC_TVDB_EPISODES_IDS: string
+    FORCE_CLEAR_CACHE: string
 }

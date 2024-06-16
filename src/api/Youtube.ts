@@ -1,7 +1,7 @@
 import { Channel } from './../models/api/youtube/Channel.js';
 import { log } from '../helpers/Log.js';
 import { Series } from '../models/api/tvdb/Series.js';
-import { getChannelVideoInfos, getVideoInfos } from './Ytdlp.js';
+import { getVideoInfos } from './Ytdlp.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
@@ -13,9 +13,10 @@ export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
         const channel = new Channel({ tvdbId: series.id });
 
         //search for a youtube link containing /videos or /playlist first
+        channel.url = series.remoteIds.find(remote => remote.id.match(/youtube.com.*(playlist|videos).*/))?.id;
         channel.videos = getVideoInfos(
             series.name,
-            series.remoteIds.find(remote => remote.id.match(/youtube.com.*(playlist|videos).*/))?.id
+            channel.url
         );
 
         // Then look for channel url
@@ -32,7 +33,8 @@ export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
         }
 
         if (channel.id && !channel.videos) {
-            channel.videos = getChannelVideoInfos(series.name, channel.id);
+            channel.url = `https://www.youtube.com/channel/${channel.id}/videos`;
+            channel.videos = getVideoInfos(series.name, channel.url);
         }
 
         if (!channel.id) {

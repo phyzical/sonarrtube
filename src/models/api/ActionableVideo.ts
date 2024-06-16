@@ -4,6 +4,7 @@ import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Series as TvdbSeries } from './tvdb/Series.js';
 import { Series as SonarrSeries } from './sonarr/Series.js';
 import { Video } from './youtube/Video.js';
+import { cachePath } from '../../helpers/Cache.js';
 
 type ActionableVideoType = {
     youtubeVideo: Video,
@@ -39,7 +40,19 @@ export class ActionableVideo {
     }
 
     missingFromTvdb(): boolean {
-        return !this.tvdbEpisode;
+        if (this.tvdbEpisode) {
+            return false;
+        }
+
+        return true;
+    }
+
+    missingYoutube(): boolean {
+        if (this.youtubeVideo) {
+            return false;
+        }
+
+        return true;
     }
 
     missingProductionCode(): boolean {
@@ -47,20 +60,23 @@ export class ActionableVideo {
             return false;
         }
 
-        const res = !this.tvdbEpisode.productionCode;
-        if (res) {
-            log(
-                [
-                    '',
-                    `Warning! Could not find episode on youtube for ${this.tvdbEpisode.name}`,
-                    'this means an invalid production code or the video is no longer in the context',
-                    // eslint-disable-next-line max-len
-                    `https://www.thetvdb.com/series/${encodeURIComponent(this.tvdbEpisode.series.slug)}/episodes/${this.tvdbEpisode.id}/0/edit`
-                ].join('\n') + '\n'
-            );
+        return !this.tvdbEpisode.productionCode;
+    }
+
+    tvdbEditUrl(): string {
+        if (!this.tvdbEpisode) {
+            return '';
         }
 
-        return res;
+        return this.tvdbEpisode.editURL();
+    }
+
+    tvdbInfoCache(): string {
+        if (!this.tvdbEpisode) {
+            return '';
+        }
+
+        return cachePath(this.tvdbEpisode.cacheKey());
     }
 
     tvdbContextFromYoutube(): TvdbEpisode {
@@ -77,5 +93,34 @@ export class ActionableVideo {
 
     season(): number {
         return this.tvdbEpisode?.seasonNumber || this.tvdbEpisodeFromContext.seasonNumber;
+    }
+
+    aired(): string {
+        return this.tvdbEpisode?.aired || this.youtubeVideo.airedDate();
+    }
+
+    youtubeURL(): string {
+        return this.tvdbEpisode?.youtubeURL() ||
+            this.youtubeVideo?.url() ||
+            this.tvdbEpisodeFromContext?.youtubeURL();
+    }
+
+    overviewLog(): void {
+        log(
+            'Overview:' +
+            [
+                '',
+                `Youtube url: ${this.youtubeURL()}`,
+                `Tvdb url: ${this.tvdbEditUrl()}`,
+                `Tvdb cache: ${this.tvdbInfoCache()}`,
+                `Aired date: ${this.aired()}`,
+                `Title: ${this.name()}`,
+                `Season: ${this.season()}`,
+            ].join('\n  ')
+        );
+    }
+
+    name(): string {
+        return this.tvdbEpisode?.name || this.youtubeVideo?.title() || this.tvdbEpisodeFromContext?.name || '';
     }
 }

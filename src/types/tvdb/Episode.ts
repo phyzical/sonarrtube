@@ -13,7 +13,7 @@ export type Episode = {
     airsBeforeEpisode?: number
     airsBeforeSeason?: number
     finaleType?: string
-    id?: number
+    id?: string
     image: string
     imageType?: number
     isMovie?: number

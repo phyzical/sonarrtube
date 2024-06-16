@@ -1,5 +1,5 @@
-builds:
-	yarn build
+watch:
+	yarn run watch
 install:
 	yarn install
 run:

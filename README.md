@@ -10,6 +10,8 @@ Adapter using sonarr + youtube + tvdb
 
 ## Flow
 
+if you set `DOWNLOAD_ONLY=true` then it will just download and none of the tvdb envs are needed
+
 * Hit sonarr for shows of type youtube
 * Exclude any episodes that are season 0 / special
 * For each of these;
@@ -20,13 +22,9 @@ Adapter using sonarr + youtube + tvdb
     * Find these in tvdb by id match up to sonarr tvdbId
     * Given the youtube production code (If you see invalid production code you will need to action these before a download can happen as the video simply isn't found given the context i.e the playlist doesn't contain the linked video)
     * Download from youtube and put in the provided folder given sonarr series rootFolder + folderPath
-TODO:
   * Find any youtube videos given the context missing from tvdb and add them, for future downloading next run
     * note if any videos in tvdb are missing production codes this is reported and instead the only action that occurs is attempts to backfill. All of these warning must be actioned before adding new is allowed, this is to avoid over saturating a series with invalid series info.
-
-TODO:
-Add logic to exclude shows it from the sync (DownloadOnlySeries csv flag?)
-Add a flag to clear cache?
+    * if you know that these videos are not part of the playlist anymore 100% add them to `SKIP_FROM_SYNC_TVDB_EPISODES_IDS` please verify that you will not duplicate episodes though
 
 NOTE!!!!!!
 
@@ -39,6 +37,55 @@ NOTE!!!!!!
 ## Envs
 
 copy the `.env.dist` to `.env` and fill out
+=""
+="true"
+="0"
+
+| Env                              | Required?              | Default     | Description                                                               |
+| -------------------------------- | ---------------------- | ----------- | ------------------------------------------------------------------------- |
+| TVDB_USERNAME                    | Only if syncing        | ''          | Username used for tvdb                                                    |
+|                                  |                        |             |                                                                           |
+| TVDB_PASSWORD                    | Only if syncing        | ''          | Password used for tvdb                                                    |
+|                                  |                        |             |                                                                           |
+| TVDB_EMAIL                       | Only if syncing        | ''          | Email used for tvdb                                                       |
+|                                  |                        |             |                                                                           |
+| TVDB_API                         | Yes                    | ''          | Api key used for tvdb api                                                 |
+|                                  |                        |             |                                                                           |
+| SONARR_API                       |                        | ''          | api key for your sonarr instance                                          |
+|                                  |                        |             |                                                                           |
+| SONARR_HOST                      |                        | ''          | ip:port of your sonarr instance                                           |
+|                                  |                        |             |                                                                           |
+| YOUTUBE_COOKIE_FILE              | no, but is recommended | ''          | Cookie extraction from youtube to avoid it thinking your a bot            |
+|                                  |                        |             | see [Cookie help](https://github.com/ytdl-org/youtube-dl/issues/30665)    |
+|                                  |                        |             |                                                                           |
+|                                  |                        |             |                                                                           |
+| YOUTUBE_ENABLE_SPONSORBLOCK      | no                     | true        | Enables sponsor block, to remove in video ads                             |
+|                                  |                        |             |                                                                           |
+| YOUTUBE_DOWNLOAD_DELAY_MONTHS    | no                     | 0           | This delays when to download a video to increase the chance               |
+|                                  |                        |             | of sponsorblock having entries added                                      |
+|                                  |                        |             |                                                                           |
+| CACHE_DIR                        | no                     | ./cache     | Directory to store api cache, error logs ect.                             |
+|                                  |                        |             |                                                                           |
+| PREVIEW_ONLY                     | no                     | true        | will not download or perform any write changes to tvdb                    |
+|                                  |                        |             |                                                                           |
+| DOWNLOAD_ONLY                    | no                     | true        | Use tvdb as readonly                                                      |
+|                                  |                        |             |                                                                           |
+| OUTPUT_DIR                       | no                     | ./downloads | Where to save youtube downloads                                           |
+|                                  |                        |             |                                                                           |
+| VERBOSE_LOGS                     | no                     | false       |                                                                           |
+|                                  |                        |             |                                                                           |
+| TITLE_CLEANER_REGEX              | no                     | ''          | Provide a global regex of text to be removed from any youtube video title |
+|                                  |                        |             | For example a video may contain the channel title in its title            |
+|                                  |                        |             | this can be used to remove it before adding to tvdb                       |
+|                                  |                        |             |                                                                           |
+| SKIP_FROM_SYNC_TVDB_SERIES_IDS   | no                     | ''          | These are the tvdb ids that you do not want to manage                     |
+|                                  |                        |             | these series ids will never try to add or edit episodes                   |
+|                                  |                        |             |                                                                           |
+| SKIP_FROM_SYNC_TVDB_EPISODES_IDS | no                     | ''          | These are the tvdb ids that you do not want to manage                     |
+|                                  |                        |             | these episodes ids will be skipped as part of the syncing                 |
+|                                  |                        |             |                                                                           |
+| FORCE_CLEAR_CACHE                | no                     | ./cache     | set to true to reset all cached data                                      |
+|                                  |                        |             |                                                                           |
 
 ## Local
 

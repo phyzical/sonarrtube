@@ -1,10 +1,11 @@
+import { log } from '../../../helpers/Log.js';
 import { Season } from '../../../types/tvdb/Season.js';
 import { Episode as EpisodeType } from './../../../types/tvdb/Episode.js';
 import { Series } from './Series.js';
 
 export class Episode {
     absoluteNumber: number;
-    id: number;
+    id: string;
     image: string;
     imageType: number;
     productionCode: string;
@@ -38,5 +39,35 @@ export class Episode {
         this.year = payload.year;
         this.series = series;
         this.aired = payload.aired;
+    }
+
+    cacheKey(): string {
+        return `/tvdb/${this.seriesId}/${this.id}.json`;
+    }
+
+    editURL(): string {
+        return `https://www.thetvdb.com/series/${encodeURIComponent(this.series.slug)}/episodes/${this.id}/0/edit`;
+    }
+
+    overviewLog(): void {
+        log(
+            'Overview:' +
+            [
+                '',
+                `Youtube url: ${this.youtubeURL()}`,
+                `Tvdb url: ${this.editURL()}`,
+                `Aired date: ${this.aired}`,
+                `Title: ${this.name}`,
+                `Season: ${this.seasonNumber}`,
+            ].join('\n  ')
+        );
+    }
+
+    youtubeURL(): string {
+        if (!this.productionCode) {
+            return '';
+        }
+
+        return `https://youtube.com/watch?v=${this.productionCode}`;
     }
 }

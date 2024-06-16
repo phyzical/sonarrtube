@@ -63,6 +63,10 @@ export class Video {
     season(): number {
         const dateSplits = this.airedDate().split('-');
 
-        return parseInt(dateSplits[dateSplits.length - 1]);
+        return parseInt(dateSplits[0]);
+    }
+
+    url(): string {
+        return `https://youtube.com/watch?v=${this.id}`;
     }
 }

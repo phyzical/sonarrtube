@@ -3,5 +3,6 @@ export type TVDBConfig = {
     password: string
     email: string
     apiKey: string
-    skippedIds: string[]
+    skippedSeriesIds: string[]
+    skippedEpisodeIds: string[]
 }
