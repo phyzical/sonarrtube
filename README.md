@@ -101,3 +101,10 @@ reference the .env.dist for envs to add
 
 `make build-image`
 `make run-image`
+
+## TODO
+
+* tests
+* mask it an cli, npm package
+* support a env file to be loaded for use with the above
+* add logic to run for specific sonarr series ids for the above

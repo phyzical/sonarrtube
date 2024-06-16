@@ -33,7 +33,7 @@ export class ShowSubmitter {
     const seriesName = videos[0].youtubeVideo.channel;
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
-    const preview = this.config.preview || backfillOnly || true;
+    const preview = this.config.preview || backfillOnly;
     if (preview) {
       log(
         `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added; `);
