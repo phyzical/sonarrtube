@@ -1,6 +1,6 @@
 export type Episode = {
     seriesId: number
-    tvdbId: number
+    tvdbId: string
     episodeFileId: number
     seasonNumber: number
     episodeNumber: number

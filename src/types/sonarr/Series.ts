@@ -28,7 +28,7 @@ export type Series = {
     monitorNewItems: string
     useSceneNumbering: boolean
     runtime: number
-    tvdbId: number
+    tvdbId: string
     tvRageId: number
     tvMazeId: number
     firstAired: string

@@ -13,4 +13,5 @@ export type Environment = {
     DOWNLOAD_ONLY: string
     TITLE_CLEANER_REGEX: string
     SKIP_FROM_SYNC_TVDB_SERIES_IDS: string
+    SKIP_FROM_SYNC_TVDB_EPISODES_IDS: string
 }

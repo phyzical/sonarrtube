@@ -36,7 +36,7 @@ export type Series = {
     firstAired: string
     lists: List[]
     genres: Genre[]
-    id: number
+    id: string
     image: string
     isOrderRandomized: true
     lastAired: string
