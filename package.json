@@ -32,5 +32,16 @@
     "ts-node": "10.9.2",
     "@types/jest": "29.5.12",
     "@types/node": "20.14.2"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
   }
 }
