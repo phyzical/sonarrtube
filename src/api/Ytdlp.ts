@@ -6,8 +6,9 @@ import { config } from '../helpers/Config.js';
 import { log } from '../helpers/Log.js';
 import { Video } from '../models/api/youtube/Video.js';
 import { ActionableVideo } from '../models/api/ActionableVideo.js';
+import { getYoutubeDelayString } from '../helpers/Generic.js';
 
-const { youtube: { cookieFile }, outputDir, preview, verbose } = config();
+const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
 
 const cacheKeyBase = (cacheKey: string): string => cachePath(`youtube/${cacheKey}`);
 const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
@@ -18,7 +19,7 @@ const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
         '--write-info-json',
         '--skip-download',
         '--force-write-archive',
-        `--cache-dir ${cachePath(cacheKeyBase('.cache'))}`,
+        `--cache-dir ${cacheKeyBase('.cache')}`,
         `--download-archive "${cacheBase}/videos.txt"`,
         '--match-filter \'duration>120 & availability!=private & availability!=premium_only & ' +
         'availability!=subscriber_only & availability!=needs_auth\'',
@@ -118,10 +119,10 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
             `Downloading https://www.youtube.com/watch?v=${youtubeVideo.id}/ to` +
             ` "${outputPath}/${fileName}.%(ext)s"`
         );
+
         execSync(
             [
                 'yt-dlp',
-                // '-f "bv*[ext=mp4]+ba[ext=m4a]"',
                 '--write-thumbnail',
                 '--add-metadata',
                 '--no-write-playlist-metafiles',
@@ -130,11 +131,9 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
                 '--convert-subs=srt',
                 '--sub-lang "en"',
                 '--ignore-no-formats-error',
-                // '--no-progress',
-                `--cache-dir ${cachePath(cacheKeyBase('.cache'))}`,
-                //  TODO: do we want to support this? gives time for sponsorblock entries
-                // '--datebefore $oneMonthAgo',
-                '--sponsorblock-remove "default"',
+                `--cache-dir ${cacheKeyBase('.cache')}`,
+                `--datebefore ${getYoutubeDelayString()}`,
+                sponsorBlockEnabled ? '--sponsorblock-remove "default"' : '',
                 '--merge-output-format mkv',
                 ` -o "${outputCacheFilePath}.%(ext)s"`,
                 `https://www.youtube.com/watch?v=${youtubeVideo.id}/`

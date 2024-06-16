@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { Config } from '../types/config/Config.js';
 import { Environment } from '../types/config/Environment.js';
+import { rmdirSync } from 'fs';
 
 let cachedConfig: Config = null;
 
@@ -17,6 +18,8 @@ export const config = (): Config => {
         TVDB_EMAIL,
         TVDB_API,
         YOUTUBE_COOKIE_FILE,
+        YOUTUBE_ENABLE_SPONSORBLOCK,
+        YOUTUBE_DOWNLOAD_DELAY_MONTHS,
         SONARR_API,
         SONARR_HOST,
         CACHE_DIR,
@@ -26,12 +29,19 @@ export const config = (): Config => {
         DOWNLOAD_ONLY,
         TITLE_CLEANER_REGEX,
         SKIP_FROM_SYNC_TVDB_SERIES_IDS,
-        SKIP_FROM_SYNC_TVDB_EPISODES_IDS
+        SKIP_FROM_SYNC_TVDB_EPISODES_IDS,
+        FORCE_CLEAR_CACHE
     } = process.env as unknown as Environment;
+
+    const cacheDir = CACHE_DIR || './cache';
+
+    if (FORCE_CLEAR_CACHE == 'true') {
+        rmdirSync(cacheDir, { recursive: true });
+    }
 
     cachedConfig = {
         titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || 'SomeRandomRegexTextThatShouldntMatchAnything'),
-        cacheDir: CACHE_DIR || './cache',
+        cacheDir,
         outputDir: OUTPUT_DIR || './downloads',
         verbose: VERBOSE_LOGS == 'true',
         downloadOnly: DOWNLOAD_ONLY == '' || DOWNLOAD_ONLY == 'true',
@@ -46,6 +56,8 @@ export const config = (): Config => {
         },
         youtube: {
             cookieFile: YOUTUBE_COOKIE_FILE,
+            sponsorBlockEnabled: YOUTUBE_ENABLE_SPONSORBLOCK == '' || YOUTUBE_ENABLE_SPONSORBLOCK == 'true',
+            downloadDelayMonths: (YOUTUBE_DOWNLOAD_DELAY_MONTHS && parseInt(YOUTUBE_DOWNLOAD_DELAY_MONTHS)) || 0,
         },
         sonarr: {
             apiKey: SONARR_API,

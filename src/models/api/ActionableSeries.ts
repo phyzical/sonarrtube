@@ -23,14 +23,17 @@ export class ActionableSeries {
     constructor({ sonarrSeries, tvdbSeries, youtubeContext }: ActionableSeriesType) {
         this.youtubeContext = youtubeContext;
         this.tvdbSeries = tvdbSeries;
-        this.tvdbSeries.episodes = tvdbSeries.filterEpisodes();
         this.sonarrSeries = sonarrSeries;
         this.videos = [];
 
         if (sonarrSeries.episodes.length != tvdbSeries.episodes.length) {
-            log('Warning there is a mismatch between tvdb and sonarr episodes! ' +
-                `${sonarrSeries.episodes.length} vs ${tvdbSeries.episodes.length}`);
+            throw new Error(
+                'Mismatch between tvdb and sonarr episodes!' +
+                `${sonarrSeries.episodes.length} vs ${tvdbSeries.episodes.length}`
+            );
         }
+
+        this.tvdbSeries.episodes = tvdbSeries.filterEpisodes();
 
         // find eps missing from tvdb, and where they line up
         for (const video of youtubeContext.videos) {
@@ -191,6 +194,7 @@ export class ActionableSeries {
                         .find(youtubeVideo => youtubeVideo.id == video.tvdbEpisode.productionCode)
                 )
                 .forEach(video => video.overviewLog());
+
             log(`\n${separator}`);
         }
 
