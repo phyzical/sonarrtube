@@ -35,9 +35,10 @@ export class Video {
 
     description(): string {
         let description = this.theDescription;
-        const crappyDescriptionRegex = new RegExp(/(sponsor)+|(download)+/i);
-
-        if (!description || description.length > 100 || crappyDescriptionRegex.test(description)) {
+        if (description.length > 100) {
+            description = description.slice(0, 100);
+        }
+        if (!description || /(sponsor)+|(download)+/i.test(description)) {
             description = this.title();
         }
 
