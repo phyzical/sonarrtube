@@ -1,19 +1,19 @@
-import { Series } from './../../../types/sonarr/Series.js';
 import { Episode as EpisodeType } from './../../../types/sonarr/Episode.js';
+import { Series } from './Series.js';
 
 export class Episode {
-    seriesId: number;
-    tvdbId: string;
+    seriesId?: number;
+    tvdbId?: string;
     seasonNumber: number;
     episodeNumber: number;
-    title: string;
-    airDate: string;
-    airDateUtc: string;
-    runtime: number;
-    overview: string;
+    title?: string;
+    airDate?: string;
+    airDateUtc?: string;
+    runtime?: number;
+    overview?: string;
     hasFile: boolean;
-    monitored: boolean;
-    id: number;
+    monitored?: boolean;
+    id?: number;
     series: Series;
     constructor(payload: EpisodeType, series: Series) {
         this.seriesId = payload.seriesId;

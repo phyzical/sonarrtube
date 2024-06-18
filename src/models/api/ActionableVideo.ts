@@ -2,9 +2,9 @@ import { log } from '../../helpers/Log.js';
 import { Episode as SonarrEpisode } from './sonarr/Episode.js';
 import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Series as TvdbSeries } from './tvdb/Series.js';
-import { Series as SonarrSeries } from './sonarr/Series.js';
 import { Video } from './youtube/Video.js';
 import { cachePath } from '../../helpers/Cache.js';
+import { Series as SonarrSeries } from './sonarr/Series.js';
 
 type ActionableVideoType = {
     youtubeVideo: Video,
@@ -79,18 +79,6 @@ export class ActionableVideo {
         return cachePath(this.tvdbEpisode.cacheKey());
     }
 
-    tvdbContextFromYoutube(): TvdbEpisode {
-        return new TvdbEpisode({
-            image: this.youtubeVideo.thumbnail,
-            productionCode: this.youtubeVideo.id,
-            name: this.youtubeVideo.title(),
-            overview: this.youtubeVideo.description(),
-            runtime: this.youtubeVideo.duration,
-            seasonNumber: this.youtubeVideo.season(),
-            aired: this.youtubeVideo.airedDate(),
-        }, this.tvdbSeries);
-    }
-
     season(): number {
         return this.tvdbEpisode?.seasonNumber || this.tvdbEpisodeFromContext.seasonNumber;
     }
@@ -122,5 +110,25 @@ export class ActionableVideo {
 
     name(): string {
         return this.tvdbEpisode?.name || this.youtubeVideo?.title() || this.tvdbEpisodeFromContext?.name || '';
+    }
+
+    tvdbContextFromYoutube(): TvdbEpisode {
+        return new TvdbEpisode({
+            image: this.youtubeVideo.thumbnail,
+            productionCode: this.youtubeVideo.id,
+            name: this.youtubeVideo.title(),
+            overview: this.youtubeVideo.description(),
+            runtime: this.youtubeVideo.duration,
+            seasonNumber: this.youtubeVideo.season(),
+            aired: this.youtubeVideo.airedDate(),
+        }, this.tvdbSeries);
+    }
+
+    generateSonarrEpisode(episodeNumber: string): void {
+        this.sonarrEpisode = new SonarrEpisode({
+            seasonNumber: this.season(),
+            episodeNumber: parseInt(episodeNumber),
+            hasFile: false,
+        }, this.sonarrSeries);
     }
 }
