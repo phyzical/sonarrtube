@@ -6,7 +6,7 @@
   "preferGlobal": true,
   "type": "module",
   "dependencies": {
-    "puppeteer": "22.11.0",
+    "puppeteer": "22.11.1",
     "dotenv": "16.4.5",
     "node-fetch": "3.3.2",
     "webp-converter": "2.3.3",
@@ -25,17 +25,17 @@
   },
   "devDependencies": {
     "typescript": "5.4.5",
-    "@typescript-eslint/parser": "7.13.0",
-    "@typescript-eslint/eslint-plugin": "7.13.0",
-    "typescript-eslint": "7.13.0",
+    "@typescript-eslint/parser": "7.13.1",
+    "@typescript-eslint/eslint-plugin": "7.13.1",
+    "typescript-eslint": "7.13.1",
     "eslint": "8.57.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-n": "17.9.0",
     "jest": "29.7.0",
-    "ts-jest": "29.1.4",
+    "ts-jest": "29.1.5",
     "ts-node": "10.9.2",
     "@types/jest": "29.5.12",
-    "@types/node": "20.14.2"
+    "@types/node": "20.14.5"
   },
   "jest": {
     "collectCoverage": true,
