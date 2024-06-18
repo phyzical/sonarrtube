@@ -13,10 +13,12 @@ export const delay = (time: number): Promise<void> => new Promise((resolve) => {
 export const find = async (page: Page, selector: string, options = {}): Promise<ElementHandle<Element>> => {
   log(`Finding ${selector}`, true);
 
-  return await page.waitForSelector(selector, options).catch((e) => {
+  try {
+    return await page.waitForSelector(selector, options);
+  } catch (e) {
     log(`Failed to find ${selector}`);
     throw e;
-  });
+  }
 };
 
 export const click = async (page: Page, selector: string, options = {}): Promise<void> => {
@@ -49,21 +51,40 @@ export const loaded = async (page: Page): Promise<HTTPResponse> => {
 export const getValue = async (page: Page, selector: string): Promise<string> =>
   await page.$eval(selector, (el: HTMLInputElement) => el.value);
 
-export const type = async (page: Page, selector: string, value: string, clearText: boolean): Promise<void> => {
-  if (clearText) {
-    const inputValue = await getValue(page, selector);
-    if (inputValue) {
-      log(`Clearing text in ${selector}`, true);
-      await page.evaluate((selector) => (<HTMLFormElement>document.querySelector(selector)).value = '', selector);
-    }
+export const mouseDrag = async (page: Page, selector: string, toX: number, toY: number): Promise<void> => {
+  log('finding points');
+  const point = await find(page, selector);
+  const pointBox = await point.boundingBox();
+  const xFrom = pointBox.x + pointBox.width / 2;
+  const yFrom = pointBox.y + pointBox.height / 2;
+  log(`dragging mouse from (${xFrom},${yFrom}) to (${toX},${toY})`);
+  await page.mouse.move(xFrom, yFrom);
+  await page.mouse.down();
+  await page.mouse.move(toX, toY);
+  await page.mouse.up();
+};
+
+export const type = async (page: Page, selector: string, value: string, simulate: boolean): Promise<void> => {
+  let inputValue = await getValue(page, selector);
+  if (inputValue) {
+    log(`Clearing text in ${selector}`, true);
+    await page.evaluate((selector) => (<HTMLFormElement>document.querySelector(selector)).value = '', selector);
   }
 
   log(`Typing ${value} into ${selector}`, true);
 
-  await page.type(selector, value);
-  const inputValue = await getValue(page, selector);
+  if (simulate) {
+    await page.type(selector, value);
+  } else {
+    await page.evaluate((selector, value) =>
+      (<HTMLFormElement>document.querySelector(selector)).value = value, selector, value);
+  }
+
+  await delay(1000);
+
+  inputValue = await getValue(page, selector);
   if (inputValue != value) {
-    throw new Error(`selector should have  ${value} but has ${inputValue}`);
+    throw new Error(`selector should have ${value} but has ${inputValue}`);
   }
 };
 

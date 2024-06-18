@@ -33,20 +33,30 @@ export class ShowSubmitter {
     const seriesName = videos[0].youtubeVideo.channel;
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
-    const preview = this.config.preview || backfillOnly || true;
+    const preview = this.config.preview || backfillOnly;
     if (preview) {
       log(
         `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added; `);
     }
+    // let i = 0;
     for (const video of videos) {
       if (this.config.preview || backfillOnly) {
         video.overviewLog();
       } else {
         this.submitter.video = video;
-        await this.submitter.addEpisode().catch(e => this.error(e));
-        await this.submitter.verifyAddedEpisode().catch(e => this.error(e));
+        try {
+          await this.submitter.addEpisode();
+          await video.generateSonarrEpisode(await this.submitter.verifyAddedEpisode());
+        } catch (e) {
+          await this.error(e);
+        }
       }
 
+      // TODO: gotta remove this once ready
+      // if (i == 7) {
+      //   return;
+      // }
+      // i++;
     }
     log(`Finished ${seriesName}`);
   }
@@ -94,8 +104,6 @@ export class ShowSubmitter {
     const actionableSerieses = await this.generateActionableSeries();
 
     for (const actionableSeries of actionableSerieses) {
-      downloadVideos(actionableSeries.unDownloadedVideos());
-
       for (const episode of actionableSeries.backfillableVideos(this.config.downloadOnly)) {
         await this.backfillEpisode(episode);
       }
@@ -112,6 +120,9 @@ export class ShowSubmitter {
           actionableSeries.hasMissing()
         );
       }
+
+      // TODO: add logic to backfill images on tvdb?
+      downloadVideos([actionableSeries.unDownloadedVideos()[actionableSeries.unDownloadedVideos().length - 1]]);
     }
 
     await this.submitter.finish(false);
