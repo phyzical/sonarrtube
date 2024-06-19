@@ -6,7 +6,7 @@
   "preferGlobal": true,
   "type": "module",
   "dependencies": {
-    "puppeteer": "22.11.1",
+    "puppeteer": "22.11.2",
     "dotenv": "16.4.5",
     "node-fetch": "3.3.2",
     "webp-converter": "2.3.3",
