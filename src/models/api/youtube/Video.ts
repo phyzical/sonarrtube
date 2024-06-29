@@ -48,6 +48,10 @@ export class Video {
         return this.fulltitle.replace(titleCleanerRegex, '');
     }
 
+    backupTitle(): string {
+        return this.theTitle.replace(titleCleanerRegex, '');
+    }
+
     runTime(): string {
         const runtime = Math.floor(this.duration / 60);
 
