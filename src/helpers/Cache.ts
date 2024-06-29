@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { config } from './Config.js';
 import path from 'path';
 import { log } from './Log.js';
@@ -34,7 +34,10 @@ export const clearCache = (cacheKey: string): void => {
     if (!cacheKey) {
         return;
     }
-    unlinkSync(cachePath(cacheKey));
+    const path = cachePath(cacheKey);
+    if (existsSync(path)) {
+        unlinkSync(path);
+    }
 
     return;
 };
