@@ -34,7 +34,7 @@ export class Series {
     filterEpisodes(): Episode[] {
         return this
             .episodes
-            .filter(video => !config()
+            .filter(video => (!config()
                 .tvdb
                 .skippedEpisodeIds
                 .find(id => {
@@ -45,7 +45,7 @@ export class Series {
                     }
 
                     return found;
-                })
+                }) && video.productionCode != 'THIS_WAS_REMOVED')
             );
     }
 }
