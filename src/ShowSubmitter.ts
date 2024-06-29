@@ -88,7 +88,25 @@ export class ShowSubmitter {
         .find(series => series.tvdbId === tvdbSeries.id);
       const youtubeChannel = youtubeChannels.find(channel => channel.tvdbId == tvdbSeries.id);
 
-      actionableSerieses.push(new ActionableSeries({ sonarrSeries, tvdbSeries, youtubeContext: youtubeChannel }));
+      if (!youtubeChannel) {
+        continue;
+      }
+
+      const actionableSeries = new ActionableSeries({ sonarrSeries, tvdbSeries, youtubeContext: youtubeChannel });
+
+      const nonYearSeason = sonarrSeries
+        .episodes
+        .map(episode => episode.seasonNumber)
+        .filter(seasonNumber => seasonNumber < 100);
+
+      if (nonYearSeason.length > 0) {
+        log(
+          `Only downloading/backfilling videos for ${tvdbSeries.name} as it has a season number in a non year format`
+        );
+        actionableSeries.backfillDownloadOnly = true;
+      }
+
+      actionableSerieses.push(actionableSeries);
     }
 
     return actionableSerieses;
