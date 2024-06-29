@@ -46,14 +46,9 @@ export class BaseSubmitter {
     await goto(this.page, url);
   }
 
-  async mouseDrag(selector: string, toX: number, toY: number): Promise<void> {
-    await mouseDrag(this.page, selector, toX, toY);
-  }
-
   async submitForm(selector: string): Promise<void> {
     await submitForm(this.page, selector);
   }
-
 
   async init(): Promise<void> {
     this.browser = await puppeteer.launch({
