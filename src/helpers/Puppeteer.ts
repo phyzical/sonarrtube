@@ -13,10 +13,12 @@ export const delay = (time: number): Promise<void> => new Promise((resolve) => {
 export const find = async (page: Page, selector: string, options = {}): Promise<ElementHandle<Element>> => {
   log(`Finding ${selector}`, true);
 
-  return await page.waitForSelector(selector, options).catch((e) => {
-    log(`Failed to find ${selector}`);
+  try {
+    return await page.waitForSelector(selector, options);
+  } catch (e) {
+    log(`Failed to find ${selector}`, true);
     throw e;
-  });
+  }
 };
 
 export const click = async (page: Page, selector: string, options = {}): Promise<void> => {
@@ -30,7 +32,7 @@ export const goto = async (page: Page, url: string): Promise<HTTPResponse> => {
   log(`Opening ${url}`, true);
 
   return await page.goto(url).catch((e) => {
-    log(`Failed to open ${url}`);
+    log(`Failed to open ${url}`, true);
     throw e;
   });
 };
@@ -49,19 +51,19 @@ export const loaded = async (page: Page): Promise<HTTPResponse> => {
 export const getValue = async (page: Page, selector: string): Promise<string> =>
   await page.$eval(selector, (el: HTMLInputElement) => el.value);
 
-export const type = async (page: Page, selector: string, value: string, clearText: boolean): Promise<void> => {
-  if (clearText) {
-    const inputValue = await getValue(page, selector);
-    if (inputValue) {
-      log(`Clearing text in ${selector}`, true);
-      await page.evaluate((selector) => (<HTMLFormElement>document.querySelector(selector)).value = '', selector);
-    }
+
+
+export const type = async (page: Page, selector: string, value: string): Promise<void> => {
+  let inputValue = await getValue(page, selector);
+  if (inputValue) {
+    log(`Clearing text in ${selector}`, true);
+    await page.evaluate((selector) => (<HTMLFormElement>document.querySelector(selector)).value = '', selector);
   }
 
   log(`Typing ${value} into ${selector}`, true);
 
   await page.type(selector, value);
-  const inputValue = await getValue(page, selector);
+  inputValue = await getValue(page, selector);
   if (inputValue != value) {
     throw new Error(`selector should have  ${value} but has ${inputValue}`);
   }
