@@ -46,7 +46,6 @@ export class ShowSubmitter {
         await this.submitter.addEpisode().catch(e => this.error(e));
         await this.submitter.verifyAddedEpisode().catch(e => this.error(e));
       }
-
     }
     log(`Finished ${seriesName}`);
   }
@@ -59,19 +58,25 @@ export class ShowSubmitter {
     throw e;
   }
 
-  private async backfillEpisode(video: ActionableVideo): Promise<void> {
+  private async backfillEpisodeProductionCode(video: ActionableVideo): Promise<void> {
     log(
-      'found a backfill match, Attempting backfill! ' +
+      'found a backfill match, Attempting production code backfill! ' +
       `youtube: ${video.youtubeVideo.title()} -> tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.video = video;
-    await this.submitter.backfillEpisode().catch(e => this.error(e));
-    clearCache(video.tvdbEpisode.cacheKey());
+    await this.submitter.backfillEpisodeProductionCode().catch(e => this.error(e));
+    video.clearCache();
   }
 
+  private async backfillEpisodeImage(video: ActionableVideo): Promise<void> {
+    log(
+      `Attempting backfill of image for tvdb: ${video.tvdbEpisode.name}`
+    );
+    this.submitter.video = video;
+    await this.submitter.backfillEpisodeImage().catch(e => this.error(e));
+  }
 
   private async generateActionableSeries(): Promise<ActionableSeries[]> {
-    // TODO: we gotta remove the [0] once were happy
     const sonarrSerieses = [(await getSonarrSeries())[0]];
     const tvdbSerieses = await getTvdbSeries(sonarrSerieses);
     const youtubeChannels = await getYoutubeChannels(tvdbSerieses);
