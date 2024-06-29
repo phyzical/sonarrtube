@@ -117,24 +117,27 @@ export class ShowSubmitter {
     const actionableSerieses = await this.generateActionableSeries();
 
     for (const actionableSeries of actionableSerieses) {
-      downloadVideos(actionableSeries.unDownloadedVideos());
-
-      for (const episode of actionableSeries.backfillableVideos(this.config.downloadOnly)) {
-        await this.backfillEpisode(episode);
+      for (const episode of actionableSeries.backfillableProductionCodeVideos(this.config.downloadOnly)) {
+        await this.backfillEpisodeProductionCode(episode);
       }
 
-      if (!this.config.downloadOnly) {
+      for (const episode of actionableSeries.backfillableImageVideos(this.config.downloadOnly)) {
+        await this.backfillEpisodeImage(episode);
+      }
+
+      if (!this.config.downloadOnly && !actionableSeries.backfillDownloadOnly) {
         await this.addEpisodes(
           actionableSeries
             .missingFromTvdbVideos()
-            // TODO: can we move this up into the missing function?
             .filter(video => !actionableSeries
-              .backfillableVideos()
+              .backfillableProductionCodeVideos()
               .find(backfillVideo => video.youtubeVideo.id === backfillVideo.youtubeVideo.id)
             ),
           actionableSeries.hasMissing()
         );
       }
+
+      downloadVideos(actionableSeries.unDownloadedVideos());
     }
 
     await this.submitter.finish(false);
