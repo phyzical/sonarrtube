@@ -14,9 +14,6 @@ const { sonarr: {
 export const series = async (): Promise<Series[]> => {
     log(`Fetching Youtube Channel Ids from ${host} (sonarr)`);
 
-    //  TODO: add cache
-    // expire on env default to a day?
-
     const youtubeSeries = (await doRequest(`${host}/api/v3/series`,
         'GET',
         {

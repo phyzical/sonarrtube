@@ -21,7 +21,7 @@ const login = async (apiKey: string): Promise<string> => {
         return token;
     }
 
-    log('Logging into tvdb');
+    log('Logging into tvdb', true);
     const responseData = (
         await doRequest(`${host}/login`, 'POST', {
             'Content-Type': 'application/json',

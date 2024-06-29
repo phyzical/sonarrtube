@@ -22,7 +22,7 @@ const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
         `--cache-dir ${cacheKeyBase('.cache')}`,
         `--download-archive "${cacheBase}/videos.txt"`,
         '--match-filter \'duration>120 & availability!=private & availability!=premium_only & ' +
-        'availability!=subscriber_only & availability!=needs_auth\'',
+        'availability!=subscriber_only\'',
         '--parse-metadata "video::(?P<heatmap>)" --parse-metadata "video::(?P<automatic_captions>)"',
         '--parse-metadata "video::(?P<thumbnails>)"',
         '--parse-metadata "video::(?P<tags>)"',

@@ -7,8 +7,23 @@ import { config } from './helpers/Config.js';
 import { Config } from './types/config/Config.js';
 import { downloadVideos } from './api/Ytdlp.js';
 import { ActionableVideo } from './models/api/ActionableVideo.js';
-import { cachePath, clearCache } from './helpers/Cache.js';
+import { cachePath } from './helpers/Cache.js';
 import { ActionableSeries } from './models/api/ActionableSeries.js';
+
+declare global {
+  interface Window {
+    cropper: {
+      cropper: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getImageData: () => any; // Adjust the return type according to the actual structure
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getCanvasData: () => any; // Adjust the return type according to the actual structure
+        // eslint-disable-next-line no-unused-vars
+        setCropBoxData: (data: { left: number; top: number; width: number; height: number }) => void;
+      };
+    };
+  }
+}
 
 export class ShowSubmitter {
   static folder: string = cachePath('screenshots/');

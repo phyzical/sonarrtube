@@ -21,8 +21,8 @@ export class BaseSubmitter {
     this.email = tvdbConfig.email;
   }
 
-  async type(selector: string, value: string, clearText: boolean = true): Promise<void> {
-    return await type(this.page, selector, value, clearText);
+  async type(selector: string, value: string): Promise<void> {
+    return await type(this.page, selector, value);
   }
 
   async find(selector: string): Promise<ElementHandle<Element>> {
