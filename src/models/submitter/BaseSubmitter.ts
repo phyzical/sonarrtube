@@ -1,4 +1,4 @@
-import { click, find, type, loaded, goto, submitForm, mouseDrag } from '../../helpers/Puppeteer.js';
+import { click, find, type, loaded, goto, submitForm } from '../../helpers/Puppeteer.js';
 import { log } from '../../helpers/Log.js';
 import { ActionableVideo } from '../api/ActionableVideo.js';
 import { Browser, ElementHandle, Page } from 'puppeteer';
@@ -46,14 +46,9 @@ export class BaseSubmitter {
     await goto(this.page, url);
   }
 
-  async mouseDrag(selector: string, toX: number, toY: number): Promise<void> {
-    await mouseDrag(this.page, selector, toX, toY);
-  }
-
   async submitForm(selector: string): Promise<void> {
     await submitForm(this.page, selector);
   }
-
 
   async init(): Promise<void> {
     this.browser = await puppeteer.launch({

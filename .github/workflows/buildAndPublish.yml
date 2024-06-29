@@ -36,12 +36,3 @@ jobs:
         with:
           push: ${{ env.IS_MAIN }}
           tags: phyzical/sonarrtube
-
-      # - name: Test
-      #   run: |
-      #     echo "Testing..."
-      #     docker run phyzical/discord-ai-bot --entrypoint "npm run test"
-
-      # - name: Publish
-      #   run: |
-      #     echo "TODO extract build from image and publish"

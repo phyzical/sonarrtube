@@ -2,6 +2,7 @@ import { Channel } from './../models/api/youtube/Channel.js';
 import { log } from '../helpers/Log.js';
 import { Series } from '../models/api/tvdb/Series.js';
 import { getVideoInfos } from './Ytdlp.js';
+import { Constants } from '../types/config/Constants.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
@@ -33,7 +34,7 @@ export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
         }
 
         if (channel.id && !channel.videos) {
-            channel.url = `https://www.youtube.com/channel/${channel.id}/videos`;
+            channel.url = `${Constants.YOUTUBE.HOST}/channel/${channel.id}/videos`;
             channel.videos = getVideoInfos(series.name, channel.url);
         }
 

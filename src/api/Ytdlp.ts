@@ -7,6 +7,7 @@ import { log } from '../helpers/Log.js';
 import { Video } from '../models/api/youtube/Video.js';
 import { ActionableVideo } from '../models/api/ActionableVideo.js';
 import { getYoutubeDelayString } from '../helpers/Generic.js';
+import { Constants } from '../types/config/Constants.js';
 
 const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
 
@@ -22,7 +23,7 @@ const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
         `--cache-dir ${cacheKeyBase('.cache')}`,
         `--download-archive "${cacheBase}/videos.txt"`,
         '--match-filter \'duration>120 & availability!=private & availability!=premium_only & ' +
-        'availability!=subscriber_only & availability!=needs_auth\'',
+        'availability!=subscriber_only\'',
         '--parse-metadata "video::(?P<heatmap>)" --parse-metadata "video::(?P<automatic_captions>)"',
         '--parse-metadata "video::(?P<thumbnails>)"',
         '--parse-metadata "video::(?P<tags>)"',
@@ -73,7 +74,7 @@ export const getVideoInfos = (seriesName: string, url: string): Video[] | null =
 
     execSync(
         getAllVideoInfoCommand(seriesName, url),
-        { encoding: 'utf8' }
+        { encoding: Constants.FILES.ENCODING }
     );
 
     return processVideoInfos(seriesName);
@@ -89,9 +90,9 @@ export const channelIdByAlias = (alias: string): string => {
             'yt-dlp',
             '-print "%(channel_id)s"',
             '--playlist-end 1',
-            `https://www.youtube.com/${alias}/`
+            `${Constants.YOUTUBE.HOST}/${alias}/`
         ].join(' '),
-        { encoding: 'utf8' }
+        { encoding: Constants.FILES.ENCODING }
     );
 };
 
@@ -102,6 +103,7 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
             seasonNumber,
             series: { title: seriesTitle, path: seriesPath }
         } = sonarrEpisode;
+        const youtubeURL = `${Constants.YOUTUBE.HOST}/watch?v=${youtubeVideo.id}/`;
         const format = 'mkv';
         // eslint-disable-next-line max-len
         const fileName = `${seriesTitle.replace(/ /g, '.')}.s${seasonNumber}e${episodeNumber < 10 ? '0' : ''}${episodeNumber}`;
@@ -114,15 +116,14 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
             continue;
         }
         if (preview) {
-            log(`Preview mode on, would have downloaded https://www.youtube.com/watch?v=${youtubeVideo.id}/ to` +
+            log(`Preview mode on, would have downloaded ${youtubeURL} to` +
                 ` "${outputPath}/${fileName}.%(ext)s"`
             );
 
             continue;
         }
         log(
-            `Downloading https://www.youtube.com/watch?v=${youtubeVideo.id}/ to` +
-            ` "${outputPath}/${fileName}.%(ext)s"`
+            `Downloading ${youtubeURL} to "${outputPath}/${fileName}.%(ext)s"`
         );
 
         execSync(
@@ -140,7 +141,7 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
                 sponsorBlockEnabled ? '--sponsorblock-remove "default"' : '',
                 `--merge-output-format ${format}`,
                 ` -o "${outputCacheFilePath}.%(ext)s"`,
-                `https://www.youtube.com/watch?v=${youtubeVideo.id}/`
+                youtubeURL
             ].join(' '),
             verbose ? { stdio: 'inherit' } : {}
         );

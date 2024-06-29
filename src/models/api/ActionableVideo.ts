@@ -3,7 +3,11 @@ import { Episode as SonarrEpisode } from './sonarr/Episode.js';
 import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Series as TvdbSeries } from './tvdb/Series.js';
 import { Video } from './youtube/Video.js';
-import { cachePath } from '../../helpers/Cache.js';
+import { cachePath, clearCache } from '../../helpers/Cache.js';
+import { Channel } from './youtube/Channel.js';
+import { randomUUID } from 'crypto';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { Constants } from '../../types/config/Constants.js';
 import { Series as SonarrSeries } from './sonarr/Series.js';
 
 type ActionableVideoType = {
@@ -11,24 +15,33 @@ type ActionableVideoType = {
     sonarrEpisode: SonarrEpisode,
     tvdbEpisode: TvdbEpisode,
     tvdbSeries: TvdbSeries,
-    sonarrSeries: SonarrSeries
+    sonarrSeries: SonarrSeries,
+    youtubeContext: Channel;
 }
 
 export class ActionableVideo {
+    id: string;
     youtubeVideo?: Video;
     sonarrEpisode?: SonarrEpisode;
     tvdbEpisode?: TvdbEpisode;
     tvdbEpisodeFromContext: TvdbEpisode;
     tvdbSeries: TvdbSeries;
     sonarrSeries: SonarrSeries;
+    youtubeContext: Channel;
 
-    constructor({ youtubeVideo, sonarrEpisode, tvdbEpisode, tvdbSeries, sonarrSeries }: ActionableVideoType) {
+    constructor(
+        {
+            youtubeVideo, sonarrEpisode, tvdbEpisode,
+            tvdbSeries, sonarrSeries, youtubeContext
+        }: ActionableVideoType) {
         this.youtubeVideo = youtubeVideo;
         this.sonarrEpisode = sonarrEpisode;
         this.tvdbEpisode = tvdbEpisode;
         this.tvdbSeries = tvdbSeries;
         this.sonarrSeries = sonarrSeries;
+        this.youtubeContext = youtubeContext;
         this.tvdbEpisodeFromContext = !this.tvdbEpisode ? this.tvdbContextFromYoutube() : null;
+        this.id = randomUUID();
     }
 
     unDownloaded(): boolean {
@@ -79,6 +92,24 @@ export class ActionableVideo {
         return cachePath(this.tvdbEpisode.cacheKey());
     }
 
+    thumbnailCacheFile(): string {
+        return cachePath(`/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbEpisode.seriesId}/thumbnails.txt`);
+    }
+
+    thumbnailUploadAttemptCount(): number {
+        if (!existsSync(this.thumbnailCacheFile())) {
+            return 0;
+        }
+
+        return readFileSync(this.thumbnailCacheFile()).toString()
+            .split('\n')
+            .filter(x => x == this.tvdbEpisode.id).length;
+    }
+
+    addThumbnailUploadAttempt(): void {
+        writeFileSync(this.thumbnailCacheFile(), `${this.tvdbEpisode.id}\n`, { flag: 'a' });
+    }
+
     season(): number {
         return this.tvdbEpisode?.seasonNumber || this.tvdbEpisodeFromContext.seasonNumber;
     }
@@ -95,17 +126,30 @@ export class ActionableVideo {
 
     overviewLog(): void {
         log(
-            'Overview:' +
+            'Overview:\n  ' +
             [
-                '',
-                `Youtube url: ${this.youtubeURL()}`,
-                `Tvdb url: ${this.tvdbEditUrl()}`,
-                `Tvdb cache: ${this.tvdbInfoCache()}`,
-                `Aired date: ${this.aired()}`,
                 `Title: ${this.name()}`,
+                `Aired date: ${this.aired()}`,
                 `Season: ${this.season()}`,
-            ].join('\n  ')
+                this.youtubeURL() ?
+                    `Youtube url: ${this.youtubeURL()}` :
+                    `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
+                this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
+                this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
+            ].filter(Boolean).join('\n  ')
         );
+    }
+
+    youtubeSearchURL(): string {
+        return `${Constants.YOUTUBE.HOST}/results?search_query=${encodeURI(`${this.seriesName()} ${this.name()}`)}`;
+    }
+
+    youtubeChannelSearchURL(): string {
+        return `${this.youtubeContext.url}?query=${encodeURI(this.name())}`;
+    }
+
+    seriesName(): string {
+        return this.youtubeVideo?.channel || this.tvdbSeries?.name;
     }
 
     name(): string {
@@ -113,6 +157,10 @@ export class ActionableVideo {
     }
 
     tvdbContextFromYoutube(): TvdbEpisode {
+        if (!this.youtubeVideo) {
+            return null;
+        }
+
         return new TvdbEpisode({
             image: this.youtubeVideo.thumbnail,
             productionCode: this.youtubeVideo.id,
@@ -122,6 +170,10 @@ export class ActionableVideo {
             seasonNumber: this.youtubeVideo.season(),
             aired: this.youtubeVideo.airedDate(),
         }, this.tvdbSeries);
+    }
+
+    clearCache(): void {
+        clearCache(this.tvdbEpisode.cacheKey());
     }
 
     generateSonarrEpisode(episodeNumber: string): void {

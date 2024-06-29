@@ -3,6 +3,7 @@ import { log } from '../helpers/Log.js';
 import { doRequest } from '../helpers/Requests.js';
 import { Episode } from '../models/api/sonarr/Episode.js';
 import { Series } from '../models/api/sonarr/Series.js';
+import { Constants } from '../types/config/Constants.js';
 import { Episode as EpisodeType } from '../types/sonarr/Episode.js';
 import { Series as SeriesType } from '../types/sonarr/Series.js';
 
@@ -14,16 +15,9 @@ const { sonarr: {
 export const series = async (): Promise<Series[]> => {
     log(`Fetching Youtube Channel Ids from ${host} (sonarr)`);
 
-    //  TODO: add cache
-    // expire on env default to a day?
-
-    const youtubeSeries = (await doRequest(`${host}/api/v3/series`,
-        'GET',
-        {
-            'accept': 'application/json,text/json',
-            'content-type': 'application/json',
-            'x-api-key': apiKey,
-        }
+    const youtubeSeries = (await doRequest(`${host}${Constants.SONARR.SERIES_ENDPOINT}`,
+        Constants.REQUESTS.GET,
+        { ...Constants.SONARR.HEADERS, 'x-api-key': apiKey }
     ))
         .map((series: SeriesType) => new Series(series))
         .filter(x => x.network == 'YouTube');
@@ -32,13 +26,9 @@ export const series = async (): Promise<Series[]> => {
 
     for (const series of youtubeSeries) {
         log(`Fetching Episodes for ${series.title} from sonarr`, true);
-        series.episodes = (await doRequest(`${host}/api/v3/episode?seriesId=${series.id}`,
-            'GET',
-            {
-                'accept': 'application/json,text/json',
-                'content-type': 'application/json',
-                'x-api-key': apiKey
-            }
+        series.episodes = (await doRequest(`${host}${Constants.SONARR.EPISODE_BY_SERIES_ENDPOINT}/${series.id}`,
+            Constants.REQUESTS.GET,
+            { ...Constants.SONARR.HEADERS, 'x-api-key': apiKey }
         ))
             .map((episode: EpisodeType) => new Episode(episode, series))
             .filter((episode: Episode) => episode.seasonNumber != 0);

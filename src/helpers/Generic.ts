@@ -1,8 +1,4 @@
-import { createWriteStream, unlinkSync } from 'fs';
 import { config } from './Config.js';
-import fetch from 'node-fetch';
-import webp from 'webp-converter';
-import { delay } from './Puppeteer.js';
 
 export const currentFileTimestamp = (): string =>
   new Date().toJSON()
@@ -20,11 +16,4 @@ export const getYoutubeDelayString = (): string => {
     .replace(/-/g, '');
 };
 
-export const processThumbnail = async (thumbnailUrl: string, thumbnailPath: string): Promise<void> => {
-  const res = await fetch(thumbnailUrl);
-  await res.body.pipe(createWriteStream(`${thumbnailPath}.webp`));
-  await delay(3000);
-  await webp.dwebp(`${thumbnailPath}.webp`, `${thumbnailPath}.png`, '-o');
-  unlinkSync(`${thumbnailPath}.webp`);
-};
 

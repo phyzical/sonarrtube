@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { Config } from '../types/config/Config.js';
 import { Environment } from '../types/config/Environment.js';
 import { rmdirSync } from 'fs';
+import { Constants } from '../types/config/Constants.js';
 
 let cachedConfig: Config = null;
 
@@ -33,16 +34,17 @@ export const config = (): Config => {
         FORCE_CLEAR_CACHE
     } = process.env as unknown as Environment;
 
-    const cacheDir = CACHE_DIR || './cache';
+
+    const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
 
     if (FORCE_CLEAR_CACHE == 'true') {
         rmdirSync(cacheDir, { recursive: true });
     }
 
     cachedConfig = {
-        titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || 'SomeRandomRegexTextThatShouldntMatchAnything'),
+        titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),
         cacheDir,
-        outputDir: OUTPUT_DIR || './downloads',
+        outputDir: OUTPUT_DIR || Constants.ENVIRONMENT.OUTPUT_DIR,
         verbose: VERBOSE_LOGS == 'true',
         downloadOnly: DOWNLOAD_ONLY == '' || DOWNLOAD_ONLY == 'true',
         preview: PREVIEW_ONLY == '' || PREVIEW_ONLY == 'true',

@@ -1,4 +1,5 @@
 import { config } from '../../../helpers/Config.js';
+import { Constants } from '../../../types/config/Constants.js';
 import { Video as VideoType } from './../../../types/youtube/Video.js';
 
 const { titleCleanerRegex } = config();
@@ -49,6 +50,10 @@ export class Video {
         return this.fulltitle.replace(titleCleanerRegex, '');
     }
 
+    backupTitle(): string {
+        return this.theTitle.replace(titleCleanerRegex, '');
+    }
+
     runTime(): string {
         const runtime = Math.floor(this.duration / 60);
 
@@ -68,6 +73,6 @@ export class Video {
     }
 
     url(): string {
-        return `https://youtube.com/watch?v=${this.id}`;
+        return `${Constants.YOUTUBE.HOST}/watch?v=${this.id}`;
     }
 }
