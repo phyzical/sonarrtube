@@ -77,7 +77,7 @@ export class ShowSubmitter {
   }
 
   private async generateActionableSeries(): Promise<ActionableSeries[]> {
-    const sonarrSerieses = [(await getSonarrSeries())[0]];
+    const sonarrSerieses = await getSonarrSeries();
     const tvdbSerieses = await getTvdbSeries(sonarrSerieses);
     const youtubeChannels = await getYoutubeChannels(tvdbSerieses);
 
