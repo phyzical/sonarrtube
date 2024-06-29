@@ -2,13 +2,13 @@ import { log } from '../../helpers/Log.js';
 import { Episode as SonarrEpisode } from './sonarr/Episode.js';
 import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Series as TvdbSeries } from './tvdb/Series.js';
-import { Series as SonarrSeries } from './sonarr/Series.js';
 import { Video } from './youtube/Video.js';
 import { cachePath, clearCache } from '../../helpers/Cache.js';
 import { Channel } from './youtube/Channel.js';
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { Constants } from '../../types/config/Constants.js';
+import { Series as SonarrSeries } from './sonarr/Series.js';
 
 type ActionableVideoType = {
     youtubeVideo: Video,
@@ -174,5 +174,13 @@ export class ActionableVideo {
 
     clearCache(): void {
         clearCache(this.tvdbEpisode.cacheKey());
+    }
+
+    generateSonarrEpisode(episodeNumber: string): void {
+        this.sonarrEpisode = new SonarrEpisode({
+            seasonNumber: this.season(),
+            episodeNumber: parseInt(episodeNumber),
+            hasFile: false,
+        }, this.sonarrSeries);
     }
 }

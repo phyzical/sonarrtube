@@ -102,15 +102,8 @@ export class ActionableSeries {
             .sort((x, y) => parseInt(x.aired().replace(/-/g, '')) - parseInt(y.aired().replace(/-/g, '')));
     }
 
-    unDownloadedVideosCached: ActionableVideo[] = [];
     unDownloadedVideos(): ActionableVideo[] {
-        if (this.unDownloadedVideosCached.length) {
-            return this.unDownloadedVideosCached;
-        }
-
-        this.unDownloadedVideosCached = this.videos.filter(actionableVideo => actionableVideo.unDownloaded());
-
-        return this.unDownloadedVideosCached;
+        return this.videos.filter(actionableVideo => actionableVideo.unDownloaded());
     }
 
     // Detected as addable

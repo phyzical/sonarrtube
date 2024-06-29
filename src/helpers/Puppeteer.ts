@@ -53,8 +53,7 @@ export const getValue = async (page: Page, selector: string): Promise<string> =>
   await page.$eval(selector, (el: HTMLInputElement) => el.value);
 
 
-
-export const type = async (page: Page, selector: string, value: string): Promise<void> => {
+export const type = async (page: Page, selector: string, value: string, simulate: boolean = true): Promise<void> => {
   let inputValue = await getValue(page, selector);
   if (inputValue) {
     log(`Clearing text in ${selector}`, true);
@@ -63,10 +62,17 @@ export const type = async (page: Page, selector: string, value: string): Promise
 
   log(`Typing ${value} into ${selector}`, true);
 
-  await page.type(selector, value);
+  if (simulate) {
+    await page.type(selector, value);
+  } else {
+    await page.evaluate((selector, value) =>
+      (<HTMLFormElement>document.querySelector(selector)).value = value, selector, value);
+    await delay(1000);
+  }
+
   inputValue = await getValue(page, selector);
   if (inputValue != value) {
-    throw new Error(`selector should have  ${value} but has ${inputValue}`);
+    throw new Error(`selector should have ${value} but has ${inputValue}`);
   }
 };
 

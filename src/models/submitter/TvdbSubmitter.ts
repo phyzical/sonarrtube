@@ -18,19 +18,19 @@ export class TvdbSubmitter extends BaseSubmitter {
     return `xpath///*[${cleanTextContainsXpath(seriesTitle)}]`;
   }
 
-  async getEpisodeIdentifier(): Promise<string> {
+  async getEpisodeNumber(): Promise<string> {
     const episodeTitle = this.video.youtubeVideo.title();
-    log(`Looking for episode for ${episodeTitle}`, true);
-    const episodeTextElement = await this.find(this.getEpisodeXpath(episodeTitle));
-    let episodeIdentifier = '';
+    let episodeNumber = '';
     try {
-      episodeIdentifier = await this.page.evaluate((element: Element) => element.textContent, episodeTextElement[0]);
-      log(`Found episode for ${episodeTitle}`, true);
+      episodeNumber = (await this.page.$eval(
+        this.getEpisodeXpath(episodeTitle), element => element.textContent)
+      ).split('E')[1];
+      log(`Found episode for ${episodeTitle} (${episodeNumber})`, true);
     } catch (e) {
-      log(`Didnt find episode for ${episodeTitle}`, true);
+      log(`Didn't find episode for ${episodeTitle}`, true);
     }
 
-    return episodeIdentifier;
+    return episodeNumber;
   }
 
   async doLogin(): Promise<void> {
@@ -109,14 +109,11 @@ export class TvdbSubmitter extends BaseSubmitter {
   }
 
   async verifyAddedEpisode(): Promise<string> {
-    let episodeTextIdentifier = '';
-    try {
-      await this.openSeriesSeasonPage();
-      episodeTextIdentifier = await this.getEpisodeIdentifier();
-      // if we cant find it on a source something went wrong
-      if (episodeTextIdentifier.length == 0) { throw new Error(); }
-    } catch (e) {
-      log(`Didnt add episode for ${this.video.youtubeVideo.title} something went horribly wrong!`);
+    await this.openSeriesSeasonPage();
+    const episodeTextIdentifier = await this.getEpisodeNumber();
+    // if we cant find it on a source something went wrong
+    if (episodeTextIdentifier.length == 0) {
+      throw new Error(`Didnt add episode for ${this.video.youtubeVideo.title()} something went horribly wrong!`);
     }
 
     return episodeTextIdentifier;
@@ -131,15 +128,14 @@ export class TvdbSubmitter extends BaseSubmitter {
   private async addInitialEpisode(): Promise<void> {
     const episode = this.video.youtubeVideo;
     log('starting adding', true);
-    const addEpisodeFormSelector = 'xpath///h3[text()=\'Episodes\']/ancestor::form';
-    await this.find(addEpisodeFormSelector);
+    await this.find('xpath///h3[text()=\'Episodes\']/ancestor::form');
     await delay(500);
-    await this.type('[name="name"]', episode.title());
-    await this.type('[name="overview"]', episode.description());
-    await this.type('[name="runtime"]', episode.runTime());
-    await this.type('[name="date"]', episode.airedDate());
+    await this.type('[name="name[]"]', episode.title());
+    await this.type('[name="overview[]"]', episode.description());
+    await this.type('[name="runtime[]"]', episode.runTime());
+    await this.type('[name="date[]"]', episode.airedDate(), false);
     await delay(500);
-    await this.click(addEpisodeFormSelector);
+    await this.click('xpath///button[text()=\'Add Episodes\']');
     log('finished adding', true);
   }
 
@@ -252,7 +248,7 @@ export class TvdbSubmitter extends BaseSubmitter {
       return thumbnailPath;
     } catch (e) {
       log(e);
-      // await this.takeScreenshot();
+      await this.takeScreenshot();
       log('Failed image upload');
 
       return Constants.THUMBNAIL.FAILED_TEXT;
@@ -266,11 +262,12 @@ export class TvdbSubmitter extends BaseSubmitter {
       await this.addSeriesSeason();
       await this.openSeriesSeasonPage();
     }
-    const episodeTextIdentifier = await this.getEpisodeIdentifier();
-    if (episodeTextIdentifier.length == 0) {
+
+    if ((await this.getEpisodeNumber()).length == 0) {
       await delay(500);
       const episode = this.video.youtubeVideo;
-      log(`Starting adding of ${episode.title()}`);
+      log('Starting adding of');
+      this.video.overviewLog();
       await this.openAddEpisodePage();
       await this.addInitialEpisode();
       try {
@@ -286,10 +283,12 @@ export class TvdbSubmitter extends BaseSubmitter {
       await this.updateEpisode();
 
       try {
-        await this.uploadEpisodeThumbnail();
+        //  TODO: support image upload
+        // await this.uploadEpisodeThumbnail();
       } catch (e) {
-        log(`sigh looks like they blocked images for ${this.video.tvdbSeries.name} (${e})`);
+        log(`sigh looks like they blocked images for ${this.video.tvdbSeries.name} for your user (${e})`);
       }
+
       log(`Finished adding of ${episode.title()}`);
     }
   }

@@ -1,11 +1,16 @@
 import { click, find, type, loaded, goto, submitForm } from '../../helpers/Puppeteer.js';
 import { log } from '../../helpers/Log.js';
 import { ActionableVideo } from '../api/ActionableVideo.js';
-import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
+import { Browser, ElementHandle, Page } from 'puppeteer';
 import { TVDBConfig } from '../../types/config/TVDBConfig.js';
 import { ShowSubmitter } from '../../ShowSubmitter.js';
 import { currentFileTimestamp } from '../../helpers/Generic.js';
 import { writeFileSync } from 'fs';
+import puppeteer from 'puppeteer-extra';
+import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+
+puppeteer.use(AdblockerPlugin()).use(StealthPlugin());
 
 export class BaseSubmitter {
   browser: Browser;
@@ -21,8 +26,8 @@ export class BaseSubmitter {
     this.email = tvdbConfig.email;
   }
 
-  async type(selector: string, value: string): Promise<void> {
-    return await type(this.page, selector, value);
+  async type(selector: string, value: string, simulate: boolean = true): Promise<void> {
+    return await type(this.page, selector, value, simulate);
   }
 
   async find(selector: string): Promise<ElementHandle<Element>> {
@@ -39,6 +44,10 @@ export class BaseSubmitter {
 
   async goto(url: string): Promise<void> {
     await goto(this.page, url);
+  }
+
+  async mouseDrag(selector: string, toX: number, toY: number): Promise<void> {
+    await mouseDrag(this.page, selector, toX, toY);
   }
 
   async submitForm(selector: string): Promise<void> {

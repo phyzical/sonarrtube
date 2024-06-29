@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, renameSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync } from 'fs';
 import { execSync } from 'child_process';
 import { cachePath } from '../helpers/Cache.js';
 import path from 'path';
@@ -97,19 +97,24 @@ export const channelIdByAlias = (alias: string): string => {
 };
 
 export const downloadVideos = (videos: ActionableVideo[]): void => {
-
     for (const { sonarrEpisode, youtubeVideo } of videos) {
         const {
-            seasonNumber,
             episodeNumber,
+            seasonNumber,
             series: { title: seriesTitle, path: seriesPath }
         } = sonarrEpisode;
         const youtubeURL = `${Constants.YOUTUBE.HOST}/watch?v=${youtubeVideo.id}/`;
-        const fileName = `${seriesTitle}.s${seasonNumber}e${episodeNumber}`;
+        const format = 'mkv';
+        // eslint-disable-next-line max-len
+        const fileName = `${seriesTitle.replace(/ /g, '.')}.s${seasonNumber}e${episodeNumber < 10 ? '0' : ''}${episodeNumber}`;
         const subPath = `Season ${seasonNumber}`;
         const outputCachePath = `${cacheKeyBase(`${seriesTitle}/tmp`)}/${subPath}`;
         const outputCacheFilePath = `${outputCachePath}/${fileName}`;
         const outputPath = `${outputDir}/${seriesPath}/${subPath}`;
+        const alreadyDownloaded = existsSync(`${outputPath}/${fileName}.${format}`);
+        if (alreadyDownloaded) {
+            continue;
+        }
         if (preview) {
             log(`Preview mode on, would have downloaded ${youtubeURL} to` +
                 ` "${outputPath}/${fileName}.%(ext)s"`
@@ -124,7 +129,6 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
         execSync(
             [
                 'yt-dlp',
-                '--write-thumbnail',
                 '--add-metadata',
                 '--no-write-playlist-metafiles',
                 '--write-auto-sub',
@@ -135,12 +139,15 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
                 `--cache-dir ${cacheKeyBase('.cache')}`,
                 `--datebefore ${getYoutubeDelayString()}`,
                 sponsorBlockEnabled ? '--sponsorblock-remove "default"' : '',
-                '--merge-output-format mkv',
+                `--merge-output-format ${format}`,
                 ` -o "${outputCacheFilePath}.%(ext)s"`,
                 youtubeURL
             ].join(' '),
             verbose ? { stdio: 'inherit' } : {}
         );
+        if (!existsSync(outputPath)) {
+            mkdirSync(outputPath);
+        }
         readdirSync(outputCachePath).forEach(file => {
             const regexFilename = fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             if (new RegExp(`.*${regexFilename}.*`).test(file)) {

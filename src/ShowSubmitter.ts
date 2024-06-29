@@ -49,7 +49,7 @@ export class ShowSubmitter {
     const seriesName = videos[0].youtubeVideo.channel;
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
-    const preview = this.config.preview || backfillOnly || true;
+    const preview = this.config.preview || backfillOnly;
     if (preview) {
       log(
         `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added; `);
@@ -59,8 +59,12 @@ export class ShowSubmitter {
         video.overviewLog();
       } else {
         this.submitter.video = video;
-        await this.submitter.addEpisode().catch(e => this.error(e));
-        await this.submitter.verifyAddedEpisode().catch(e => this.error(e));
+        try {
+          await this.submitter.addEpisode();
+          await video.generateSonarrEpisode(await this.submitter.verifyAddedEpisode());
+        } catch (e) {
+          await this.error(e);
+        }
       }
     }
     log(`Finished ${seriesName}`);
