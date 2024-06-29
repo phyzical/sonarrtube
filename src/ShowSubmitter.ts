@@ -9,6 +9,7 @@ import { downloadVideos } from './api/Ytdlp.js';
 import { ActionableVideo } from './models/api/ActionableVideo.js';
 import { cachePath } from './helpers/Cache.js';
 import { ActionableSeries } from './models/api/ActionableSeries.js';
+import { Constants } from './types/config/Constants.js';
 
 declare global {
   interface Window {
@@ -26,7 +27,7 @@ declare global {
 }
 
 export class ShowSubmitter {
-  static folder: string = cachePath('screenshots/');
+  static folder: string = cachePath(`${Constants.CACHE_FOLDERS.SCREENSHOTS}/`);
 
   config: Config;
   submitter: TvdbSubmitter;

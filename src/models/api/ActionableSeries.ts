@@ -6,6 +6,7 @@ import { Channel as YoutubeContext } from './youtube/Channel.js';
 import { ActionableVideo } from './ActionableVideo.js';
 import { log } from '../../helpers/Log.js';
 import { cleanText } from '../../helpers/Puppeteer.js';
+import { Constants } from '../../types/config/Constants.js';
 
 type ActionableSeriesType = {
     videos?: ActionableVideo[],
@@ -49,7 +50,8 @@ export class ActionableSeries {
 
             if (tvdbEpisodes.length > 1) {
                 log('Warning found multiple matches this shouldn\'t happen! This is probably a duplicate issue\n'
-                    + 'If you are sure its a duplicate please just set the production code to THIS_WAS_REMOVED for one'
+                    + 'If you are sure its a duplicate please just set the production code to ' +
+                    `${Constants.YOUTUBE.VIDEO_REMOVED_FLAG} for one`
                 );
                 tvdbEpisodes.forEach(episode => {
                     const tempVideo = new ActionableVideo(
@@ -239,7 +241,8 @@ export class ActionableSeries {
                 [
                     `The following are affected (${this.youtubeContext.url});`,
                     // eslint-disable-next-line max-len
-                    '(In the case the video was removed set its production code to THIS_WAS_REMOVED and it will be skipped)',
+                    '(In the case the video was removed set its production code to ' +
+                    `${Constants.YOUTUBE.VIDEO_REMOVED_FLAG} and it will be skipped)`,
                     '(You may need to add these to ignore env)',
                 ].join('\n')
             );

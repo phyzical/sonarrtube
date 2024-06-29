@@ -8,6 +8,7 @@ import { cachePath, clearCache } from '../../helpers/Cache.js';
 import { Channel } from './youtube/Channel.js';
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { Constants } from '../../types/config/Constants.js';
 
 type ActionableVideoType = {
     youtubeVideo: Video,
@@ -92,7 +93,7 @@ export class ActionableVideo {
     }
 
     thumbnailCacheFile(): string {
-        return cachePath(`/tvdb/${this.tvdbEpisode.seriesId}/thumbnails.txt`);
+        return cachePath(`/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbEpisode.seriesId}/thumbnails.txt`);
     }
 
     thumbnailUploadAttemptCount(): number {
@@ -140,7 +141,7 @@ export class ActionableVideo {
     }
 
     youtubeSearchURL(): string {
-        return `https://www.youtube.com/results?search_query=${encodeURI(`${this.seriesName()} ${this.name()}`)}`;
+        return `${Constants.YOUTUBE.HOST}/results?search_query=${encodeURI(`${this.seriesName()} ${this.name()}`)}`;
     }
 
     youtubeChannelSearchURL(): string {
@@ -169,14 +170,6 @@ export class ActionableVideo {
             seasonNumber: this.youtubeVideo.season(),
             aired: this.youtubeVideo.airedDate(),
         }, this.tvdbSeries);
-    }
-
-    generateSonarrEpisode(episodeNumber: string): void {
-        this.sonarrEpisode = new SonarrEpisode({
-            seasonNumber: this.season(),
-            episodeNumber: parseInt(episodeNumber),
-            hasFile: false,
-        }, this.sonarrSeries);
     }
 
     clearCache(): void {

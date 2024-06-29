@@ -5,6 +5,7 @@ import { log } from './Log.js';
 import { cachePath } from './Cache.js';
 import { existsSync, unlinkSync, writeFileSync } from 'fs';
 import { delay } from './Puppeteer.js';
+import { Constants } from '../types/config/Constants.js';
 
 const cropImage = async (
     inputPath: string, rect: { x0: number, y0: number, x1: number, y1: number }
@@ -55,14 +56,14 @@ const cropImage = async (
 type Coordinates = { x0: number; y0: number; x1: number; y1: number; }
 
 const findThumbnailText = async (imagePath: string, attempt: number): Promise<Coordinates> => {
-    const worker = await createWorker('eng', 1, {
-        cachePath: cachePath('tesseract')
+    const worker = await createWorker(Constants.THUMBNAIL.TEXT.LANGUAGE, 1, {
+        cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
         // logger: m => console.log(m), // Log progress
     });
 
     try {
         worker.setParameters({
-            tessedit_char_whitelist: ' 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?!\'"`',
+            tessedit_char_whitelist: Constants.THUMBNAIL.TEXT.FINDER_CHAR_LIST,
             tessedit_pageseg_mode: PSM.SPARSE_TEXT,
         });
         const image = await Jimp.read(imagePath);
@@ -76,17 +77,11 @@ const findThumbnailText = async (imagePath: string, attempt: number): Promise<Co
 
         let coordinates = null;
 
-        const thumbnailTextExtractorSettings = {
-            font_size: 45,
-            length: attempt == 3 ? 1 : 4,
-            direction: 'LEFT_TO_RIGHT'
-        };
-
         res.data.words.forEach(element => {
             if (
-                element.direction == thumbnailTextExtractorSettings.direction &&
-                element.text.length >= thumbnailTextExtractorSettings.length &&
-                element.font_size > thumbnailTextExtractorSettings.font_size
+                element.direction == Constants.THUMBNAIL.TEXT.DIRECTION &&
+                element.text.length >= (attempt == 3 ? 1 : Constants.THUMBNAIL.TEXT.LENGTH) &&
+                element.font_size > Constants.THUMBNAIL.TEXT.FONT_SIZE
             ) {
                 if (!coordinates) {
                     coordinates = {
@@ -115,13 +110,13 @@ export const processThumbnail = async (thumbnailUrl: string, id: string, attempt
     log(`downloading ${thumbnailUrl}`, true);
     const urlSplits = thumbnailUrl.split('.');
     const extension = urlSplits[urlSplits.length - 1];
-    let thumbnailPath = cachePath(`thumbnails/${id}_${attempt}.${extension}`);
+    let thumbnailPath = cachePath(`${Constants.CACHE_FOLDERS.THUMBNAIL}/${id}_${attempt}.${extension}`);
     const res = await fetch(thumbnailUrl);
     const buffer = Buffer.from(await res.arrayBuffer());
     writeFileSync(thumbnailPath, buffer);
-    if (extension == 'webp') {
+    if (extension == Constants.EXTENSIONS.WEBP) {
         const webpPath = thumbnailPath;
-        thumbnailPath = thumbnailPath.replace('.webp', '.png');
+        thumbnailPath = thumbnailPath.replace(Constants.EXTENSIONS.WEBP, Constants.EXTENSIONS.PNG);
         await webp.dwebp(webpPath, thumbnailPath, '-o');
         delay(3000);
         unlinkSync(webpPath);
@@ -145,7 +140,10 @@ export const processThumbnail = async (thumbnailUrl: string, id: string, attempt
 
     const image = await Jimp.read(thumbnailPath);
 
-    if (image.bitmap.width < 640 && image.bitmap.height < 360) {
+    if (
+        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH &&
+        image.bitmap.height < Constants.THUMBNAIL.MINIMUM_HEIGHT
+    ) {
         return;
     }
 

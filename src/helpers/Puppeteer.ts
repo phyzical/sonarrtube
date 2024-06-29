@@ -1,5 +1,6 @@
 import { ElementHandle, HTTPResponse, Page } from 'puppeteer';
 import { log } from './Log.js';
+import { Constants } from '../types/config/Constants.js';
 
 // eslint-disable-next-line no-return-assign
 export const setHtmlInput = (el: Element, v: string): string => ((<HTMLInputElement>el).value = v);
@@ -75,12 +76,10 @@ export const submitForm = async (page: Page, selector: string): Promise<void> =>
 };
 
 
-const capitalChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖŠÚÛÜÙÝŸŽ';
-
 export const cleanTextContainsXpath = (text: string): string =>
   // Remove following chars from filename and document contexts ?'/|-*: \ And lowercase all chars to increase matching
   'contains(translate(translate(translate(text(),\'\\`~!@#$%^&*()-_=+[]{}|;:<>",./?, \',\'\'), "\'", \'\'),' +
-  `'${capitalChars}', '${capitalChars.toLowerCase()}') , '${cleanText(text)}')`;
+  `'${Constants.CHAR_CLEANER_LIST}', '${Constants.CHAR_CLEANER_LIST.toLowerCase()}') , '${cleanText(text)}')`;
 
 
 export const cleanText = (text: string): string =>

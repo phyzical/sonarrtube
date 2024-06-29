@@ -1,3 +1,4 @@
+import { Constants } from './../../../types/config/Constants';
 import { config } from '../../../helpers/Config.js';
 import { log } from '../../../helpers/Log.js';
 import { RemoteID } from '../../../types/tvdb/RemoteID.js';
@@ -45,7 +46,7 @@ export class Series {
                     }
 
                     return found;
-                }) && video.productionCode != 'THIS_WAS_REMOVED')
+                }) && video.productionCode != Constants.YOUTUBE.VIDEO_REMOVED_FLAG)
             );
     }
 }

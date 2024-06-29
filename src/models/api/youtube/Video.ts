@@ -1,4 +1,5 @@
 import { config } from '../../../helpers/Config.js';
+import { Constants } from '../../../types/config/Constants.js';
 import { Video as VideoType } from './../../../types/youtube/Video.js';
 
 const { titleCleanerRegex } = config();
@@ -71,6 +72,6 @@ export class Video {
     }
 
     url(): string {
-        return `https://youtube.com/watch?v=${this.id}`;
+        return `${Constants.YOUTUBE.HOST}/watch?v=${this.id}`;
     }
 }

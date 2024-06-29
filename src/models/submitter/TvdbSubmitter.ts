@@ -5,9 +5,9 @@ import { BaseSubmitter } from './BaseSubmitter.js';
 import { ElementHandle } from 'puppeteer';
 import { unlinkSync } from 'node:fs';
 import { processThumbnail } from '../../helpers/Thumbnails.js';
+import { Constants } from '../../types/config/Constants.js';
 
 export class TvdbSubmitter extends BaseSubmitter {
-  #baseURL = 'https://thetvdb.com';
   imageUploadsDisabled = null;
 
   getEpisodeXpath(episodeTitle: string): string {
@@ -35,22 +35,22 @@ export class TvdbSubmitter extends BaseSubmitter {
 
   async doLogin(): Promise<void> {
     log('starting login', true);
-    await this.goto([this.#baseURL, 'auth', 'login'].join('/'));
+    await this.goto([Constants.TVDB.HOST, 'auth', 'login'].join('/'));
     const loginFormSelector = 'form[action="/auth/login"]';
     await this.find(loginFormSelector);
     await this.type('[name="email"]', this.email);
     await this.type('[name="password"]', this.password);
     await this.submitForm(loginFormSelector);
-    await this.goto([this.#baseURL, 'dashboard'].join('/'));
+    await this.goto([Constants.TVDB.HOST, 'dashboard'].join('/'));
     await this.find(`xpath///*[contains(text(),"${this.email}")]`);
-    await this.goto([this.#baseURL].join('/'));
+    await this.goto([Constants.TVDB.HOST].join('/'));
     log('finishing login', true);
   }
 
   async openSeriesSeasonPage(): Promise<void> {
     const season = this.video.season();
     const series = this.video.tvdbSeries.slug;
-    const showSeasonURL = [this.#baseURL, 'series', series, 'seasons', 'official', season].join('/');
+    const showSeasonURL = [Constants.TVDB.HOST, 'series', series, 'seasons', 'official', season].join('/');
     await this.goto(showSeasonURL);
     let seasonSelector = `xpath///*[contains(text(), "Season ${season}")]`;
     if (season == 0) { seasonSelector = 'xpath///*[contains(text(), "Specials")]'; }
@@ -75,7 +75,7 @@ export class TvdbSubmitter extends BaseSubmitter {
 
   async openSeriesPage(): Promise<void> {
     const series = this.video.tvdbSeries.slug;
-    const showSeriesURL = [this.#baseURL, 'series', series].join('/');
+    const showSeriesURL = [Constants.TVDB.HOST, 'series', series].join('/');
     await this.goto(showSeriesURL);
     await this.find(this.getSeriesXpath(series));
     log(`opened ${showSeriesURL}`, true);
@@ -87,7 +87,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     const editEpisodeXpath = 'xpath///*[contains(text(),"Edit Episode")]';
     if (!this.video.missingFromTvdb()) {
       const showSeriesURL = [
-        this.#baseURL, 'series', series, 'episodes', this.video.tvdbEpisode.id,
+        Constants.TVDB.HOST, 'series', series, 'episodes', this.video.tvdbEpisode.id,
       ].concat(edit ? ['0', 'edit'] : []).join('/');
       await this.goto(showSeriesURL);
 
@@ -204,7 +204,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     if (this.imageUploadsDisabled == true) {
       log('Image uploads disabled, skipping');
 
-      return 'FAILED';
+      return Constants.THUMBNAIL.FAILED_TEXT;
     }
 
     const episode = this.video.youtubeVideo;
@@ -220,7 +220,7 @@ export class TvdbSubmitter extends BaseSubmitter {
       if (this.imageUploadsDisabled == true) {
         log('Image uploads disabled, skipping');
 
-        return 'FAILED';
+        return Constants.THUMBNAIL.FAILED_TEXT;
       }
 
       try {
@@ -255,7 +255,7 @@ export class TvdbSubmitter extends BaseSubmitter {
       // await this.takeScreenshot();
       log('Failed image upload');
 
-      return 'FAILED';
+      return Constants.THUMBNAIL.FAILED_TEXT;
     }
   }
 
@@ -304,10 +304,10 @@ export class TvdbSubmitter extends BaseSubmitter {
     // then two contrasts attempting to remove text
     // then once more setting no max length of text to 1
     // finally if all else fails just use raw
-    if (this.video.thumbnailUploadAttemptCount() < 4) {
+    if (this.video.thumbnailUploadAttemptCount() < Constants.THUMBNAIL.MAX_ATTEMPTS) {
       await this.openEpisodePage(false);
       const res = await this.uploadEpisodeThumbnail(backfillAttempts);
-      if (res != 'FAILED') {
+      if (res != Constants.THUMBNAIL.FAILED_TEXT) {
         this.video.addThumbnailUploadAttempt();
         this.video.clearCache();
       }

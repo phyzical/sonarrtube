@@ -7,6 +7,7 @@ import { log } from '../helpers/Log.js';
 import { Video } from '../models/api/youtube/Video.js';
 import { ActionableVideo } from '../models/api/ActionableVideo.js';
 import { getYoutubeDelayString } from '../helpers/Generic.js';
+import { Constants } from '../types/config/Constants.js';
 
 const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
 
@@ -73,7 +74,7 @@ export const getVideoInfos = (seriesName: string, url: string): Video[] | null =
 
     execSync(
         getAllVideoInfoCommand(seriesName, url),
-        { encoding: 'utf8' }
+        { encoding: Constants.FILES.ENCODING }
     );
 
     return processVideoInfos(seriesName);
@@ -89,9 +90,9 @@ export const channelIdByAlias = (alias: string): string => {
             'yt-dlp',
             '-print "%(channel_id)s"',
             '--playlist-end 1',
-            `https://www.youtube.com/${alias}/`
+            `${Constants.YOUTUBE.HOST}/${alias}/`
         ].join(' '),
-        { encoding: 'utf8' }
+        { encoding: Constants.FILES.ENCODING }
     );
 };
 
@@ -103,21 +104,21 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
             episodeNumber,
             series: { title: seriesTitle, path: seriesPath }
         } = sonarrEpisode;
+        const youtubeURL = `${Constants.YOUTUBE.HOST}/watch?v=${youtubeVideo.id}/`;
         const fileName = `${seriesTitle}.s${seasonNumber}e${episodeNumber}`;
         const subPath = `Season ${seasonNumber}`;
         const outputCachePath = `${cacheKeyBase(`${seriesTitle}/tmp`)}/${subPath}`;
         const outputCacheFilePath = `${outputCachePath}/${fileName}`;
         const outputPath = `${outputDir}/${seriesPath}/${subPath}`;
         if (preview) {
-            log(`Preview mode on, would have downloaded https://www.youtube.com/watch?v=${youtubeVideo.id}/ to` +
+            log(`Preview mode on, would have downloaded ${youtubeURL} to` +
                 ` "${outputPath}/${fileName}.%(ext)s"`
             );
 
             continue;
         }
         log(
-            `Downloading https://www.youtube.com/watch?v=${youtubeVideo.id}/ to` +
-            ` "${outputPath}/${fileName}.%(ext)s"`
+            `Downloading ${youtubeURL} to "${outputPath}/${fileName}.%(ext)s"`
         );
 
         execSync(
@@ -136,7 +137,7 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
                 sponsorBlockEnabled ? '--sponsorblock-remove "default"' : '',
                 '--merge-output-format mkv',
                 ` -o "${outputCacheFilePath}.%(ext)s"`,
-                `https://www.youtube.com/watch?v=${youtubeVideo.id}/`
+                youtubeURL
             ].join(' '),
             verbose ? { stdio: 'inherit' } : {}
         );

@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from '
 import { config } from './Config.js';
 import path from 'path';
 import { log } from './Log.js';
+import { Constants } from '../types/config/Constants.js';
 
 const { cacheDir } = config();
 
@@ -11,7 +12,9 @@ export const getCache = (cacheKey: string): string | void => {
     }
     let json;
     try {
-        json = JSON.parse(readFileSync(cachePath(cacheKey), 'utf8'));
+        json = JSON.parse(
+            readFileSync(cachePath(cacheKey), Constants.FILES.ENCODING)
+        );
         // eslint-disable-next-line no-empty
     } catch (e) { }
     if (json) {

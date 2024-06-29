@@ -1,4 +1,5 @@
 import { log } from '../../../helpers/Log.js';
+import { Constants } from '../../../types/config/Constants.js';
 import { Season } from '../../../types/tvdb/Season.js';
 import { Episode as EpisodeType } from './../../../types/tvdb/Episode.js';
 import { Series } from './Series.js';
@@ -42,11 +43,11 @@ export class Episode {
     }
 
     cacheKey(): string {
-        return `/tvdb/${this.seriesId}/${this.id}.json`;
+        return `/${Constants.CACHE_FOLDERS.TVDB}/${this.seriesId}/${this.id}.json`;
     }
 
     editURL(): string {
-        return `https://www.thetvdb.com/series/${encodeURIComponent(this.series.slug)}/episodes/${this.id}/0/edit`;
+        return `${Constants.TVDB.HOST}/series/${encodeURIComponent(this.series.slug)}/episodes/${this.id}/0/edit`;
     }
 
     overviewLog(): void {
@@ -68,7 +69,7 @@ export class Episode {
             return '';
         }
 
-        return `https://youtube.com/watch?v=${this.productionCode}`;
+        return `${Constants.YOUTUBE.HOST}/watch?v=${this.productionCode}`;
     }
 
 }
