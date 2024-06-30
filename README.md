@@ -1,4 +1,4 @@
-# sonarrtube
+# sonarrtube <img src="logo.png" alt="Alt text" title="sonarrtube" width="100" height="100">
 
 Adapter using sonarr + youtube + tvdb
 
