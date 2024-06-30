@@ -18,4 +18,6 @@ export type Environment = {
     SKIP_FROM_SYNC_TVDB_EPISODES_IDS: string
     ONLY_SYNC_TVDB_SERIES_IDS: string
     FORCE_CLEAR_CACHE: string
+    SUCCESS_NOTIFICATION_WEBHOOK: string
+    FAILURE_NOTIFICATION_WEBHOOK: string
 }
