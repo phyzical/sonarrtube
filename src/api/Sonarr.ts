@@ -7,10 +7,16 @@ import { Constants } from '../types/config/Constants.js';
 import { Episode as EpisodeType } from '../types/sonarr/Episode.js';
 import { Series as SeriesType } from '../types/sonarr/Series.js';
 
-const { sonarr: {
-    apiKey,
-    host
-} } = config();
+const {
+    sonarr: {
+        apiKey,
+        host
+    },
+    tvdb: {
+        skipSeriesIds,
+        matchSeriesIds
+    },
+} = config();
 
 export const series = async (): Promise<Series[]> => {
     log(`Fetching Youtube Channel Ids from ${host} (sonarr)`);
@@ -20,7 +26,10 @@ export const series = async (): Promise<Series[]> => {
         { ...Constants.SONARR.HEADERS, 'x-api-key': apiKey }
     ))
         .map((series: SeriesType) => new Series(series))
-        .filter(x => x.network == 'YouTube');
+        .filter((series: Series) => series.network == 'YouTube' &&
+            (skipSeriesIds.length == 0 || !skipSeriesIds.includes(series.tvdbId)) &&
+            (matchSeriesIds.length == 0 || matchSeriesIds.includes(series.tvdbId))
+        );
 
     log(`Found: ${youtubeSeries.map(x => x.title).join(', ')}`);
 

@@ -37,12 +37,11 @@ NOTE!!!!!!
 ## Envs
 
 copy the `.env.dist` to `.env` and fill out
-=""
-="true"
-="0"
 
 | Env                              | Required?              | Default     | Description                                                               |
 | -------------------------------- | ---------------------- | ----------- | ------------------------------------------------------------------------- |
+| ENV_FILE                         | no                     | '.env'      | File path to env file                                                     |
+|                                  |                        |             |                                                                           |
 | TVDB_USERNAME                    | Only if syncing        | ''          | Username used for tvdb                                                    |
 |                                  |                        |             |                                                                           |
 | TVDB_PASSWORD                    | Only if syncing        | ''          | Password used for tvdb                                                    |
@@ -78,6 +77,8 @@ copy the `.env.dist` to `.env` and fill out
 |                                  |                        |             | For example a video may contain the channel title in its title            |
 |                                  |                        |             | this can be used to remove it before adding to tvdb                       |
 |                                  |                        |             |                                                                           |
+| ONLY_SYNC_TVDB_SERIES_IDS        | no                     | ''          | These are the tvdb ids that you do want want to manage                    |
+|                                  |                        |             |                                                                           |
 | SKIP_FROM_SYNC_TVDB_SERIES_IDS   | no                     | ''          | These are the tvdb ids that you do not want to manage                     |
 |                                  |                        |             | these series ids will never try to add or edit episodes                   |
 |                                  |                        |             |                                                                           |
@@ -106,5 +107,3 @@ reference the .env.dist for envs to add
 
 * tests
 * mask it an cli, npm package
-* support a env file to be loaded for use with the above
-* add logic to run for specific sonarr series ids for the above

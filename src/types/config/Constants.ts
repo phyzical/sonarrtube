@@ -7,6 +7,7 @@ export const Constants = {
         ENCODING: 'utf8' as BufferEncoding,
     },
     ENVIRONMENT: {
+        ENV_FILE: '.env',
         CACHE_DIR: './cache',
         TITLE_CLEANER_REGEX: 'SomeRandomRegexTextThatShouldntMatchAnything',
         OUTPUT_DIR: './downloads'
