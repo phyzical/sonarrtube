@@ -11,7 +11,9 @@ export const config = (): Config => {
         return cachedConfig;
     }
 
-    dotenv.config();
+    const envFile = process.env.ENV_FILE || Constants.ENVIRONMENT.ENV_FILE;
+
+    dotenv.config({ path: envFile });
 
     const {
         TVDB_USERNAME,
@@ -31,6 +33,7 @@ export const config = (): Config => {
         TITLE_CLEANER_REGEX,
         SKIP_FROM_SYNC_TVDB_SERIES_IDS,
         SKIP_FROM_SYNC_TVDB_EPISODES_IDS,
+        ONLY_SYNC_TVDB_SERIES_IDS,
         FORCE_CLEAR_CACHE
     } = process.env as unknown as Environment;
 
@@ -53,8 +56,9 @@ export const config = (): Config => {
             password: TVDB_PASSWORD,
             email: TVDB_EMAIL,
             apiKey: TVDB_API,
-            skippedSeriesIds: SKIP_FROM_SYNC_TVDB_SERIES_IDS.split(','),
-            skippedEpisodeIds: SKIP_FROM_SYNC_TVDB_EPISODES_IDS.split(',')
+            skipSeriesIds: SKIP_FROM_SYNC_TVDB_SERIES_IDS.split(','),
+            skippedEpisodeIds: SKIP_FROM_SYNC_TVDB_EPISODES_IDS.split(','),
+            matchSeriesIds: ONLY_SYNC_TVDB_SERIES_IDS.split(',')
         },
         youtube: {
             cookieFile: YOUTUBE_COOKIE_FILE,

@@ -16,5 +16,6 @@ export type Environment = {
     TITLE_CLEANER_REGEX: string
     SKIP_FROM_SYNC_TVDB_SERIES_IDS: string
     SKIP_FROM_SYNC_TVDB_EPISODES_IDS: string
+    ONLY_SYNC_TVDB_SERIES_IDS: string
     FORCE_CLEAR_CACHE: string
 }
