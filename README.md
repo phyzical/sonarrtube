@@ -87,6 +87,8 @@ copy the `.env.dist` to `.env` and fill out
 |                                  |                        |             |                                                                           |
 | FORCE_CLEAR_CACHE                | no                     | ./cache     | set to true to reset all cached data                                      |
 |                                  |                        |             |                                                                           |
+| NOTIFICATION_WEBHOOK             | no                     | ''          | Webhook url to send   warnings, failures and successful downloads to      |
+|                                  |                        |             |                                                                           |
 
 ## Local
 
@@ -107,3 +109,5 @@ reference the .env.dist for envs to add
 
 * tests
 * mask it an cli, npm package
+* notifications
+* ability to run as a cron
