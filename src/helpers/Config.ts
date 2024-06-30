@@ -35,7 +35,8 @@ export const config = (): Config => {
         SKIP_FROM_SYNC_TVDB_EPISODES_IDS,
         ONLY_SYNC_TVDB_SERIES_IDS,
         FORCE_CLEAR_CACHE,
-        NOTIFICATION_WEBHOOK
+        SUCCESS_NOTIFICATION_WEBHOOK,
+        FAILURE_NOTIFICATION_WEBHOOK
     } = process.env as unknown as Environment;
 
 
@@ -47,7 +48,8 @@ export const config = (): Config => {
 
     cachedConfig = {
         titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),
-        notificationWebhook: NOTIFICATION_WEBHOOK,
+        successNotificationWebhook: SUCCESS_NOTIFICATION_WEBHOOK,
+        failureNotificationWebhook: FAILURE_NOTIFICATION_WEBHOOK,
         cacheDir,
         outputDir: OUTPUT_DIR || Constants.ENVIRONMENT.OUTPUT_DIR,
         verbose: VERBOSE_LOGS == 'true',
