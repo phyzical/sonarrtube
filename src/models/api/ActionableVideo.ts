@@ -124,20 +124,17 @@ export class ActionableVideo {
             this.tvdbEpisodeFromContext?.youtubeURL();
     }
 
-    overviewLog(): void {
-        log(
-            'Overview:\n  ' +
-            [
-                `Title: ${this.name()}`,
-                `Aired date: ${this.aired()}`,
-                `Season: ${this.season()}`,
-                this.youtubeURL() ?
-                    `Youtube url: ${this.youtubeURL()}` :
-                    `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
-                this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
-                this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
-            ].filter(Boolean).join('\n  ')
-        );
+    summary(): string {
+        return [
+            `Title: ${this.name()}`,
+            `Aired date: ${this.aired()}`,
+            `Season: ${this.season()}`,
+            this.youtubeURL() ?
+                `Youtube url: ${this.youtubeURL()}` :
+                `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
+            this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
+            this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
+        ].filter(Boolean).join('\n  ');
     }
 
     youtubeSearchURL(): string {

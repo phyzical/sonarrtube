@@ -4,7 +4,6 @@ import { Episode as SonarrEpisode } from './sonarr/Episode.js';
 import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Channel as YoutubeContext } from './youtube/Channel.js';
 import { ActionableVideo } from './ActionableVideo.js';
-import { log } from '../../helpers/Log.js';
 import { cleanText } from '../../helpers/Puppeteer.js';
 import { Constants } from '../../types/config/Constants.js';
 
@@ -21,12 +20,14 @@ export class ActionableSeries {
     tvdbSeries: TvdbSeries;
     youtubeContext: YoutubeContext;
     backfillDownloadOnly: boolean = false;
+    warnings: string[];
 
     constructor({ sonarrSeries, tvdbSeries, youtubeContext }: ActionableSeriesType) {
         this.youtubeContext = youtubeContext;
         this.tvdbSeries = tvdbSeries;
         this.sonarrSeries = sonarrSeries;
         this.videos = [];
+        this.warnings = [];
 
         if (this.sonarrSeries.episodes.length != this.tvdbSeries.episodes.length) {
             throw new Error(
@@ -49,10 +50,12 @@ export class ActionableSeries {
                 .find((episode: SonarrEpisode) => episode.tvdbId == tvdbEpisode?.id);
 
             if (tvdbEpisodes.length > 1) {
-                log('Warning found multiple matches this shouldn\'t happen! This is probably a duplicate issue\n'
+                this.warnings.push(
+                    'Warning found multiple matches this shouldn\'t happen! This is probably a duplicate issue\n'
                     + 'If you are sure its a duplicate please just set the production code to ' +
                     `${Constants.YOUTUBE.VIDEO_REMOVED_FLAG} for one`
                 );
+
                 tvdbEpisodes.forEach(episode => {
                     const tempVideo = new ActionableVideo(
                         {
@@ -61,7 +64,7 @@ export class ActionableSeries {
                             sonarrSeries: this.sonarrSeries, youtubeContext: this.youtubeContext
                         }
                     );
-                    tempVideo.overviewLog();
+                    this.warnings.push(tempVideo.summary());
                     tempVideo.clearCache();
                 });
             }
@@ -220,18 +223,14 @@ export class ActionableSeries {
 
     hasMissing(): boolean {
         const missing = this.futureTotal() != this.youtubeContext.videos.length;
-        const separator = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n';
         if (missing) {
-            log(
-                `\n${separator}` +
-                `Warning: tvdb count (${this.tvdbSeries.episodes.length}) + ` +
-                `to be added (${this.missingFromTvdbVideos().length}) - ` +
-                `unmatched with production code (${this.unmatchedYoutubeVideos().length}) ${this.futureTotal()} ` +
-                `!= ${this.youtubeContext.videos.length} current youtube list\n`
-            );
-
-            log(
+            this.warnings.push(
                 [
+                    `\n${Constants.SEPARATOR}`,
+                    `Warning: tvdb count (${this.tvdbSeries.episodes.length}) + ` +
+                    `to be added (${this.missingFromTvdbVideos().length}) - ` +
+                    `unmatched with production code (${this.unmatchedYoutubeVideos().length}) ${this.futureTotal()} ` +
+                    `!= ${this.youtubeContext.videos.length} current youtube list`,
                     `The following are affected (${this.youtubeContext.url});`,
                     // eslint-disable-next-line max-len
                     '(In the case the video was removed set its production code to ' +
@@ -242,11 +241,9 @@ export class ActionableSeries {
 
             this.missingProductionCodeTvdbVideos()//.concat(this.unmatchedYoutubeVideos())
                 .forEach(video => {
-                    video.overviewLog();
+                    this.warnings.push(video.summary());
                     video.clearCache();
                 });
-
-            log(`\n${separator}`);
         }
 
         return missing;

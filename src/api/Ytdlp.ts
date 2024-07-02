@@ -96,14 +96,15 @@ export const channelIdByAlias = (alias: string): string => {
     );
 };
 
-export const downloadVideos = (videos: ActionableVideo[]): void => {
-    for (const { sonarrEpisode, youtubeVideo } of videos) {
+export const downloadVideos = (videos: ActionableVideo[]): string[] => {
+    const summaries = [];
+    for (const video of videos) {
         const {
             episodeNumber,
             seasonNumber,
             series: { title: seriesTitle, path: seriesPath }
-        } = sonarrEpisode;
-        const youtubeURL = `${Constants.YOUTUBE.HOST}/watch?v=${youtubeVideo.id}/`;
+        } = video.sonarrEpisode;
+        const youtubeURL = `${Constants.YOUTUBE.HOST}/watch?v=${video.youtubeVideo.id}/`;
         const format = 'mkv';
         // eslint-disable-next-line max-len
         const fileName = `${seriesTitle.replace(/ /g, '.')}.s${seasonNumber}e${episodeNumber < 10 ? '0' : ''}${episodeNumber}`;
@@ -115,16 +116,14 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
         if (alreadyDownloaded) {
             continue;
         }
+        let summaryText = `Downloading ${youtubeURL} to "${outputPath}/${fileName}.%(ext)s"`;
         if (preview) {
-            log(`Preview mode on, would have downloaded ${youtubeURL} to` +
-                ` "${outputPath}/${fileName}.%(ext)s"`
-            );
-
+            summaryText = `Preview mode on, would have ${summaryText}`;
+            summaries.push(summaryText);
             continue;
         }
-        log(
-            `Downloading ${youtubeURL} to "${outputPath}/${fileName}.%(ext)s"`
-        );
+
+        log(summaryText);
 
         execSync(
             [
@@ -157,5 +156,8 @@ export const downloadVideos = (videos: ActionableVideo[]): void => {
             }
         });
 
+        summaries.push(`${summaryText}\n${video.summary()}`);
     }
+
+    return summaries;
 };

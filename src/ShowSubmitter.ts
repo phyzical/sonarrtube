@@ -50,14 +50,8 @@ export class ShowSubmitter {
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
     const preview = this.config.preview || backfillOnly;
-    if (preview) {
-      log(
-        `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added; `);
-    }
     for (const video of videos) {
-      if (this.config.preview || backfillOnly) {
-        video.overviewLog();
-      } else {
+      if (!preview) {
         this.submitter.video = video;
         try {
           await this.submitter.addEpisode();
@@ -66,6 +60,13 @@ export class ShowSubmitter {
           await this.error(e);
         }
       }
+      let updateText = '';
+      if (preview) {
+        updateText = `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added:\n`;
+      }
+      this.submitter.updates.push(
+        `${updateText}${video.summary()}`
+      );
     }
     log(`Finished ${seriesName}`);
   }
@@ -84,7 +85,9 @@ export class ShowSubmitter {
       `youtube: ${video.youtubeVideo.title()} -> tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.video = video;
-    await this.submitter.backfillEpisodeProductionCode().catch(e => this.error(e));
+    await this.submitter.backfillEpisodeProductionCode()
+      .then(_ => this.submitter.updates.push(`Backfilled Production Code\n${video.summary()}`))
+      .catch(e => this.error(e));
     video.clearCache();
   }
 
@@ -93,7 +96,10 @@ export class ShowSubmitter {
       `Attempting backfill of image for tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.video = video;
-    await this.submitter.backfillEpisodeImage().catch(e => this.error(e));
+    await this.submitter.backfillEpisodeImage()
+      .then(_ => this.submitter.updates.push(`Backfilled Image\n${video.summary()}`))
+      .catch(e => this.error(e));
+
   }
 
   private async generateActionableSeries(): Promise<ActionableSeries[]> {
@@ -157,7 +163,10 @@ export class ShowSubmitter {
         );
       }
 
-      downloadVideos(actionableSeries.unDownloadedVideos());
+      this.submitter.downloads.concat(
+        downloadVideos(actionableSeries.unDownloadedVideos())
+      );
+      await this.submitter.handleReports(actionableSeries);
     }
 
     await this.submitter.finish(false);
