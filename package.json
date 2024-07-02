@@ -26,10 +26,10 @@
     "start": "node main.js"
   },
   "devDependencies": {
-    "typescript": "5.4.5",
-    "@typescript-eslint/parser": "7.14.1",
-    "@typescript-eslint/eslint-plugin": "7.14.1",
-    "typescript-eslint": "7.14.1",
+    "typescript": "5.5.3",
+    "@typescript-eslint/parser": "7.15.0",
+    "@typescript-eslint/eslint-plugin": "7.15.0",
+    "typescript-eslint": "7.15.0",
     "eslint": "8.57.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-n": "17.9.0",
@@ -37,7 +37,7 @@
     "ts-jest": "29.1.5",
     "ts-node": "10.9.2",
     "@types/jest": "29.5.12",
-    "@types/node": "20.14.5"
+    "@types/node": "20.14.9"
   },
   "jest": {
     "collectCoverage": true,
