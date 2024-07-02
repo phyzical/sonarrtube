@@ -91,6 +91,7 @@ copy the `.env.dist` to `.env` and fill out
 |                                  |                        |                 | designed for discord, may work with others                                |
 |                                  |                        |                 |                                                                           |
 | RE_RUN_INTERVAL                  | no                     | '1440'  (1 day) | Amount of minutes to wait before rerunning                                |
+|                                  |                        |                 | provided in minutes                                                       |
 |                                  |                        |                 |                                                                           |
 
 ## Local
