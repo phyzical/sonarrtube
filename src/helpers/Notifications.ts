@@ -11,8 +11,7 @@ export const notify = async (message: string): Promise<void> => {
         const payload = {
             'content': message,
             'username': 'sonarrTubeBot',
-            // https://github.com/phyzical/sonarrtube/blob/main/logo.png
-            'avatar_url': 'https://github.com/phyzical/sonarrtube/blob/feature/notifications/logo.png',
+            'avatar_url': ' https://github.com/phyzical/sonarrtube/blob/main/logo.png',
             //  TODO: do we want to switch up for fancier notifications?
             // 'embeds': [
             // {
