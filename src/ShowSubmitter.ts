@@ -42,7 +42,7 @@ export class ShowSubmitter {
     }
     this.submitter = new TvdbSubmitter(this.config.tvdb);
     await this.submitter.init();
-    await this.submitter.doLogin().catch(e => this.error(e));
+    await this.submitter.doLogin().catch(e => this.error(e, ''));
   }
 
   private async addEpisodes(videos: ActionableVideo[], backfillOnly: boolean): Promise<void> {
@@ -51,28 +51,28 @@ export class ShowSubmitter {
     log(`Processing ${videos.length} episodes`);
     const preview = this.config.preview || backfillOnly;
     for (const video of videos) {
+      let updateText = '';
+      if (preview) {
+        updateText = `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added:\n`;
+      }
+      updateText = `${updateText}${video.summary()}`;
       if (!preview) {
         this.submitter.video = video;
         try {
           await this.submitter.addEpisode();
           await video.generateSonarrEpisode(await this.submitter.verifyAddedEpisode());
+          this.submitter.updates.push(updateText);
         } catch (e) {
-          await this.error(e);
+          await this.error(e, updateText);
         }
       }
-      let updateText = '';
-      if (preview) {
-        updateText = `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added:\n`;
-      }
-      this.submitter.updates.push(
-        `${updateText}${video.summary()}`
-      );
     }
     log(`Finished ${seriesName}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async error(e: any): Promise<void> {
+  private async error(e: any, summary: string): Promise<void> {
+    this.submitter.errors.push(`Error:\n${e.message}\n${summary}`);
     await this.submitter.finish(true).catch((e2) => {
       log(e2);
     });
@@ -85,9 +85,10 @@ export class ShowSubmitter {
       `youtube: ${video.youtubeVideo.title()} -> tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.video = video;
+    const message = `Backfilled Production Code\n${video.summary()}`;
     await this.submitter.backfillEpisodeProductionCode()
-      .then(_ => this.submitter.updates.push(`Backfilled Production Code\n${video.summary()}`))
-      .catch(e => this.error(e));
+      .then(_ => this.submitter.updates.push(message))
+      .catch(e => this.error(e, message));
     video.clearCache();
   }
 
@@ -96,9 +97,10 @@ export class ShowSubmitter {
       `Attempting backfill of image for tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.video = video;
+    const message = `Backfilled Image\n${video.summary()}`;
     await this.submitter.backfillEpisodeImage()
-      .then(_ => this.submitter.updates.push(`Backfilled Image\n${video.summary()}`))
-      .catch(e => this.error(e));
+      .then(_ => this.submitter.updates.push(message))
+      .catch(e => this.error(e, message));
 
   }
 
