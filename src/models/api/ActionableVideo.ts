@@ -1,4 +1,3 @@
-import { log } from '../../helpers/Log.js';
 import { Episode as SonarrEpisode } from './sonarr/Episode.js';
 import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Series as TvdbSeries } from './tvdb/Series.js';
