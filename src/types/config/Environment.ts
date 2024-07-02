@@ -19,4 +19,5 @@ export type Environment = {
     ONLY_SYNC_TVDB_SERIES_IDS: string
     FORCE_CLEAR_CACHE: string
     NOTIFICATION_WEBHOOK: string
+    RE_RUN_INTERVAL: string
 }

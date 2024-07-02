@@ -1,4 +1,4 @@
-import { Constants } from './../../../types/config/Constants';
+import { Constants } from './../../../types/config/Constants.js';
 import { config } from '../../../helpers/Config.js';
 import { log } from '../../../helpers/Log.js';
 import { RemoteID } from '../../../types/tvdb/RemoteID.js';
