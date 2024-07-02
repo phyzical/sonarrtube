@@ -1,5 +1,6 @@
 export const Constants = {
     SEPARATOR: '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+    RE_RUN_INTERVAL: 1440,
     REQUESTS: {
         GET: 'GET',
         POST: 'POST',

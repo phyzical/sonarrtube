@@ -13,6 +13,7 @@ export type Config = {
     downloadOnly: boolean
     titleCleanerRegex: RegExp
     notificationWebhook: string
+    reRunInterval: number
 }
 
 
