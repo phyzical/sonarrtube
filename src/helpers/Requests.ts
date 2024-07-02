@@ -13,8 +13,10 @@ export const doRequest = async (
             body
         })
             .then(async response => {
-                json = (await response.json());
-                setCache(cacheKey, JSON.stringify(json));
+                if (response.body) {
+                    json = (await response.json());
+                    setCache(cacheKey, JSON.stringify(json));
+                }
             })
             .catch(e => {
                 throw e;
