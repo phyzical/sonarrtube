@@ -12,8 +12,7 @@ export type Config = {
     verbose: boolean
     downloadOnly: boolean
     titleCleanerRegex: RegExp
-    successNotificationWebhook: string
-    failureNotificationWebhook: string
+    notificationWebhook: string
 }
 
 

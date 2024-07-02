@@ -1,4 +1,5 @@
 export const Constants = {
+    SEPARATOR: '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
     REQUESTS: {
         GET: 'GET',
         POST: 'POST',

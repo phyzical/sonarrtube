@@ -87,9 +87,8 @@ copy the `.env.dist` to `.env` and fill out
 |                                  |                        |             |                                                                           |
 | FORCE_CLEAR_CACHE                | no                     | ./cache     | set to true to reset all cached data                                      |
 |                                  |                        |             |                                                                           |
-| SUCCESS_NOTIFICATION_WEBHOOK     | no                     | ''          | Webhook url to send successful downloads to                               |
-|                                  |                        |             |                                                                           |
-| FAILURE_NOTIFICATION_WEBHOOK     | no                     | ''          | Webhook url to send warnings and failures to downloads to                 |
+| NOTIFICATION_WEBHOOK             | no                     | ''          | Webhook url to send successful downloads, warnings, updates and errors to |
+|                                  |                        |             | designed for discord, may work with others                                |
 |                                  |                        |             |                                                                           |
 
 ## Local
