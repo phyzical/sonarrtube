@@ -267,7 +267,6 @@ export class TvdbSubmitter extends BaseSubmitter {
       await delay(500);
       const episode = this.video.youtubeVideo;
       log('Starting adding of');
-      this.video.overviewLog();
       await this.openAddEpisodePage();
       await this.addInitialEpisode();
       try {

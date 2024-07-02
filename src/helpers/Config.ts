@@ -4,7 +4,7 @@ import { Environment } from '../types/config/Environment.js';
 import { rmdirSync } from 'fs';
 import { Constants } from '../types/config/Constants.js';
 
-let cachedConfig: Config = null;
+const cachedConfig: Config = null;
 
 export const config = (): Config => {
     if (cachedConfig) {
@@ -34,7 +34,8 @@ export const config = (): Config => {
         SKIP_FROM_SYNC_TVDB_SERIES_IDS,
         SKIP_FROM_SYNC_TVDB_EPISODES_IDS,
         ONLY_SYNC_TVDB_SERIES_IDS,
-        FORCE_CLEAR_CACHE
+        FORCE_CLEAR_CACHE,
+        NOTIFICATION_WEBHOOK,
     } = process.env as unknown as Environment;
 
 
@@ -44,25 +45,28 @@ export const config = (): Config => {
         rmdirSync(cacheDir, { recursive: true });
     }
 
-    cachedConfig = {
+    return {
         titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),
+        notificationWebhook: NOTIFICATION_WEBHOOK,
         cacheDir,
         outputDir: OUTPUT_DIR || Constants.ENVIRONMENT.OUTPUT_DIR,
         verbose: VERBOSE_LOGS == 'true',
-        downloadOnly: DOWNLOAD_ONLY == '' || DOWNLOAD_ONLY == 'true',
-        preview: PREVIEW_ONLY == '' || PREVIEW_ONLY == 'true',
+        downloadOnly: DOWNLOAD_ONLY == undefined || DOWNLOAD_ONLY == '' || DOWNLOAD_ONLY == 'true',
+        preview: PREVIEW_ONLY == undefined || PREVIEW_ONLY == '' || PREVIEW_ONLY == 'true',
         tvdb: {
             username: TVDB_USERNAME,
             password: TVDB_PASSWORD,
             email: TVDB_EMAIL,
             apiKey: TVDB_API,
-            skipSeriesIds: SKIP_FROM_SYNC_TVDB_SERIES_IDS.split(','),
-            skippedEpisodeIds: SKIP_FROM_SYNC_TVDB_EPISODES_IDS.split(','),
-            matchSeriesIds: ONLY_SYNC_TVDB_SERIES_IDS.split(',')
+            skipSeriesIds: (SKIP_FROM_SYNC_TVDB_SERIES_IDS || '').split(','),
+            skippedEpisodeIds: (SKIP_FROM_SYNC_TVDB_EPISODES_IDS || '').split(','),
+            matchSeriesIds: (ONLY_SYNC_TVDB_SERIES_IDS || '').split(',')
         },
         youtube: {
             cookieFile: YOUTUBE_COOKIE_FILE,
-            sponsorBlockEnabled: YOUTUBE_ENABLE_SPONSORBLOCK == '' || YOUTUBE_ENABLE_SPONSORBLOCK == 'true',
+            sponsorBlockEnabled: YOUTUBE_ENABLE_SPONSORBLOCK == undefined ||
+                YOUTUBE_ENABLE_SPONSORBLOCK == '' ||
+                YOUTUBE_ENABLE_SPONSORBLOCK == 'true',
             downloadDelayMonths: (YOUTUBE_DOWNLOAD_DELAY_MONTHS && parseInt(YOUTUBE_DOWNLOAD_DELAY_MONTHS)) || 0,
         },
         sonarr: {
@@ -70,6 +74,4 @@ export const config = (): Config => {
             host: SONARR_HOST
         }
     };
-
-    return cachedConfig;
 };

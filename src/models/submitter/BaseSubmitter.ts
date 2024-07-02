@@ -9,6 +9,9 @@ import { writeFileSync } from 'fs';
 import puppeteer from 'puppeteer-extra';
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { Constants } from '../../types/config/Constants.js';
+import { notify } from '../../helpers/Notifications.js';
+import { ActionableSeries } from '../api/ActionableSeries.js';
 
 puppeteer.use(AdblockerPlugin()).use(StealthPlugin());
 
@@ -19,6 +22,10 @@ export class BaseSubmitter {
   email: string;
   password: string;
   video: ActionableVideo;
+  updates: string[];
+  downloads: string[];
+  warnings: string[];
+  errors: string[];
 
   constructor(tvdbConfig: TVDBConfig) {
     this.username = tvdbConfig.username;
@@ -68,12 +75,46 @@ export class BaseSubmitter {
   }
 
 
-  async finish(saveScreenshot: boolean = false): Promise<void> {
-    if (saveScreenshot) {
+  async finish(isError: boolean = false): Promise<void> {
+    if (isError) {
       await this.takeScreenshot();
       await this.saveHtml();
+    } else {
+      await this.browser.close();
     }
-    await this.browser.close();
+  }
+
+  async handleReports(actionableSeries: ActionableSeries): Promise<void> {
+    await notify(`Summary for ${this.video.seriesName};`);
+
+    if (this.downloads.length > 0) {
+      log(Constants.SEPARATOR);
+      //  TODO: maybe we just make these the fancy ones?
+      await notify(`Downloads:\n${this.downloads.join('\n')}`);
+    }
+
+    if (this.updates.length > 0) {
+      log(Constants.SEPARATOR);
+      await notify(`Updates:\n${this.updates.join('\n')}`);
+    }
+
+    const warnings = actionableSeries.warnings.concat(this.warnings);
+    if (warnings.length > 0) {
+      log(Constants.SEPARATOR);
+      await notify(`Warnings:\n${warnings.join('\n')}`);
+    }
+
+    if (this.errors.length > 0) {
+      log(Constants.SEPARATOR);
+      await notify(`Errors:\n${this.errors.join('\n')}`);
+    }
+
+    log(Constants.SEPARATOR);
+
+    this.updates = [];
+    this.downloads = [];
+    this.warnings = [];
+    this.errors = [];
   }
 
   async saveHtml(): Promise<void> {

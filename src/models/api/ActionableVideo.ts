@@ -1,4 +1,3 @@
-import { log } from '../../helpers/Log.js';
 import { Episode as SonarrEpisode } from './sonarr/Episode.js';
 import { Episode as TvdbEpisode } from './tvdb/Episode.js';
 import { Series as TvdbSeries } from './tvdb/Series.js';
@@ -124,20 +123,17 @@ export class ActionableVideo {
             this.tvdbEpisodeFromContext?.youtubeURL();
     }
 
-    overviewLog(): void {
-        log(
-            'Overview:\n  ' +
-            [
-                `Title: ${this.name()}`,
-                `Aired date: ${this.aired()}`,
-                `Season: ${this.season()}`,
-                this.youtubeURL() ?
-                    `Youtube url: ${this.youtubeURL()}` :
-                    `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
-                this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
-                this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
-            ].filter(Boolean).join('\n  ')
-        );
+    summary(): string {
+        return [
+            `Title: ${this.name()}`,
+            `Aired date: ${this.aired()}`,
+            `Season: ${this.season()}`,
+            this.youtubeURL() ?
+                `Youtube url: ${this.youtubeURL()}` :
+                `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
+            this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
+            this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
+        ].filter(Boolean).join('\n  ');
     }
 
     youtubeSearchURL(): string {

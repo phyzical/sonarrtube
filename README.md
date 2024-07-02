@@ -1,4 +1,4 @@
-# sonarrtube
+# sonarrtube <img src="logo.png" alt="Alt text" title="sonarrtube" width="100" height="100">
 
 Adapter using sonarr + youtube + tvdb
 
@@ -87,6 +87,9 @@ copy the `.env.dist` to `.env` and fill out
 |                                  |                        |             |                                                                           |
 | FORCE_CLEAR_CACHE                | no                     | ./cache     | set to true to reset all cached data                                      |
 |                                  |                        |             |                                                                           |
+| NOTIFICATION_WEBHOOK             | no                     | ''          | Webhook url to send successful downloads, warnings, updates and errors to |
+|                                  |                        |             | designed for discord, may work with others                                |
+|                                  |                        |             |                                                                           |
 
 ## Local
 
@@ -107,3 +110,5 @@ reference the .env.dist for envs to add
 
 * tests
 * mask it an cli, npm package
+* notifications
+* ability to run as a cron
