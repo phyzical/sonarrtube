@@ -56,16 +56,18 @@ export const cachePath = (cacheKey: string): string => {
 };
 
 export const resetCache = (): void => {
-    const items = readdirSync(cacheDir);
-    for (const item of items) {
-        const fullPath = join(cacheDir, item);
-        const itemStats = statSync(fullPath);
-        if (itemStats.isDirectory()) {
-            // Recursively remove directories
-            rmSync(fullPath, { recursive: true, force: true });
-        } else {
-            // Remove files
-            rmSync(fullPath, { force: true });
+    if (existsSync(cacheDir)) {
+        const items = readdirSync(cacheDir);
+        for (const item of items) {
+            const fullPath = join(cacheDir, item);
+            const itemStats = statSync(fullPath);
+            if (itemStats.isDirectory()) {
+                // Recursively remove directories
+                rmSync(fullPath, { recursive: true, force: true });
+            } else {
+                // Remove files
+                rmSync(fullPath, { force: true });
+            }
         }
     }
 };
