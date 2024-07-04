@@ -13,13 +13,17 @@ lint:
 build-image:
 	docker build . --target ${BUILD_TARGET} -t ${TAG}
 run-image:
-	docker run -it --env-file=.env -v cache:/app/cache \
+	docker run -it --env-file=.env \
 		--rm \
 		--name ${NAME} \
-		-v downloads:/app/downloads \
-		-v cookies.txt:/app/cookies.txt \
+		-v ${PWD}/cache:/app/cache\
+		-v ${PWD}/downloads:/app/downloads \
+		-v ${PWD}/cookies.txt:/app/cookies.txt \
 		${TAG}
 run-image-bash: 
 	docker run -it --rm --name ${NAME}-bash \
+		-v ${PWD}/cache:/app/cache:rw \
+		-v ${PWD}/downloads:/app/downloads:rw \
+		-v ${PWD}/cookies.txt:/app/cookies.txt:ro \
 		--entrypoint=/bin/bash \
 		${TAG}
