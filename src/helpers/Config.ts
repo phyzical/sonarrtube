@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import { Config } from '../types/config/Config.js';
 import { Environment } from '../types/config/Environment.js';
-import { existsSync, readdirSync, rmSync, statSync } from 'fs';
+import { existsSync } from 'fs';
 import { Constants } from '../types/config/Constants.js';
-import { join } from 'path';
+import { resetCache } from './Cache.js';
 
 let cachedConfig: Config = null;
 
@@ -43,18 +43,7 @@ export const config = (): Config => {
     const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
 
     if (FORCE_CLEAR_CACHE == 'true' && existsSync(cacheDir)) {
-        const items = readdirSync(cacheDir);
-        for (const item of items) {
-            const fullPath = join(cacheDir, item);
-            const itemStats = statSync(fullPath);
-            if (itemStats.isDirectory()) {
-                // Recursively remove directories
-                rmSync(fullPath, { recursive: true, force: true });
-            } else {
-                // Remove files
-                rmSync(fullPath, { force: true });
-            }
-        }
+        resetCache();
     }
 
     return cachedConfig = {

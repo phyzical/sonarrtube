@@ -1,6 +1,6 @@
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, unlinkSync, writeFileSync } from 'fs';
 import { config } from './Config.js';
-import path from 'path';
+import path, { join } from 'path';
 import { log } from './Log.js';
 import { Constants } from '../types/config/Constants.js';
 
@@ -53,4 +53,19 @@ export const cachePath = (cacheKey: string): string => {
     mkdirSync(dir, { recursive: true });
 
     return path.join(dir, cacheKeyFile);
+};
+
+export const resetCache = (): void => {
+    const items = readdirSync(cacheDir);
+    for (const item of items) {
+        const fullPath = join(cacheDir, item);
+        const itemStats = statSync(fullPath);
+        if (itemStats.isDirectory()) {
+            // Recursively remove directories
+            rmSync(fullPath, { recursive: true, force: true });
+        } else {
+            // Remove files
+            rmSync(fullPath, { force: true });
+        }
+    }
 };
