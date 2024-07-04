@@ -93,12 +93,13 @@ export class ShowSubmitter {
     try {
       if (!this.config.preview) {
         this.submitter.backfillEpisodeProductionCode();
+        video.clearCache();
       }
       this.submitter.updates.push(message);
     } catch (e) {
       this.error(e, message);
+      video.clearCache();
     }
-    video.clearCache();
   }
 
   private async backfillEpisodeImage(video: ActionableVideo): Promise<void> {
@@ -110,12 +111,13 @@ export class ShowSubmitter {
     try {
       if (!this.config.preview) {
         this.submitter.backfillEpisodeImage();
+        video.clearCache();
       }
       this.submitter.updates.push(message);
     } catch (e) {
       this.error(e, message);
+      video.clearCache();
     }
-    video.clearCache();
   }
 
   private async generateActionableSeries(): Promise<ActionableSeries[]> {
