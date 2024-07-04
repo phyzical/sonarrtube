@@ -16,7 +16,7 @@ export const run = async (): Promise<void> => {
   const start = async (): Promise<void> => {
     console.log(`Next run at ${nextRun}`);
 
-    if (!running) {
+    if (running) {
       return;
     }
     running = true;
