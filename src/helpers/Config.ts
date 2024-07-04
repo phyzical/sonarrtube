@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { Config } from '../types/config/Config.js';
 import { Environment } from '../types/config/Environment.js';
-import { rmdirSync } from 'fs';
+import { existsSync, rmdirSync } from 'fs';
 import { Constants } from '../types/config/Constants.js';
 
 const cachedConfig: Config = null;
@@ -42,7 +42,7 @@ export const config = (): Config => {
 
     const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
 
-    if (FORCE_CLEAR_CACHE == 'true') {
+    if (FORCE_CLEAR_CACHE == 'true' && existsSync(cacheDir)) {
         rmdirSync(cacheDir, { recursive: true });
     }
 
