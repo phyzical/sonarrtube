@@ -58,44 +58,15 @@ COPY --chown=app ./ ./
 RUN yarn lint && \
     yarn build
 
-# FROM base as dependencies
-# # This layer gets discarded to reduce the production image size. Only the dependencies
-# # built here will be copied into the production stage.
-# USER root
-
-# # Add other dependencies
-# RUN yum -y install \
-#     --enablerepo=devel \
-#     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
-#     xz-5.2.5-8.el9_0 \
-#     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-#     gcc-11.4.1-2.1.el9 \
-#     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-#     gcc-c++-11.4.1-2.1.el9 \
-#     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
-#     make-4.3-7.el9 \
-#     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
-#     unzip-6.0-56.el9 \
-#     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-#     automake-1.16.2-8.el9 \
-#     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-#     readline-devel-8.1-4.el9 \
-#     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-#     openssl-devel-3.0.7-25.el9_3 \
-#     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
-#     bzip2-1.0.8-8.el9 \
-#     # renovate: datasource=yum repo=rocky-9-crb-x86_64
-#     mysql-devel-8.0.36-1.el9_3 \
-#     && yum -y clean all \
-#     && rm -rf /var/cache/yum
-
 FROM base as final
 
 USER app
 
 COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
+COPY --from=build --chown=app ${APP_DIR}/node_modules ${APP_DIR}/node_modules
 COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
-COPY --chown=app ./main.js ./main.js
+COPY --chown=app ./main.js ./boot.sh ./package.json ./
+
 
 USER root
 
@@ -106,5 +77,5 @@ USER app
 ARG RELEASE_VERSION="VERSION_PROVIDED_ON_BUILD"
 ENV RELEASE_VERSION $RELEASE_VERSION
 
-ENTRYPOINT ["node"]
-CMD ["main.js"]
+ENTRYPOINT [ "/app/boot.sh" ]
+CMD [ "node", "main.js" ]
