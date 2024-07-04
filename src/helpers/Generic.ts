@@ -16,4 +16,8 @@ export const getYoutubeDelayString = (): string => {
     .replace(/-/g, '');
 };
 
+export const handleSignal = (signal: string): void => {
+  console.log(`Received ${signal}. Graceful shutdown...`);
+  process.exit(0); // Exit the process
+};
 

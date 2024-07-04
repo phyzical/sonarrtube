@@ -31,6 +31,10 @@ export class BaseSubmitter {
     this.username = tvdbConfig.username;
     this.password = tvdbConfig.password;
     this.email = tvdbConfig.email;
+    this.updates = [];
+    this.downloads = [];
+    this.warnings = [];
+    this.errors = [];
   }
 
   async type(selector: string, value: string, simulate: boolean = true): Promise<void> {

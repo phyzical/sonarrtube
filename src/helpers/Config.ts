@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 import { Config } from '../types/config/Config.js';
 import { Environment } from '../types/config/Environment.js';
-import { rmdirSync } from 'fs';
 import { Constants } from '../types/config/Constants.js';
+import { resetCache } from './Cache.js';
 
-const cachedConfig: Config = null;
+let cachedConfig: Config = null;
 
 export const config = (): Config => {
     if (cachedConfig) {
@@ -39,14 +39,13 @@ export const config = (): Config => {
         RE_RUN_INTERVAL,
     } = process.env as unknown as Environment;
 
-
     const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
 
     if (FORCE_CLEAR_CACHE == 'true') {
-        rmdirSync(cacheDir, { recursive: true });
+        resetCache();
     }
 
-    return {
+    return cachedConfig = {
         titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),
         notificationWebhook: NOTIFICATION_WEBHOOK,
         reRunInterval: (parseInt(RE_RUN_INTERVAL) || Constants.RE_RUN_INTERVAL) * 60000,

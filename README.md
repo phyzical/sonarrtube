@@ -38,6 +38,8 @@ NOTE!!!!!!
 
 copy the `.env.dist` to `.env` and fill out
 
+NOTE: if you using the env file you need to quote your variables, if your providing the env file to docker directly you don't
+
 | Env                              | Required?              | Default         | Description                                                               |
 | -------------------------------- | ---------------------- | --------------- | ------------------------------------------------------------------------- |
 | ENV_FILE                         | no                     | '.env'          | File path to env file                                                     |

@@ -51,20 +51,17 @@ export class ShowSubmitter {
     log(`Processing ${videos.length} episodes`);
     const preview = this.config.preview || backfillOnly;
     for (const video of videos) {
-      let updateText = '';
-      if (preview) {
-        updateText = `${this.config.preview ? 'Preview' : 'BackfillOnly'} mode on, Would have added:\n`;
-      }
-      updateText = `${updateText}${video.summary()}`;
-      if (!preview) {
-        this.submitter.video = video;
-        try {
+      const updateText = `${this.previewText(backfillOnly)} adding:\n${video.summary()}`;
+      this.submitter.video = video;
+      try {
+        if (!preview) {
           await this.submitter.addEpisode();
           await video.generateSonarrEpisode(await this.submitter.verifyAddedEpisode());
-          this.submitter.updates.push(updateText);
-        } catch (e) {
-          await this.error(e, updateText);
         }
+
+        this.submitter.updates.push(updateText);
+      } catch (e) {
+        await this.error(e, updateText);
       }
     }
     log(`Finished ${seriesName}`);
@@ -79,29 +76,48 @@ export class ShowSubmitter {
     throw e;
   }
 
+  private previewText(backFillMode: boolean = false): string {
+    const { preview } = this.config;
+
+    return preview || backFillMode ? 'Preview Mode on Would have:' : '';
+  }
+
+
   private async backfillEpisodeProductionCode(video: ActionableVideo): Promise<void> {
     log(
-      'found a backfill match, Attempting production code backfill! ' +
+      `${this.previewText()} found a backfill match, Attempting production code backfill! ` +
       `youtube: ${video.youtubeVideo.title()} -> tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.video = video;
-    const message = `Backfilled Production Code\n${video.summary()}`;
-    await this.submitter.backfillEpisodeProductionCode()
-      .then(_ => this.submitter.updates.push(message))
-      .catch(e => this.error(e, message));
-    video.clearCache();
+    const message = `${this.previewText()} Backfilled Production Code\n${video.summary()}`;
+    try {
+      if (!this.config.preview) {
+        this.submitter.backfillEpisodeProductionCode();
+        video.clearCache();
+      }
+      this.submitter.updates.push(message);
+    } catch (e) {
+      this.error(e, message);
+      video.clearCache();
+    }
   }
 
   private async backfillEpisodeImage(video: ActionableVideo): Promise<void> {
     log(
-      `Attempting backfill of image for tvdb: ${video.tvdbEpisode.name}`
+      `${this.previewText()} Attempting backfill of image for tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.video = video;
-    const message = `Backfilled Image\n${video.summary()}`;
-    await this.submitter.backfillEpisodeImage()
-      .then(_ => this.submitter.updates.push(message))
-      .catch(e => this.error(e, message));
-
+    const message = `${this.previewText()} Backfilled Image\n${video.summary()}`;
+    try {
+      if (!this.config.preview) {
+        this.submitter.backfillEpisodeImage();
+        video.clearCache();
+      }
+      this.submitter.updates.push(message);
+    } catch (e) {
+      this.error(e, message);
+      video.clearCache();
+    }
   }
 
   private async generateActionableSeries(): Promise<ActionableSeries[]> {
