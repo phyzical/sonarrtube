@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
 import { Config } from '../types/config/Config.js';
 import { Environment } from '../types/config/Environment.js';
-import { existsSync, rmdirSync } from 'fs';
+import { existsSync, readdirSync, rmSync, statSync } from 'fs';
 import { Constants } from '../types/config/Constants.js';
+import { join } from 'path';
 
-const cachedConfig: Config = null;
+let cachedConfig: Config = null;
 
 export const config = (): Config => {
     if (cachedConfig) {
@@ -39,14 +40,24 @@ export const config = (): Config => {
         RE_RUN_INTERVAL,
     } = process.env as unknown as Environment;
 
-
     const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
 
     if (FORCE_CLEAR_CACHE == 'true' && existsSync(cacheDir)) {
-        rmdirSync(cacheDir, { recursive: true });
+        const items = readdirSync(cacheDir);
+        for (const item of items) {
+            const fullPath = join(cacheDir, item);
+            const itemStats = statSync(fullPath);
+            if (itemStats.isDirectory()) {
+                // Recursively remove directories
+                rmSync(fullPath, { recursive: true, force: true });
+            } else {
+                // Remove files
+                rmSync(fullPath, { force: true });
+            }
+        }
     }
 
-    return {
+    return cachedConfig = {
         titleCleanerRegex: new RegExp(TITLE_CLEANER_REGEX || Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),
         notificationWebhook: NOTIFICATION_WEBHOOK,
         reRunInterval: (parseInt(RE_RUN_INTERVAL) || Constants.RE_RUN_INTERVAL) * 60000,
