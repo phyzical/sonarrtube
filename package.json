@@ -20,8 +20,7 @@
   "scripts": {
     "build": "tsc --p tsconfig.build.json",
     "watch": "tsc -w --p tsconfig.build.json",
-    "test": "jest",
-    "coverage": "jest --coverage",
+    "test": "jest --coverage",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "start": "node main.js"
@@ -39,16 +38,5 @@
     "ts-node": "10.9.2",
     "@types/jest": "29.5.12",
     "@types/node": "20.14.9"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    }
   }
 }

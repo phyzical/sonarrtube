@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
     "target": "ES6",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -8,7 +9,11 @@
     "noImplicitAny": false,
     "esModuleInterop": true,
     "types": ["jest", "node"],
-    "sourceMap": true
+    "paths": {
+      "*": ["*", ".ts", ".tsx"] // This line is optional and customizable
+    },
+    "sourceMap": true,
+    "strict": true
   },
   "include": ["tests/**/*", "src/**/*"]
 }
