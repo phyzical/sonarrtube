@@ -34,7 +34,5 @@ export class Series {
         this.id = payload.id;
     }
 
-    tvdbCacheKey(): string {
-        return `/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbId}.json`;
-    }
+    tvdbCacheKey = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbId}.json`;
 }

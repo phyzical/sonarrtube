@@ -106,13 +106,11 @@ export class ActionableSeries {
                 parseInt(y.aired()?.replace(/-/g, '') || '0'));
     }
 
-    unDownloadedVideos(): ActionableVideo[] {
-        return this.videos.filter(actionableVideo => actionableVideo.unDownloaded());
-    }
+    unDownloadedVideos = (): ActionableVideo[] => this.videos.filter(actionableVideo => actionableVideo.unDownloaded());
 
     // Detected as addable
     _missingFromTvdbVideos: ActionableVideo[] = [];
-    missingFromTvdbVideos(): ActionableVideo[] {
+    missingFromTvdbVideos = (): ActionableVideo[] => {
         if (this._missingFromTvdbVideos) {
             return this._missingFromTvdbVideos;
         }
@@ -122,11 +120,11 @@ export class ActionableSeries {
             .filter(actionableVideo => actionableVideo.missingFromTvdb());
 
         return this._missingFromTvdbVideos;
-    }
+    };
 
     // Detected as missing production codes
     _missingProductionCodeTvdbVideos: ActionableVideo[] = [];
-    missingProductionCodeTvdbVideos(): ActionableVideo[] {
+    missingProductionCodeTvdbVideos = (): ActionableVideo[] => {
         if (this._missingProductionCodeTvdbVideos) {
             return this._missingProductionCodeTvdbVideos;
         }
@@ -135,11 +133,11 @@ export class ActionableSeries {
             .filter(actionableVideo => actionableVideo.missingProductionCode());
 
         return this._missingProductionCodeTvdbVideos;
-    }
+    };
 
     // Detected as not being in the youtube video list
     _unmatchedYoutubeVideos: ActionableVideo[] = [];
-    unmatchedYoutubeVideos(): ActionableVideo[] {
+    unmatchedYoutubeVideos = (): ActionableVideo[] => {
         if (this._unmatchedYoutubeVideos) {
             return this._unmatchedYoutubeVideos;
         }
@@ -148,11 +146,11 @@ export class ActionableSeries {
             .filter(actionableVideo => !actionableVideo.missingProductionCode() && actionableVideo.missingYoutube());
 
         return this._unmatchedYoutubeVideos;
-    }
+    };
 
     // Detected as updatable with production codes
     _backfillableProductionCodeVideos: ActionableVideo[] = [];
-    backfillableProductionCodeVideos(downloadOnly: boolean = false): ActionableVideo[] {
+    backfillableProductionCodeVideos = (downloadOnly: boolean = false): ActionableVideo[] => {
         if (this._backfillableProductionCodeVideos) {
             return this._backfillableProductionCodeVideos;
         }
@@ -211,11 +209,11 @@ export class ActionableSeries {
         );
 
         return this._backfillableProductionCodeVideos;
-    }
+    };
 
     // Detected as updatable with production codes
     _backfillableImageVideos: ActionableVideo[] = [];
-    backfillableImageVideos(downloadOnly: boolean = false): ActionableVideo[] {
+    backfillableImageVideos = (downloadOnly: boolean = false): ActionableVideo[] => {
         if (this._backfillableImageVideos) {
             return this._backfillableImageVideos;
         }
@@ -230,14 +228,12 @@ export class ActionableSeries {
         );
 
         return this._backfillableImageVideos;
-    }
+    };
 
-    futureTotal(): number {
-        return this.tvdbSeries.episodes.length +
-            this.missingFromTvdbVideos().length - this.unmatchedYoutubeVideos().length;
-    }
+    futureTotal = (): number => this.tvdbSeries.episodes.length +
+        this.missingFromTvdbVideos().length - this.unmatchedYoutubeVideos().length;
 
-    hasMissing(): boolean {
+    hasMissing = (): boolean => {
         const missing = this.futureTotal() != this.youtubeContext.videos.length;
         if (missing) {
             this.warnings.push(
@@ -263,6 +259,6 @@ export class ActionableSeries {
         }
 
         return missing;
-    }
+    };
 }
 

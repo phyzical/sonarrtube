@@ -32,7 +32,5 @@ export class Episode {
         this.series = series;
     }
 
-    tvdbCacheKey(): string {
-        return `/${Constants.CACHE_FOLDERS.TVDB}/${this.series.tvdbId}/${this.tvdbId}.json`;
-    }
+    tvdbCacheKey = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.series.tvdbId}/${this.tvdbId}.json`;
 }

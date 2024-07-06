@@ -32,21 +32,19 @@ export class Series {
         this.year = payload.year;
     }
 
-    filterEpisodes(): Episode[] {
-        return this
-            .episodes
-            .filter(video => (!config()
-                .tvdb
-                .skippedEpisodeIds
-                .find(id => {
-                    const found = id && id == video.id;
-                    if (found) {
-                        log('Skipping');
-                        video.overviewLog();
-                    }
+    filterEpisodes = (): Episode[] => this
+        .episodes
+        .filter(video => (!config()
+            .tvdb
+            .skippedEpisodeIds
+            .find(id => {
+                const found = id && id == video.id;
+                if (found) {
+                    log('Skipping');
+                    video.overviewLog();
+                }
 
-                    return found;
-                }) && video.productionCode != Constants.YOUTUBE.VIDEO_REMOVED_FLAG)
-            );
-    }
+                return found;
+            }) && video.productionCode != Constants.YOUTUBE.VIDEO_REMOVED_FLAG)
+        );
 }

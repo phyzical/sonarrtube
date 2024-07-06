@@ -37,55 +37,51 @@ export class BaseSubmitter {
     this.errors = [];
   }
 
-  page(): Page {
+  page = (): Page => {
     if (!this.pageObj) {
       throw new Error('Page not initialized');
     }
 
     return this.pageObj;
-  }
+  };
 
-  browser(): Browser {
+  browser = (): Browser => {
     if (!this.browserObj) {
       throw new Error('Browser not initialized');
     }
 
     return this.browserObj;
-  }
+  };
 
-  video(): ActionableVideo {
+  video = (): ActionableVideo => {
     if (!this.videoObj) {
       throw new Error('Video not initialized');
     }
 
     return this.videoObj;
-  }
+  };
 
-  async type(selector: string, value: string, simulate: boolean = true): Promise<void> {
-    return await type(this.page(), selector, value, simulate);
-  }
+  type = async (
+    selector: string, value: string, simulate: boolean = true
+  ): Promise<void> => await type(this.page(), selector, value, simulate);
 
-  async find(selector: string): Promise<ElementHandle<Element> | null> {
-    return await find(this.page(), selector);
-  }
+  find = async (selector: string): Promise<ElementHandle<Element> | null> => await find(this.page(), selector);
 
-  async click(selector: string, options = {}): Promise<void> {
-    return await click(this.page(), selector, options);
-  }
+  click = async (selector: string, options = {}): Promise<void> => await click(this.page(), selector, options);
 
-  async loaded(): Promise<void> {
+  loaded = async (): Promise<void> => {
     await loaded(this.page());
-  }
+  };
 
-  async goto(url: string): Promise<void> {
+  goto = async (url: string): Promise<void> => {
     await goto(this.page(), url);
-  }
+  };
 
-  async submitForm(selector: string): Promise<void> {
+  submitForm = async (selector: string): Promise<void> => {
     await submitForm(this.page(), selector);
-  }
+  };
 
-  async init(): Promise<void> {
+  init = async (): Promise<void> => {
     this.browserObj = await puppeteer.launch({
       args: [
         // Required for Docker version of Puppeteer
@@ -100,19 +96,19 @@ export class BaseSubmitter {
     const browserVersion = await this.browser().version();
     log(`Started ${browserVersion}`);
     this.pageObj = await this.browser().newPage();
-  }
+  };
 
 
-  async finish(isError: boolean = false): Promise<void> {
+  finish = async (isError: boolean = false): Promise<void> => {
     if (isError) {
       await this.takeScreenshot();
       await this.saveHtml();
     } else {
       await this.browser().close();
     }
-  }
+  };
 
-  async handleReports(actionableSeries: ActionableSeries): Promise<void> {
+  handleReports = async (actionableSeries: ActionableSeries): Promise<void> => {
     await notify(`Summary for ${this.video().seriesName};`);
 
     if (this.downloads.length > 0) {
@@ -143,9 +139,9 @@ export class BaseSubmitter {
     this.downloads = [];
     this.warnings = [];
     this.errors = [];
-  }
+  };
 
-  async saveHtml(): Promise<void> {
+  saveHtml = async (): Promise<void> => {
     try {
       const html = await this.page().content();
       const filename = `${ShowSubmitter.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
@@ -155,9 +151,9 @@ export class BaseSubmitter {
     } catch (e) {
       log(`failed to save html: ${e}`);
     }
-  }
+  };
 
-  async takeScreenshot(): Promise<void> {
+  takeScreenshot = async (): Promise<void> => {
     const filename = `${ShowSubmitter.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
     const screenshotPath = `${filename}.png`;
     try {
@@ -169,6 +165,6 @@ export class BaseSubmitter {
     } catch (e) {
       log(`failed to save screenshot: ${e}`);
     }
-  }
+  };
 }
 

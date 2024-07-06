@@ -42,15 +42,12 @@ export class Episode {
         this.aired = payload.aired;
     }
 
-    cacheKey(): string {
-        return `/${Constants.CACHE_FOLDERS.TVDB}/${this.seriesId}/${this.id}.json`;
-    }
+    cacheKey = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.seriesId}/${this.id}.json`;
 
-    editURL(): string {
-        return `${Constants.TVDB.HOST}/series/${encodeURIComponent(this.series.slug)}/episodes/${this.id}/0/edit`;
-    }
+    editURL = (): string =>
+        `${Constants.TVDB.HOST}/series/${encodeURIComponent(this.series.slug)}/episodes/${this.id}/0/edit`;
 
-    overviewLog(): void {
+    overviewLog = (): void => {
         log(
             'Overview:' +
             [
@@ -62,14 +59,14 @@ export class Episode {
                 `Season: ${this.seasonNumber}`,
             ].join('\n  ')
         );
-    }
+    };
 
-    youtubeURL(): string {
+    youtubeURL = (): string => {
         if (!this.productionCode) {
             return '';
         }
 
         return `${Constants.YOUTUBE.HOST}/watch?v=${this.productionCode}`;
-    }
+    };
 
 }

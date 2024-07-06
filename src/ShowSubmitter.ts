@@ -37,15 +37,15 @@ export class ShowSubmitter {
     this.submitter = new TvdbSubmitter(this.config.tvdb);
   }
 
-  private async initSubmitter(): Promise<void> {
+  private initSubmitter = async (): Promise<void> => {
     if (this.config.downloadOnly) {
       return;
     }
     await this.submitter.init();
     await this.submitter.doLogin().catch(e => this.error(e, ''));
-  }
+  };
 
-  private async addEpisodes(videos: ActionableVideo[], backfillOnly: boolean): Promise<void> {
+  private addEpisodes = async (videos: ActionableVideo[], backfillOnly: boolean): Promise<void> => {
     if (!videos[0].youtubeVideo) {
       throw new Error('Missing youtubeVideo aborting addEpisodes');
     }
@@ -68,25 +68,25 @@ export class ShowSubmitter {
       }
     }
     log(`Finished ${seriesName}`);
-  }
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async error(e: any, summary: string): Promise<void> {
+  private error = async (e: any, summary: string): Promise<void> => {
     this.submitter.errors.push(`Error:\n${e.message}\n${summary}`);
     await this.submitter.finish(true).catch((e2) => {
       log(e2);
     });
     throw e;
-  }
+  };
 
-  private previewText(backFillMode: boolean = false): string {
+  private previewText = (backFillMode: boolean = false): string => {
     const { preview } = this.config;
 
     return preview || backFillMode ? 'Preview Mode on Would have:' : '';
-  }
+  };
 
 
-  private async backfillEpisodeProductionCode(video: ActionableVideo): Promise<void> {
+  private backfillEpisodeProductionCode = async (video: ActionableVideo): Promise<void> => {
     if (!video.tvdbEpisode) {
       throw new Error('Missing tvdbEpisode aborting backfillProductionCode');
     }
@@ -109,9 +109,9 @@ export class ShowSubmitter {
       this.error(e, message);
       video.clearCache();
     }
-  }
+  };
 
-  private async backfillEpisodeImage(video: ActionableVideo): Promise<void> {
+  private backfillEpisodeImage = async (video: ActionableVideo): Promise<void> => {
     if (!video.tvdbEpisode) {
       throw new Error('Missing tvdbEpisode aborting backfillEpisode');
     }
@@ -130,9 +130,9 @@ export class ShowSubmitter {
       this.error(e, message);
       video.clearCache();
     }
-  }
+  };
 
-  private async generateActionableSeries(): Promise<ActionableSeries[]> {
+  private generateActionableSeries = async (): Promise<ActionableSeries[]> => {
     const sonarrSerieses = await getSonarrSeries();
     const tvdbSerieses = await getTvdbSeries(sonarrSerieses);
     const youtubeChannels = await getYoutubeChannels(tvdbSerieses);
@@ -174,9 +174,9 @@ export class ShowSubmitter {
     }
 
     return actionableSerieses;
-  }
+  };
 
-  async start(): Promise<void> {
+  start = async (): Promise<void> => {
     await this.initSubmitter();
     const actionableSerieses = await this.generateActionableSeries();
 
@@ -210,5 +210,5 @@ export class ShowSubmitter {
     }
 
     await this.submitter.finish(false);
-  }
+  };
 }

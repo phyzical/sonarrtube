@@ -51,55 +51,55 @@ export class ActionableVideo {
         return !this.sonarrEpisode.hasFile;
     };
 
-    missingFromTvdb(): boolean {
+    missingFromTvdb = (): boolean => {
         if (this.tvdbEpisode) {
             return false;
         }
 
         return true;
-    }
+    };
 
-    missingYoutube(): boolean {
+    missingYoutube = (): boolean => {
         if (this.youtubeVideo) {
             return false;
         }
 
         return true;
-    }
+    };
 
-    missingProductionCode(): boolean {
+    missingProductionCode = (): boolean => {
         if (!this.tvdbEpisode) {
             return false;
         }
 
         return !this.tvdbEpisode.productionCode;
-    }
+    };
 
-    tvdbEditUrl(): string | undefined {
+    tvdbEditUrl = (): string | undefined => {
         if (!this.tvdbEpisode) {
             return;
         }
 
         return this.tvdbEpisode.editURL();
-    }
+    };
 
-    tvdbInfoCache(): string | undefined {
+    tvdbInfoCache = (): string | undefined => {
         if (!this.tvdbEpisode) {
             return;
         }
 
         return cachePath(this.tvdbEpisode.cacheKey());
-    }
+    };
 
-    thumbnailCacheFile(): string {
+    thumbnailCacheFile = (): string => {
         if (!this.tvdbEpisode) {
             throw new Error('Episode not found this shouldn\'t happen!');
         }
 
         return cachePath(`/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbEpisode.seriesId}/thumbnails.txt`);
-    }
+    };
 
-    thumbnailUploadAttemptCount(): number {
+    thumbnailUploadAttemptCount = (): number => {
         const cachePath = this.thumbnailCacheFile();
         if (!existsSync(cachePath)) {
             return 0;
@@ -114,9 +114,9 @@ export class ActionableVideo {
         return readFileSync(cachePath).toString()
             .split('\n')
             .filter(x => x == episode.id).length;
-    }
+    };
 
-    addThumbnailUploadAttempt(): void {
+    addThumbnailUploadAttempt = (): void => {
         const episode = this.tvdbEpisode;
 
         if (!episode) {
@@ -124,52 +124,40 @@ export class ActionableVideo {
         }
 
         writeFileSync(this.thumbnailCacheFile(), `${episode.id}\n`, { flag: 'a' });
-    }
+    };
 
-    season(): number | undefined {
-        return (this.tvdbEpisode || this.tvdbEpisodeFromContext)?.seasonNumber;
-    }
+    season = (): number | undefined => (this.tvdbEpisode || this.tvdbEpisodeFromContext)?.seasonNumber;
 
-    aired(): string | undefined {
-        return this.tvdbEpisode?.aired || this.youtubeVideo?.airedDate();
-    }
+    aired = (): string | undefined => this.tvdbEpisode?.aired || this.youtubeVideo?.airedDate();
 
-    youtubeURL(): string | undefined {
-        return this.tvdbEpisode?.youtubeURL() ||
-            this.youtubeVideo?.url() ||
-            this.tvdbEpisodeFromContext?.youtubeURL();
-    }
+    youtubeURL = (): string | undefined => this.tvdbEpisode?.youtubeURL() ||
+        this.youtubeVideo?.url() ||
+        this.tvdbEpisodeFromContext?.youtubeURL();
 
-    summary(): string {
-        return [
-            `Title: ${this.name()}`,
-            `Aired date: ${this.aired()}`,
-            `Season: ${this.season()}`,
-            this.youtubeURL() ?
-                `Youtube url: ${this.youtubeURL()}` :
-                `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
-            this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
-            this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
-        ].filter(Boolean).join('\n  ');
-    }
+    summary = (): string => [
+        `Title: ${this.name()}`,
+        `Aired date: ${this.aired()}`,
+        `Season: ${this.season()}`,
+        this.youtubeURL() ?
+            `Youtube url: ${this.youtubeURL()}` :
+            `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
+        this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
+        this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
+    ].filter(Boolean).join('\n  ');
 
-    youtubeSearchURL(): string {
-        return `${Constants.YOUTUBE.HOST}/results?search_query=${encodeURI(`${this.seriesName()} ${this.name()}`)}`;
-    }
+    youtubeSearchURL = (): string =>
+        `${Constants.YOUTUBE.HOST}/results?search_query=${encodeURI(`${this.seriesName()} ${this.name()}`)}`;
 
-    youtubeChannelSearchURL(): string {
-        return `${this.youtubeContext.url}?query=${encodeURI(this.name())}`;
-    }
+    youtubeChannelSearchURL = (): string => `${this.youtubeContext.url}?query=${encodeURI(this.name())}`;
 
-    seriesName(): string {
-        return this.youtubeVideo?.channel || this.tvdbSeries?.name;
-    }
+    seriesName = (): string => this.youtubeVideo?.channel || this.tvdbSeries?.name;
 
-    name(): string {
-        return this.tvdbEpisode?.name || this.youtubeVideo?.title() || this.tvdbEpisodeFromContext?.name || '';
-    }
+    name = (): string => this.tvdbEpisode?.name ||
+        this.youtubeVideo?.title() ||
+        this.tvdbEpisodeFromContext?.name ||
+        '';
 
-    tvdbContextFromYoutube(): TvdbEpisode | undefined {
+    tvdbContextFromYoutube = (): TvdbEpisode | undefined => {
         if (!this.youtubeVideo) {
             return;
         }
@@ -183,18 +171,18 @@ export class ActionableVideo {
             seasonNumber: this.youtubeVideo.season(),
             aired: this.youtubeVideo.airedDate(),
         }, this.tvdbSeries);
-    }
+    };
 
-    clearCache(): void {
+    clearCache = (): void => {
         const episode = this.tvdbEpisode;
 
         if (!episode) {
             throw new Error('Episode not found this shouldn\'t happen!');
         }
         clearCache(episode.cacheKey());
-    }
+    };
 
-    generateSonarrEpisode(episodeNumber: string): SonarrEpisode {
+    generateSonarrEpisode = (episodeNumber: string): SonarrEpisode => {
         const seasonNumber = this.season();
         if (!seasonNumber) {
             throw new Error('season not found this shouldn\'t happen!');
@@ -205,5 +193,5 @@ export class ActionableVideo {
             episodeNumber: parseInt(episodeNumber),
             hasFile: false,
         }, this.sonarrSeries);
-    }
+    };
 }
