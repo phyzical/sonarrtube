@@ -4,7 +4,7 @@ import { Episode } from './Episode.js';
 import { Constants } from '../../../types/config/Constants.js';
 
 export class Series {
-    episodes: Episode[];
+    episodes: Episode[] = [];
     title: string;
     status: string;
     overview: string;

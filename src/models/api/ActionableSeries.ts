@@ -15,7 +15,7 @@ type ActionableSeriesType = {
 }
 
 export class ActionableSeries {
-    videos?: ActionableVideo[];
+    videos: ActionableVideo[];
     sonarrSeries: SonarrSeries;
     tvdbSeries: TvdbSeries;
     youtubeContext: YoutubeContext;
@@ -92,7 +92,7 @@ export class ActionableSeries {
                 this.videos.push(
                     new ActionableVideo(
                         {
-                            youtubeVideo: null, sonarrEpisode,
+                            sonarrEpisode,
                             tvdbEpisode, tvdbSeries: this.tvdbSeries,
                             sonarrSeries: this.sonarrSeries, youtubeContext: this.youtubeContext
                         }
@@ -102,7 +102,8 @@ export class ActionableSeries {
         }
 
         this.videos = this.videos
-            .sort((x, y) => parseInt(x.aired().replace(/-/g, '')) - parseInt(y.aired().replace(/-/g, '')));
+            .sort((x, y) => parseInt(x.aired()?.replace(/-/g, '') || '0') -
+                parseInt(y.aired()?.replace(/-/g, '') || '0'));
     }
 
     unDownloadedVideos(): ActionableVideo[] {
@@ -110,7 +111,7 @@ export class ActionableSeries {
     }
 
     // Detected as addable
-    _missingFromTvdbVideos: ActionableVideo[] = null;
+    _missingFromTvdbVideos: ActionableVideo[] = [];
     missingFromTvdbVideos(): ActionableVideo[] {
         if (this._missingFromTvdbVideos) {
             return this._missingFromTvdbVideos;
@@ -124,7 +125,7 @@ export class ActionableSeries {
     }
 
     // Detected as missing production codes
-    _missingProductionCodeTvdbVideos: ActionableVideo[] = null;
+    _missingProductionCodeTvdbVideos: ActionableVideo[] = [];
     missingProductionCodeTvdbVideos(): ActionableVideo[] {
         if (this._missingProductionCodeTvdbVideos) {
             return this._missingProductionCodeTvdbVideos;
@@ -137,7 +138,7 @@ export class ActionableSeries {
     }
 
     // Detected as not being in the youtube video list
-    _unmatchedYoutubeVideos: ActionableVideo[] = null;
+    _unmatchedYoutubeVideos: ActionableVideo[] = [];
     unmatchedYoutubeVideos(): ActionableVideo[] {
         if (this._unmatchedYoutubeVideos) {
             return this._unmatchedYoutubeVideos;
@@ -150,24 +151,29 @@ export class ActionableSeries {
     }
 
     // Detected as updatable with production codes
-    _backfillableProductionCodeVideos: ActionableVideo[] = null;
+    _backfillableProductionCodeVideos: ActionableVideo[] = [];
     backfillableProductionCodeVideos(downloadOnly: boolean = false): ActionableVideo[] {
         if (this._backfillableProductionCodeVideos) {
             return this._backfillableProductionCodeVideos;
         }
 
-        const backfillVideos = [];
+        const backfillVideos: ActionableVideo[] = [];
         if (downloadOnly) {
             return backfillVideos;
         }
 
         for (const episode of this.missingProductionCodeTvdbVideos()) {
+            const tvdbEpisode = episode.tvdbEpisode;
+            if (!tvdbEpisode) {
+                continue;
+            }
+
             episode.youtubeVideo = this.youtubeContext
                 .videos
                 .find(
-                    (video) => cleanText(video.title()) == cleanText(episode.tvdbEpisode.name) ||
-                        cleanText(video.backupTitle()) == cleanText(episode.tvdbEpisode.name) ||
-                        video.airedDate() == episode.tvdbEpisode.aired
+                    (video) => cleanText(video.title()) == cleanText(tvdbEpisode.name) ||
+                        cleanText(video.backupTitle()) == cleanText(tvdbEpisode.name) ||
+                        video.airedDate() == tvdbEpisode.aired
                 );
 
             if (episode.youtubeVideo) {
@@ -176,13 +182,18 @@ export class ActionableSeries {
         }
 
         for (const episode of this.missingFromTvdbVideos()) {
+            const youtubeVideo = episode.youtubeVideo;
+            if (!youtubeVideo) {
+                continue;
+            }
+
             episode.tvdbEpisode = this.tvdbSeries
                 .episodes
                 .find(
                     (tvdbEpisode) =>
-                        cleanText(episode.youtubeVideo.title()) == cleanText(tvdbEpisode.name) ||
-                        cleanText(episode.youtubeVideo.backupTitle()) == cleanText(tvdbEpisode.name) ||
-                        episode.youtubeVideo.airedDate() == tvdbEpisode.aired
+                        cleanText(youtubeVideo.title()) == cleanText(tvdbEpisode.name) ||
+                        cleanText(youtubeVideo.backupTitle()) == cleanText(tvdbEpisode.name) ||
+                        youtubeVideo.airedDate() == tvdbEpisode.aired
                 );
 
             if (episode.tvdbEpisode) {
@@ -190,15 +201,20 @@ export class ActionableSeries {
             }
         }
 
+        if (backfillVideos.find(video => !video.youtubeVideo?.id)) {
+            throw new Error('Youtube video not found, this shouldn\'t happen!');
+        }
+
+        // DEDUPLICATE
         this._backfillableProductionCodeVideos = backfillVideos.filter((video, index, self) =>
-            index === self.findIndex((v) => v.youtubeVideo.id === video.youtubeVideo.id)
+            index === self.findIndex((video2) => video2.youtubeVideo?.id === video.youtubeVideo?.id)
         );
 
         return this._backfillableProductionCodeVideos;
     }
 
     // Detected as updatable with production codes
-    _backfillableImageVideos: ActionableVideo[] = null;
+    _backfillableImageVideos: ActionableVideo[] = [];
     backfillableImageVideos(downloadOnly: boolean = false): ActionableVideo[] {
         if (this._backfillableImageVideos) {
             return this._backfillableImageVideos;

@@ -11,7 +11,7 @@ export const delay = (time: number): Promise<void> => new Promise((resolve) => {
   setTimeout(resolve, time);
 });
 
-export const find = async (page: Page, selector: string, options = {}): Promise<ElementHandle<Element>> => {
+export const find = async (page: Page, selector: string, options = {}): Promise<ElementHandle<Element> | null> => {
   log(`Finding ${selector}`, true);
 
   try {
@@ -26,10 +26,11 @@ export const click = async (page: Page, selector: string, options = {}): Promise
   await find(page, selector, options);
   log(`Clicking ${selector}`, true);
 
-  return (await page.$$(selector))[0].evaluate((b: HTMLElement) => b.click());
+  (await page.$$(selector))[0].click();
+  // (await page.$$(selector))[0].evaluate((b: HTMLElement) => b.click());
 };
 
-export const goto = async (page: Page, url: string): Promise<HTTPResponse> => {
+export const goto = async (page: Page, url: string): Promise<HTTPResponse | null> => {
   log(`Opening ${url}`, true);
 
   return await page.goto(url).catch((e) => {
@@ -38,7 +39,7 @@ export const goto = async (page: Page, url: string): Promise<HTTPResponse> => {
   });
 };
 
-export const loaded = async (page: Page): Promise<HTTPResponse> => {
+export const loaded = async (page: Page): Promise<HTTPResponse | null | undefined> => {
   log('Waiting for page to load', true);
   try {
     return await page.waitForNavigation({
@@ -50,7 +51,7 @@ export const loaded = async (page: Page): Promise<HTTPResponse> => {
 };
 
 export const getValue = async (page: Page, selector: string): Promise<string> =>
-  await page.$eval(selector, (el: HTMLInputElement) => el.value);
+  await page.$eval(selector, (el: Element) => (el as HTMLInputElement).value);
 
 
 export const type = async (page: Page, selector: string, value: string, simulate: boolean = true): Promise<void> => {

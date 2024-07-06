@@ -37,41 +37,44 @@ const processVideoInfos = (cacheKey: string): Video[] => {
     const cachePath = cacheKeyBase(cacheKey);
     const files = readdirSync(cachePath);
 
-    return files.map(file => {
-        if (!file.match(/.*json.*/)) {
-            return;
-        }
-        const videoInfo = JSON.parse(
+    return files
+        .filter(file => file.match(/.*json.*/))
+        .map(file => JSON.parse(
             readFileSync(path.join(cachePath, file)).toString()
-        );
-
-        if (videoInfo._type != 'video') {
-            return;
-        }
-
-        return new Video({
-            title: videoInfo.title,
-            fulltitle: videoInfo.fulltitle,
-            thumbnail: videoInfo.thumbnail,
-            description: videoInfo.description,
-            channel_id: videoInfo.channel_id,
-            channel_url: videoInfo.channel_url,
-            channel: videoInfo.channel,
-            duration: videoInfo.duration,
-            view_count: videoInfo.view_count,
-            webpage_url: videoInfo.webpage_url,
-            id: videoInfo.id,
-            timestamp: videoInfo.timestamp,
-            upload_date: videoInfo.upload_date,
-        });
-    }).filter(Boolean);
+        ))
+        .filter(videoInfo => videoInfo._type != 'video')
+        .map(({
+            title,
+            fulltitle,
+            thumbnail,
+            description,
+            channel_id,
+            channel_url,
+            channel,
+            duration,
+            view_count,
+            webpage_url,
+            id,
+            timestamp,
+            upload_date,
+        }) => new Video({
+            title,
+            fulltitle,
+            thumbnail,
+            description,
+            channel_id,
+            channel_url,
+            channel,
+            duration,
+            view_count,
+            webpage_url,
+            id,
+            timestamp,
+            upload_date,
+        }));
 };
 
-export const getVideoInfos = (seriesName: string, url: string): Video[] | null => {
-    if (!url) {
-        return null;
-    }
-
+export const getVideoInfos = (seriesName: string, url: string): Video[] => {
     execSync(
         getAllVideoInfoCommand(seriesName, url),
         { encoding: Constants.FILES.ENCODING }
@@ -80,9 +83,9 @@ export const getVideoInfos = (seriesName: string, url: string): Video[] | null =
     return processVideoInfos(seriesName);
 };
 
-export const channelIdByAlias = (alias: string): string => {
+export const channelIdByAlias = (alias: string): string | undefined => {
     if (!alias) {
-        return null;
+        return;
     }
 
     return execSync(
@@ -97,8 +100,14 @@ export const channelIdByAlias = (alias: string): string => {
 };
 
 export const downloadVideos = (videos: ActionableVideo[]): string[] => {
-    const summaries = [];
+    const summaries: string[] = [];
     for (const video of videos) {
+        if (!video.sonarrEpisode) {
+            throw new Error('sonarrEpisode episode not found This shouldn\'t happen!');
+        }
+        if (!video.youtubeVideo) {
+            throw new Error('youtubeVideo episode not found This shouldn\'t happen!');
+        }
         const {
             episodeNumber,
             seasonNumber,

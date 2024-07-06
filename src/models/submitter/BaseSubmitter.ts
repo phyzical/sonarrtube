@@ -16,12 +16,12 @@ import { ActionableSeries } from '../api/ActionableSeries.js';
 puppeteer.use(AdblockerPlugin()).use(StealthPlugin());
 
 export class BaseSubmitter {
-  browser: Browser;
-  page: Page;
+  browserObj: Browser | undefined;
+  pageObj: Page | undefined;
   username: string;
   email: string;
   password: string;
-  video: ActionableVideo;
+  videoObj: ActionableVideo | undefined;
   updates: string[];
   downloads: string[];
   warnings: string[];
@@ -37,32 +37,56 @@ export class BaseSubmitter {
     this.errors = [];
   }
 
-  async type(selector: string, value: string, simulate: boolean = true): Promise<void> {
-    return await type(this.page, selector, value, simulate);
+  page(): Page {
+    if (!this.pageObj) {
+      throw new Error('Page not initialized');
+    }
+
+    return this.pageObj;
   }
 
-  async find(selector: string): Promise<ElementHandle<Element>> {
-    return await find(this.page, selector);
+  browser(): Browser {
+    if (!this.browserObj) {
+      throw new Error('Browser not initialized');
+    }
+
+    return this.browserObj;
+  }
+
+  video(): ActionableVideo {
+    if (!this.videoObj) {
+      throw new Error('Video not initialized');
+    }
+
+    return this.videoObj;
+  }
+
+  async type(selector: string, value: string, simulate: boolean = true): Promise<void> {
+    return await type(this.page(), selector, value, simulate);
+  }
+
+  async find(selector: string): Promise<ElementHandle<Element> | null> {
+    return await find(this.page(), selector);
   }
 
   async click(selector: string, options = {}): Promise<void> {
-    return await click(this.page, selector, options);
+    return await click(this.page(), selector, options);
   }
 
   async loaded(): Promise<void> {
-    await loaded(this.page);
+    await loaded(this.page());
   }
 
   async goto(url: string): Promise<void> {
-    await goto(this.page, url);
+    await goto(this.page(), url);
   }
 
   async submitForm(selector: string): Promise<void> {
-    await submitForm(this.page, selector);
+    await submitForm(this.page(), selector);
   }
 
   async init(): Promise<void> {
-    this.browser = await puppeteer.launch({
+    this.browserObj = await puppeteer.launch({
       args: [
         // Required for Docker version of Puppeteer
         '--no-sandbox',
@@ -73,9 +97,9 @@ export class BaseSubmitter {
       ],
     });
 
-    const browserVersion = await this.browser.version();
+    const browserVersion = await this.browser().version();
     log(`Started ${browserVersion}`);
-    this.page = await this.browser.newPage();
+    this.pageObj = await this.browser().newPage();
   }
 
 
@@ -84,12 +108,12 @@ export class BaseSubmitter {
       await this.takeScreenshot();
       await this.saveHtml();
     } else {
-      await this.browser.close();
+      await this.browser().close();
     }
   }
 
   async handleReports(actionableSeries: ActionableSeries): Promise<void> {
-    await notify(`Summary for ${this.video.seriesName};`);
+    await notify(`Summary for ${this.video().seriesName};`);
 
     if (this.downloads.length > 0) {
       log(Constants.SEPARATOR);
@@ -123,7 +147,7 @@ export class BaseSubmitter {
 
   async saveHtml(): Promise<void> {
     try {
-      const html = await this.page.content();
+      const html = await this.page().content();
       const filename = `${ShowSubmitter.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
       const htmlPath = `${filename}.html`;
       writeFileSync(htmlPath, html);
@@ -137,7 +161,7 @@ export class BaseSubmitter {
     const filename = `${ShowSubmitter.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
     const screenshotPath = `${filename}.png`;
     try {
-      await this.page.screenshot({
+      await this.page().screenshot({
         path: screenshotPath,
         fullPage: true,
       });

@@ -4,7 +4,7 @@ import { Environment } from '../types/config/Environment.js';
 import { Constants } from '../types/config/Constants.js';
 import { resetCache } from './Cache.js';
 
-let cachedConfig: Config = null;
+let cachedConfig: Config;
 
 export const config = (): Config => {
     if (cachedConfig) {
@@ -42,7 +42,7 @@ export const config = (): Config => {
     const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
 
     if (FORCE_CLEAR_CACHE == 'true') {
-        resetCache();
+        resetCache(cacheDir);
     }
 
     return cachedConfig = {

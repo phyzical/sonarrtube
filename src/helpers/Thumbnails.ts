@@ -55,7 +55,7 @@ const cropImage = async (
 
 type Coordinates = { x0: number; y0: number; x1: number; y1: number; }
 
-const findThumbnailText = async (imagePath: string, attempt: number): Promise<Coordinates> => {
+const findThumbnailText = async (imagePath: string, attempt: number): Promise<Coordinates | undefined> => {
     const worker = await createWorker(Constants.THUMBNAIL.TEXT.LANGUAGE, 1, {
         cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
         // logger: m => console.log(m), // Log progress
@@ -75,7 +75,7 @@ const findThumbnailText = async (imagePath: string, attempt: number): Promise<Co
                 .getBufferAsync(Jimp.MIME_PNG)
         );
 
-        let coordinates = null;
+        let coordinates: Coordinates | undefined;
 
         res.data.words.forEach(element => {
             if (
@@ -106,7 +106,9 @@ const findThumbnailText = async (imagePath: string, attempt: number): Promise<Co
     }
 };
 
-export const processThumbnail = async (thumbnailUrl: string, id: string, attempt: number = 0): Promise<string> => {
+export const processThumbnail = async (
+    thumbnailUrl: string, id: string, attempt: number = 0
+): Promise<string | undefined> => {
     log(`downloading ${thumbnailUrl}`, true);
     const urlSplits = thumbnailUrl.split('.');
     const extension = urlSplits[urlSplits.length - 1];

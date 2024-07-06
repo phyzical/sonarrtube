@@ -10,8 +10,8 @@ import { Constants } from '../../types/config/Constants.js';
 import { Series as SonarrSeries } from './sonarr/Series.js';
 
 type ActionableVideoType = {
-    youtubeVideo: Video,
-    sonarrEpisode: SonarrEpisode,
+    youtubeVideo?: Video,
+    sonarrEpisode?: SonarrEpisode,
     tvdbEpisode: TvdbEpisode,
     tvdbSeries: TvdbSeries,
     sonarrSeries: SonarrSeries,
@@ -23,7 +23,7 @@ export class ActionableVideo {
     youtubeVideo?: Video;
     sonarrEpisode?: SonarrEpisode;
     tvdbEpisode?: TvdbEpisode;
-    tvdbEpisodeFromContext: TvdbEpisode;
+    tvdbEpisodeFromContext?: TvdbEpisode;
     tvdbSeries: TvdbSeries;
     sonarrSeries: SonarrSeries;
     youtubeContext: Channel;
@@ -39,17 +39,17 @@ export class ActionableVideo {
         this.tvdbSeries = tvdbSeries;
         this.sonarrSeries = sonarrSeries;
         this.youtubeContext = youtubeContext;
-        this.tvdbEpisodeFromContext = !this.tvdbEpisode ? this.tvdbContextFromYoutube() : null;
+        this.tvdbEpisodeFromContext = !this.tvdbEpisode ? this.tvdbContextFromYoutube() : undefined;
         this.id = randomUUID();
     }
 
-    unDownloaded(): boolean {
+    unDownloaded = (): boolean => {
         if (!this.sonarrEpisode || !this.youtubeVideo) {
             return false;
         }
 
         return !this.sonarrEpisode.hasFile;
-    }
+    };
 
     missingFromTvdb(): boolean {
         if (this.tvdbEpisode) {
@@ -75,49 +75,66 @@ export class ActionableVideo {
         return !this.tvdbEpisode.productionCode;
     }
 
-    tvdbEditUrl(): string {
+    tvdbEditUrl(): string | undefined {
         if (!this.tvdbEpisode) {
-            return '';
+            return;
         }
 
         return this.tvdbEpisode.editURL();
     }
 
-    tvdbInfoCache(): string {
+    tvdbInfoCache(): string | undefined {
         if (!this.tvdbEpisode) {
-            return '';
+            return;
         }
 
         return cachePath(this.tvdbEpisode.cacheKey());
     }
 
     thumbnailCacheFile(): string {
+        if (!this.tvdbEpisode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+
         return cachePath(`/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbEpisode.seriesId}/thumbnails.txt`);
     }
 
     thumbnailUploadAttemptCount(): number {
-        if (!existsSync(this.thumbnailCacheFile())) {
+        const cachePath = this.thumbnailCacheFile();
+        if (!existsSync(cachePath)) {
             return 0;
         }
 
-        return readFileSync(this.thumbnailCacheFile()).toString()
+        const episode = this.tvdbEpisode;
+
+        if (!episode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+
+        return readFileSync(cachePath).toString()
             .split('\n')
-            .filter(x => x == this.tvdbEpisode.id).length;
+            .filter(x => x == episode.id).length;
     }
 
     addThumbnailUploadAttempt(): void {
-        writeFileSync(this.thumbnailCacheFile(), `${this.tvdbEpisode.id}\n`, { flag: 'a' });
+        const episode = this.tvdbEpisode;
+
+        if (!episode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+
+        writeFileSync(this.thumbnailCacheFile(), `${episode.id}\n`, { flag: 'a' });
     }
 
-    season(): number {
-        return this.tvdbEpisode?.seasonNumber || this.tvdbEpisodeFromContext.seasonNumber;
+    season(): number | undefined {
+        return (this.tvdbEpisode || this.tvdbEpisodeFromContext)?.seasonNumber;
     }
 
-    aired(): string {
-        return this.tvdbEpisode?.aired || this.youtubeVideo.airedDate();
+    aired(): string | undefined {
+        return this.tvdbEpisode?.aired || this.youtubeVideo?.airedDate();
     }
 
-    youtubeURL(): string {
+    youtubeURL(): string | undefined {
         return this.tvdbEpisode?.youtubeURL() ||
             this.youtubeVideo?.url() ||
             this.tvdbEpisodeFromContext?.youtubeURL();
@@ -152,9 +169,9 @@ export class ActionableVideo {
         return this.tvdbEpisode?.name || this.youtubeVideo?.title() || this.tvdbEpisodeFromContext?.name || '';
     }
 
-    tvdbContextFromYoutube(): TvdbEpisode {
+    tvdbContextFromYoutube(): TvdbEpisode | undefined {
         if (!this.youtubeVideo) {
-            return null;
+            return;
         }
 
         return new TvdbEpisode({
@@ -169,12 +186,22 @@ export class ActionableVideo {
     }
 
     clearCache(): void {
-        clearCache(this.tvdbEpisode.cacheKey());
+        const episode = this.tvdbEpisode;
+
+        if (!episode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+        clearCache(episode.cacheKey());
     }
 
-    generateSonarrEpisode(episodeNumber: string): void {
-        this.sonarrEpisode = new SonarrEpisode({
-            seasonNumber: this.season(),
+    generateSonarrEpisode(episodeNumber: string): SonarrEpisode {
+        const seasonNumber = this.season();
+        if (!seasonNumber) {
+            throw new Error('season not found this shouldn\'t happen!');
+        }
+
+        return this.sonarrEpisode = new SonarrEpisode({
+            seasonNumber,
             episodeNumber: parseInt(episodeNumber),
             hasFile: false,
         }, this.sonarrSeries);

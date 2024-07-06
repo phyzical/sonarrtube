@@ -53,7 +53,7 @@ export const notify = async (message: string): Promise<void> => {
             notificationWebhook,
             Constants.REQUESTS.POST,
             { 'Content-Type': 'application/json' },
-            null,
+            undefined,
             JSON.stringify(payload)
         );
     }

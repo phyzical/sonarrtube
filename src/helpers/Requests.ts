@@ -1,7 +1,7 @@
 import { getCache, setCache } from './Cache.js';
 
 export const doRequest = async (
-    url: string, method: string, headers = {}, cacheKey: string = null, body: string = null
+    url: string, method: string, headers = {}, cacheKey?: string, body?: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> => {
     let json = getCache(cacheKey);

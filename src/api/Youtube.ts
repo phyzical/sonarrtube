@@ -7,18 +7,21 @@ import { Constants } from '../types/config/Constants.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
 
-    const channels = [];
+    const channels: Channel[] = [];
 
     for (const series of tvdbSeries) {
         log(`Fetching Episodes from youtube for ${series.name}`);
         const channel = new Channel({ tvdbId: series.id });
 
         //search for a youtube link containing /videos or /playlist first
-        channel.url = series.remoteIds.find(remote => remote.id.match(/youtube.com.*(playlist|videos).*/))?.id;
-        channel.videos = getVideoInfos(
-            series.name,
-            channel.url
-        );
+        const url = series.remoteIds.find(remote => remote.id.match(/youtube.com.*(playlist|videos).*/))?.id;
+        if (url) {
+            channel.url = url;
+            channel.videos = getVideoInfos(
+                series.name,
+                channel.url
+            );
+        }
 
         // Then look for channel url
         const remoteId = series.remoteIds.find(remote => remote.id.match(/youtube.com\/c(hannel)*\//));

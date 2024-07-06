@@ -9,7 +9,7 @@ import { Episode } from './Episode.js';
 
 export class Series {
     defaultSeasonType: number;
-    episodes: Episode[];
+    episodes: Episode[] = [];
     id: string;
     image: string;
     name: string;

@@ -5,21 +5,21 @@ import { Episode as EpisodeType } from './../../../types/tvdb/Episode.js';
 import { Series } from './Series.js';
 
 export class Episode {
-    absoluteNumber: number;
-    id: string;
+    absoluteNumber?: number;
+    id?: string;
     image: string;
-    imageType: number;
+    imageType?: number;
     productionCode: string;
-    lastUpdated: string;
+    lastUpdated?: string;
     name: string;
-    number: number;
+    number?: number;
     overview: string;
     runtime: number;
     seasonNumber: number;
-    seasons: Season[];
-    seriesId: number;
-    seasonName: string;
-    year: string;
+    seasons?: Season[];
+    seriesId?: number;
+    seasonName?: string;
+    year?: string;
     series: Series;
     aired: string;
     constructor(payload: EpisodeType, series: Series) {

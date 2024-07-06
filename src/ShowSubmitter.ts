@@ -34,25 +34,28 @@ export class ShowSubmitter {
 
   constructor() {
     this.config = config();
+    this.submitter = new TvdbSubmitter(this.config.tvdb);
   }
 
   private async initSubmitter(): Promise<void> {
     if (this.config.downloadOnly) {
-      return null;
+      return;
     }
-    this.submitter = new TvdbSubmitter(this.config.tvdb);
     await this.submitter.init();
     await this.submitter.doLogin().catch(e => this.error(e, ''));
   }
 
   private async addEpisodes(videos: ActionableVideo[], backfillOnly: boolean): Promise<void> {
+    if (!videos[0].youtubeVideo) {
+      throw new Error('Missing youtubeVideo aborting addEpisodes');
+    }
     const seriesName = videos[0].youtubeVideo.channel;
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
     const preview = this.config.preview || backfillOnly;
     for (const video of videos) {
       const updateText = `${this.previewText(backfillOnly)} adding:\n${video.summary()}`;
-      this.submitter.video = video;
+      this.submitter.videoObj = video;
       try {
         if (!preview) {
           await this.submitter.addEpisode();
@@ -84,11 +87,17 @@ export class ShowSubmitter {
 
 
   private async backfillEpisodeProductionCode(video: ActionableVideo): Promise<void> {
+    if (!video.tvdbEpisode) {
+      throw new Error('Missing tvdbEpisode aborting backfillProductionCode');
+    }
+    if (!video.youtubeVideo) {
+      throw new Error('Missing youtubeVideo aborting backfillProductionCode');
+    }
     log(
       `${this.previewText()} found a backfill match, Attempting production code backfill! ` +
       `youtube: ${video.youtubeVideo.title()} -> tvdb: ${video.tvdbEpisode.name}`
     );
-    this.submitter.video = video;
+    this.submitter.videoObj = video;
     const message = `${this.previewText()} Backfilled Production Code\n${video.summary()}`;
     try {
       if (!this.config.preview) {
@@ -103,10 +112,13 @@ export class ShowSubmitter {
   }
 
   private async backfillEpisodeImage(video: ActionableVideo): Promise<void> {
+    if (!video.tvdbEpisode) {
+      throw new Error('Missing tvdbEpisode aborting backfillEpisode');
+    }
     log(
       `${this.previewText()} Attempting backfill of image for tvdb: ${video.tvdbEpisode.name}`
     );
-    this.submitter.video = video;
+    this.submitter.videoObj = video;
     const message = `${this.previewText()} Backfilled Image\n${video.summary()}`;
     try {
       if (!this.config.preview) {
@@ -125,14 +137,22 @@ export class ShowSubmitter {
     const tvdbSerieses = await getTvdbSeries(sonarrSerieses);
     const youtubeChannels = await getYoutubeChannels(tvdbSerieses);
 
-    const actionableSerieses = [];
+    const actionableSerieses = [] as ActionableSeries[];
 
     for (const tvdbSeries of tvdbSerieses) {
+      log(`Starting Processing of ${tvdbSeries.name}`);
       const sonarrSeries = sonarrSerieses
         .find(series => series.tvdbId === tvdbSeries.id);
+
+      if (!sonarrSeries) {
+        log('Could not find sonarr series, this should never happen!');
+        continue;
+      }
+
       const youtubeChannel = youtubeChannels.find(channel => channel.tvdbId == tvdbSeries.id);
 
       if (!youtubeChannel) {
+        log('Could not find youtube series, this should never happen!');
         continue;
       }
 
@@ -175,7 +195,9 @@ export class ShowSubmitter {
             .missingFromTvdbVideos()
             .filter(video => !actionableSeries
               .backfillableProductionCodeVideos()
-              .find(backfillVideo => video.youtubeVideo.id === backfillVideo.youtubeVideo.id)
+              .find(backfillVideo => video.youtubeVideo?.id &&
+                (video.youtubeVideo?.id === backfillVideo.youtubeVideo?.id)
+              )
             ),
           actionableSeries.hasMissing()
         );
