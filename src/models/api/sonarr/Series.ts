@@ -1,7 +1,7 @@
-import { Series as SeriesType } from '../../../types/sonarr/Series.js';
-import { Season } from '../../../types/sonarr/Season.js';
-import { Episode } from './Episode.js';
-import { Constants } from '../../../types/config/Constants.js';
+import { Series as SeriesType } from '@sonarrTube/types/sonarr/Series.js';
+import { Season } from '@sonarrTube/types/sonarr/Season.js';
+import { Episode } from '@sonarrTube/models/api/sonarr/Episode.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 export class Series {
     episodes: Episode[] = [];

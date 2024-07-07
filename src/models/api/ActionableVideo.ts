@@ -1,13 +1,14 @@
-import { Episode as SonarrEpisode } from './sonarr/Episode.js';
-import { Episode as TvdbEpisode } from './tvdb/Episode.js';
-import { Series as TvdbSeries } from './tvdb/Series.js';
-import { Video } from './youtube/Video.js';
-import { cachePath, clearCache } from '../../helpers/Cache.js';
-import { Channel } from './youtube/Channel.js';
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { Constants } from '../../types/config/Constants.js';
-import { Series as SonarrSeries } from './sonarr/Series.js';
+
+import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
+import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
+import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
+import { Video } from '@sonarrTube/models/api/youtube/Video.js';
+import { cachePath, clearCache } from '@sonarrTube/helpers/Cache.js';
+import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
 
 type ActionableVideoType = {
     youtubeVideo?: Video,

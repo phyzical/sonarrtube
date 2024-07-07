@@ -1,6 +1,6 @@
-import { config } from '../../../helpers/Config.js';
-import { Constants } from '../../../types/config/Constants.js';
-import { Video as VideoType } from './../../../types/youtube/Video.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 
 const { titleCleanerRegex } = config();
 

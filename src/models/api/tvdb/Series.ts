@@ -1,11 +1,11 @@
-import { Constants } from './../../../types/config/Constants.js';
-import { config } from '../../../helpers/Config.js';
-import { log } from '../../../helpers/Log.js';
-import { RemoteID } from '../../../types/tvdb/RemoteID.js';
-import { Season } from '../../../types/tvdb/Season.js';
-import { SeasonType } from '../../../types/tvdb/SeasonType.js';
-import { Series as SeriesType } from './../../../types/tvdb/Series.js';
-import { Episode } from './Episode.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { RemoteID } from '@sonarrTube/types/tvdb/RemoteID.js';
+import { Season } from '@sonarrTube/types/tvdb/Season.js';
+import { SeasonType } from '@sonarrTube/types/tvdb/SeasonType.js';
+import { Series as SeriesType } from '@sonarrTube/types/tvdb/Series.js';
+import { Episode } from '@sonarrTube/models/api/tvdb/Episode.js';
 
 export class Series {
     defaultSeasonType: number;

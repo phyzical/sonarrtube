@@ -1,4 +1,4 @@
-import { Tag } from './Tag.js';
+import { Tag } from '@sonarrTube/types/tvdb/Tag.js';
 
 
 export type Artwork = {

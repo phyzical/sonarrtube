@@ -1,11 +1,11 @@
-import { Series as TvdbSeries } from './tvdb/Series.js';
-import { Series as SonarrSeries } from './sonarr/Series.js';
-import { Episode as SonarrEpisode } from './sonarr/Episode.js';
-import { Episode as TvdbEpisode } from './tvdb/Episode.js';
-import { Channel as YoutubeContext } from './youtube/Channel.js';
-import { ActionableVideo } from './ActionableVideo.js';
-import { cleanText } from '../../helpers/Puppeteer.js';
-import { Constants } from '../../types/config/Constants.js';
+import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
+import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
+import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
+import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
+import { Channel as YoutubeContext } from '@sonarrTube/models/api/youtube/Channel.js';
+import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
+import { cleanText } from '@sonarrTube/helpers/Puppeteer.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 type ActionableSeriesType = {
     videos?: ActionableVideo[],
@@ -244,7 +244,6 @@ export class ActionableSeries {
                     `unmatched with production code (${this.unmatchedYoutubeVideos().length}) ${this.futureTotal()} ` +
                     `!= ${this.youtubeContext.videos.length} current youtube list`,
                     `The following are affected (${this.youtubeContext.url});`,
-                    // eslint-disable-next-line max-len
                     '(In the case the video was removed set its production code to ' +
                     `${Constants.YOUTUBE.VIDEO_REMOVED_FLAG} and it will be skipped)`,
                     '(You may need to add these to ignore env)',

@@ -1,6 +1,6 @@
-import { ShowSubmitter } from './ShowSubmitter.js';
-import { config } from './helpers/Config.js';
-import { handleSignal } from './helpers/Generic.js';
+import { ShowSubmitter } from '@sonarrTube/ShowSubmitter.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { handleSignal } from '@sonarrTube/helpers/Generic.js';
 
 const rerunInterval = config().reRunInterval;
 

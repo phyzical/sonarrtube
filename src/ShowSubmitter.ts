@@ -1,15 +1,15 @@
-import { TvdbSubmitter } from './models/submitter/TvdbSubmitter.js';
-import { log } from './helpers/Log.js';
-import { series as getSonarrSeries } from './api/Sonarr.js';
-import { series as getTvdbSeries } from './api/Tvdb.js';
-import { channels as getYoutubeChannels } from './api/Youtube.js';
-import { config } from './helpers/Config.js';
-import { Config } from './types/config/Config.js';
-import { downloadVideos } from './api/Ytdlp.js';
-import { ActionableVideo } from './models/api/ActionableVideo.js';
-import { cachePath } from './helpers/Cache.js';
-import { ActionableSeries } from './models/api/ActionableSeries.js';
-import { Constants } from './types/config/Constants.js';
+import { TvdbSubmitter } from '@sonarrTube/models/submitter/TvdbSubmitter.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { series as getSonarrSeries } from '@sonarrTube/api/Sonarr.js';
+import { series as getTvdbSeries } from '@sonarrTube/api/Tvdb.js';
+import { channels as getYoutubeChannels } from '@sonarrTube/api/Youtube.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { Config } from '@sonarrTube/types/config/Config.js';
+import { downloadVideos } from '@sonarrTube/api/Ytdlp.js';
+import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
+import { cachePath } from '@sonarrTube/helpers/Cache.js';
+import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 declare global {
   interface Window {

@@ -1,4 +1,4 @@
-import { getCache, setCache } from './Cache.js';
+import { getCache, setCache } from '@sonarrTube/helpers/Cache.js';
 
 export const doRequest = async (
     url: string, method: string, headers = {}, cacheKey?: string, body?: string

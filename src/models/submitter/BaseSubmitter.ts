@@ -1,17 +1,19 @@
-import { click, find, type, loaded, goto, submitForm } from '../../helpers/Puppeteer.js';
-import { log } from '../../helpers/Log.js';
-import { ActionableVideo } from '../api/ActionableVideo.js';
-import { Browser, ElementHandle, Page } from 'puppeteer';
-import { TVDBConfig } from '../../types/config/TVDBConfig.js';
-import { ShowSubmitter } from '../../ShowSubmitter.js';
-import { currentFileTimestamp } from '../../helpers/Generic.js';
 import { writeFileSync } from 'fs';
+
 import puppeteer from 'puppeteer-extra';
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-import { Constants } from '../../types/config/Constants.js';
-import { notify } from '../../helpers/Notifications.js';
-import { ActionableSeries } from '../api/ActionableSeries.js';
+import { Browser, ElementHandle, Page } from 'puppeteer';
+
+import { click, find, type, loaded, goto, submitForm } from '@sonarrTube/helpers/Puppeteer.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
+import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig.js';
+import { ShowSubmitter } from '@sonarrTube/ShowSubmitter.js';
+import { currentFileTimestamp } from '@sonarrTube/helpers/Generic.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { notify } from '@sonarrTube/helpers/Notifications.js';
+import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
 
 puppeteer.use(AdblockerPlugin()).use(StealthPlugin());
 

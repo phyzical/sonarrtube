@@ -1,8 +1,8 @@
 import { ElementHandle, HTTPResponse, Page } from 'puppeteer';
-import { log } from './Log.js';
-import { Constants } from '../types/config/Constants.js';
 
-// eslint-disable-next-line no-return-assign
+import { log } from '@sonarrTube/helpers/Log.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+
 export const setHtmlInput = (el: Element, v: string): string => ((<HTMLInputElement>el).value = v);
 
 export const submitHtmlForm = (form: Element): void => (<HTMLFormElement>form).submit();
@@ -45,7 +45,7 @@ export const loaded = async (page: Page): Promise<HTTPResponse | null | undefine
     return await page.waitForNavigation({
       waitUntil: ['load', 'domcontentloaded', 'networkidle0']
     });
-  } catch (e) {
+  } catch (_e) {
     log('Warning! didn\'t detect a load', true);
   }
 };

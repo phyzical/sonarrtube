@@ -1,8 +1,8 @@
-import { log } from '../../../helpers/Log.js';
-import { Constants } from '../../../types/config/Constants.js';
-import { Season } from '../../../types/tvdb/Season.js';
-import { Episode as EpisodeType } from './../../../types/tvdb/Episode.js';
-import { Series } from './Series.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { Season } from '@sonarrTube/types/tvdb/Season.js';
+import { Episode as EpisodeType } from '@sonarrTube/types/tvdb/Episode.js';
+import { Series } from '@sonarrTube/models/api/tvdb/Series.js';
 
 export class Episode {
     absoluteNumber?: number;

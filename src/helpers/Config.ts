@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
-import { Config } from '../types/config/Config.js';
-import { Environment } from '../types/config/Environment.js';
-import { Constants } from '../types/config/Constants.js';
-import { resetCache } from './Cache.js';
+
+import { Environment } from '@sonarrTube/types/config/Environment.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { resetCache } from '@sonarrTube/helpers/Cache.js';
+import { Config } from '@sonarrTube/types/config/Config.js';
 
 let cachedConfig: Config;
 

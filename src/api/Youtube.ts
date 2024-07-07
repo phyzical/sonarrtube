@@ -1,10 +1,9 @@
-import { Channel } from './../models/api/youtube/Channel.js';
-import { log } from '../helpers/Log.js';
-import { Series } from '../models/api/tvdb/Series.js';
-import { getVideoInfos } from './Ytdlp.js';
-import { Constants } from '../types/config/Constants.js';
+import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { Series } from '@sonarrTube/models/api/tvdb/Series.js';
+import { getVideoInfos } from '@sonarrTube/api/Ytdlp.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
 
     const channels: Channel[] = [];

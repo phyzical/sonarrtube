@@ -1,11 +1,13 @@
+import { existsSync, unlinkSync, writeFileSync } from 'fs';
+
 import webp from 'webp-converter';
 import Jimp from 'jimp';
 import { PSM, createWorker } from 'tesseract.js';
-import { log } from './Log.js';
-import { cachePath } from './Cache.js';
-import { existsSync, unlinkSync, writeFileSync } from 'fs';
-import { delay } from './Puppeteer.js';
-import { Constants } from '../types/config/Constants.js';
+
+import { log } from '@sonarrTube/helpers/Log.js';
+import { cachePath } from '@sonarrTube/helpers/Cache.js';
+import { delay } from '@sonarrTube/helpers/Puppeteer.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 const cropImage = async (
     inputPath: string, rect: { x0: number, y0: number, x1: number, y1: number }

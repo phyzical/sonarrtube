@@ -1,13 +1,14 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync } from 'fs';
 import { execSync } from 'child_process';
-import { cachePath } from '../helpers/Cache.js';
 import path from 'path';
-import { config } from '../helpers/Config.js';
-import { log } from '../helpers/Log.js';
-import { Video } from '../models/api/youtube/Video.js';
-import { ActionableVideo } from '../models/api/ActionableVideo.js';
-import { getYoutubeDelayString } from '../helpers/Generic.js';
-import { Constants } from '../types/config/Constants.js';
+
+import { Video } from '@sonarrTube/models/api/youtube/Video.js';
+import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
+import { cachePath } from '@sonarrTube/helpers/Cache.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { getYoutubeDelayString } from '@sonarrTube/helpers/Generic.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
 

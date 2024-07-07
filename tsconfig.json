@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "target": "ES6",
+    "baseUrl": ".",
+    "outDir": "./build",
+    "target": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -10,10 +12,14 @@
     "esModuleInterop": true,
     "types": ["jest", "node"],
     "paths": {
-      "*": ["*", ".ts", ".tsx"] // This line is optional and customizable
+      "@sonarrTube/*": ["./src/*"], // Example for more specific paths
+      "@sonarrTube/root/*": ["./*"], // Allows you to use @root/ to refer to the project root
+      "@sonarrTube/tests/*": ["./tests/*"] // Allows you to use @root/ to refer to the project root
+      // Add more custom paths here
     },
     "sourceMap": true,
     "strict": true
   },
-  "include": ["tests/**/*", "src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

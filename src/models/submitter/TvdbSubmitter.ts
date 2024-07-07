@@ -1,11 +1,13 @@
-import { cleanTextContainsXpath, delay } from '../../helpers/Puppeteer.js';
-import { log } from '../../helpers/Log.js';
 import { setTimeout } from 'node:timers/promises';
-import { BaseSubmitter } from './BaseSubmitter.js';
-import { ElementHandle } from 'puppeteer';
 import { unlinkSync } from 'node:fs';
-import { processThumbnail } from '../../helpers/Thumbnails.js';
-import { Constants } from '../../types/config/Constants.js';
+
+import { ElementHandle } from 'puppeteer';
+
+import { log } from '@sonarrTube/helpers/Log.js';
+import { cleanTextContainsXpath, delay } from '@sonarrTube/helpers/Puppeteer.js';
+import { processThumbnail } from '@sonarrTube/helpers/Thumbnails.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { BaseSubmitter } from '@sonarrTube/models/submitter/BaseSubmitter.js';
 
 export class TvdbSubmitter extends BaseSubmitter {
   imageUploadsDisabled: boolean = false;
@@ -29,7 +31,7 @@ export class TvdbSubmitter extends BaseSubmitter {
         throw new Error('No episode number found');
       }
       log(`Found episode for ${episodeTitle} (${episodeNumber})`, true);
-    } catch (e) {
+    } catch (_e) {
       log(`Didn't find episode for ${episodeTitle}`, true);
     }
 
