@@ -1,5 +1,5 @@
 {
-  "name": "show-submitter",
+  "name": "sonarrtube",
   "version": "0.0.1",
   "description": "Adds shows to various show sources (Youtube)",
   "license": "MIT",
@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsc --p tsconfig.build.json && tsc-alias",
     "watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
-    "test": "jest --coverage",
+    "test": "jest",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "start": "node main.js"
@@ -40,6 +40,7 @@
     "@types/jest": "29.5.12",
     "@types/node": "20.14.9",
     "tsc-alias": "1.8.10",
-    "concurrently": "8.2.2"
+    "concurrently": "8.2.2",
+    "jest-ts-webcompat-resolver": "1.0.0"
   }
 }

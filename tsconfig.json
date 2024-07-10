@@ -5,21 +5,19 @@
     "target": "esnext",
     "module": "ESNext",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false,
     "esModuleInterop": true,
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "@types/jest"],
     "paths": {
-      "@sonarrTube/*": ["./src/*"], // Example for more specific paths
-      "@sonarrTube/root/*": ["./*"], // Allows you to use @root/ to refer to the project root
-      "@sonarrTube/tests/*": ["./tests/*"] // Allows you to use @root/ to refer to the project root
-      // Add more custom paths here
+      "@sonarrTube/*": ["./src/*"]
     },
     "sourceMap": true,
     "strict": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules"]
 }

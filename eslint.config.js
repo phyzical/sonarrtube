@@ -15,16 +15,7 @@ export default [
       globals: {
         ...globals.node,
         ...globals.browser,
-        console: true,
-        describe: true,
-        it: true,
-        beforeEach: true,
-        afterEach: true,
-        expect: true,
-        Element: true,
-        HTMLInputElement: true,
-        HTMLFormElement: true,
-        module: true,
+        ...globals.jest,
       },
       parserOptions: {
         ecmaVersion: 2022,

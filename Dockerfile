@@ -64,7 +64,7 @@ USER app
 
 COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
 COPY --from=build --chown=app ${APP_DIR}/node_modules ${APP_DIR}/node_modules
-COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
+COPY --from=build --chown=app ${APP_DIR}/build/src ${APP_DIR}/build/src
 COPY --chown=app ./main.js ./boot.sh ./package.json ./
 
 
