@@ -27,7 +27,7 @@
     "start": "node main.js"
   },
   "devDependencies": {
-    "typescript": "5.5.3",
+    "typescript": "5.5.4",
     "@typescript-eslint/parser": "7.15.0",
     "@typescript-eslint/eslint-plugin": "7.15.0",
     "typescript-eslint": "7.15.0",
