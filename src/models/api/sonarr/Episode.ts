@@ -1,6 +1,6 @@
-import { Episode as EpisodeType } from './../../../types/sonarr/Episode.js';
-import { Constants } from '../../../types/config/Constants.js';
-import { Series } from './Series.js';
+import { Episode as EpisodeType } from '@sonarrTube/types/sonarr/Episode.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { Series } from '@sonarrTube/models/api/sonarr/Series.js';
 
 export class Episode {
     seriesId?: number;
@@ -32,7 +32,5 @@ export class Episode {
         this.series = series;
     }
 
-    tvdbCacheKey(): string {
-        return `/${Constants.CACHE_FOLDERS.TVDB}/${this.series.tvdbId}/${this.tvdbId}.json`;
-    }
+    tvdbCacheKey = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.series.tvdbId}/${this.tvdbId}.json`;
 }

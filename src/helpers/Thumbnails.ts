@@ -1,11 +1,13 @@
+import { existsSync, unlinkSync, writeFileSync } from 'fs';
+
 import webp from 'webp-converter';
 import Jimp from 'jimp';
 import { PSM, createWorker } from 'tesseract.js';
-import { log } from './Log.js';
-import { cachePath } from './Cache.js';
-import { existsSync, unlinkSync, writeFileSync } from 'fs';
-import { delay } from './Puppeteer.js';
-import { Constants } from '../types/config/Constants.js';
+
+import { log } from '@sonarrTube/helpers/Log.js';
+import { cachePath } from '@sonarrTube/helpers/Cache.js';
+import { delay } from '@sonarrTube/helpers/Puppeteer.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 const cropImage = async (
     inputPath: string, rect: { x0: number, y0: number, x1: number, y1: number }
@@ -55,7 +57,7 @@ const cropImage = async (
 
 type Coordinates = { x0: number; y0: number; x1: number; y1: number; }
 
-const findThumbnailText = async (imagePath: string, attempt: number): Promise<Coordinates> => {
+const findThumbnailText = async (imagePath: string, attempt: number): Promise<Coordinates | undefined> => {
     const worker = await createWorker(Constants.THUMBNAIL.TEXT.LANGUAGE, 1, {
         cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
         // logger: m => console.log(m), // Log progress
@@ -75,7 +77,7 @@ const findThumbnailText = async (imagePath: string, attempt: number): Promise<Co
                 .getBufferAsync(Jimp.MIME_PNG)
         );
 
-        let coordinates = null;
+        let coordinates: Coordinates | undefined;
 
         res.data.words.forEach(element => {
             if (
@@ -106,7 +108,9 @@ const findThumbnailText = async (imagePath: string, attempt: number): Promise<Co
     }
 };
 
-export const processThumbnail = async (thumbnailUrl: string, id: string, attempt: number = 0): Promise<string> => {
+export const processThumbnail = async (
+    thumbnailUrl: string, id: string, attempt: number = 0
+): Promise<string | undefined> => {
     log(`downloading ${thumbnailUrl}`, true);
     const urlSplits = thumbnailUrl.split('.');
     const extension = urlSplits[urlSplits.length - 1];

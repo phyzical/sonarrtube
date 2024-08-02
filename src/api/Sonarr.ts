@@ -1,11 +1,11 @@
-import { config } from '../helpers/Config.js';
-import { log } from '../helpers/Log.js';
-import { doRequest } from '../helpers/Requests.js';
-import { Episode } from '../models/api/sonarr/Episode.js';
-import { Series } from '../models/api/sonarr/Series.js';
-import { Constants } from '../types/config/Constants.js';
-import { Episode as EpisodeType } from '../types/sonarr/Episode.js';
-import { Series as SeriesType } from '../types/sonarr/Series.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { doRequest } from '@sonarrTube/helpers/Requests.js';
+import { Episode } from '@sonarrTube/models/api/sonarr/Episode.js';
+import { Series } from '@sonarrTube/models/api/sonarr/Series.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { Episode as EpisodeType } from '@sonarrTube/types/sonarr/Episode.js';
+import { Series as SeriesType } from '@sonarrTube/types/sonarr/Series.js';
 
 const {
     sonarr: {

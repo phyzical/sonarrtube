@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
-import { Config } from '../types/config/Config.js';
-import { Environment } from '../types/config/Environment.js';
-import { Constants } from '../types/config/Constants.js';
-import { resetCache } from './Cache.js';
 
-let cachedConfig: Config = null;
+import { Environment } from '@sonarrTube/types/config/Environment.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { resetCache } from '@sonarrTube/helpers/Cache.js';
+import { Config } from '@sonarrTube/types/config/Config.js';
+
+let cachedConfig: Config;
 
 export const config = (): Config => {
     if (cachedConfig) {
@@ -42,7 +43,7 @@ export const config = (): Config => {
     const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
 
     if (FORCE_CLEAR_CACHE == 'true') {
-        resetCache();
+        resetCache(cacheDir);
     }
 
     return cachedConfig = {

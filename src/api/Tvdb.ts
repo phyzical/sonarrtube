@@ -1,11 +1,11 @@
-import { Episode as SonarrEpisode } from '../models/api/sonarr/Episode.js';
-import { Series as SonarrSeries } from '../models/api/sonarr/Series.js';
-import { config } from '../helpers/Config.js';
-import { log } from '../helpers/Log.js';
-import { doRequest } from '../helpers/Requests.js';
-import { Episode } from '../models/api/tvdb/Episode.js';
-import { Series } from '../models/api/tvdb/Series.js';
-import { Constants } from '../types/config/Constants.js';
+import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
+import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { doRequest } from '@sonarrTube/helpers/Requests.js';
+import { Episode } from '@sonarrTube/models/api/tvdb/Episode.js';
+import { Series } from '@sonarrTube/models/api/tvdb/Series.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 const {
     tvdb: {
@@ -26,7 +26,7 @@ const login = async (apiKey: string): Promise<string> => {
             `${Constants.TVDB.API_HOST}/${Constants.TVDB.LOGIN_ENDPOINT}`,
             Constants.REQUESTS.POST,
             Constants.TVDB.HEADERS,
-            null,
+            undefined,
             JSON.stringify({ apiKey })
         )
     ).data;
@@ -40,7 +40,7 @@ const login = async (apiKey: string): Promise<string> => {
 
 export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> => {
     const token = await login(apiKey);
-    const serieses = [];
+    const serieses: Series[] = [];
 
     for (const series of sonarrSeries) {
         log(`Fetching Series ${series.title} (${series.tvdbId}) from tvdb`);
@@ -65,7 +65,7 @@ export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> =>
 
 const episodes = async (sonarrEpisodes: SonarrEpisode[], series: Series): Promise<Episode[]> => {
     const token = await login(apiKey);
-    const episodes = [];
+    const episodes: Episode[] = [];
 
     for (const episode of sonarrEpisodes) {
         log(`Fetching Episode ${episode.tvdbId} from tvdb`, true);

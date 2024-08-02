@@ -1,7 +1,7 @@
-import { Constants } from '../types/config/Constants.js';
-import { config } from './Config.js';
-import { log } from './Log.js';
-import { doRequest } from './Requests.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { doRequest } from '@sonarrTube/helpers/Requests.js';
 
 
 export const notify = async (message: string): Promise<void> => {
@@ -53,7 +53,7 @@ export const notify = async (message: string): Promise<void> => {
             notificationWebhook,
             Constants.REQUESTS.POST,
             { 'Content-Type': 'application/json' },
-            null,
+            undefined,
             JSON.stringify(payload)
         );
     }

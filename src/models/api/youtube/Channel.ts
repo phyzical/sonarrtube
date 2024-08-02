@@ -1,8 +1,8 @@
-import { Channel as ChannelType } from './../../../types/youtube/Channel.js';
-import { Video } from './Video.js';
+import { Channel as ChannelType } from '@sonarrTube/types/youtube/Channel.js';
+import { Video } from '@sonarrTube/models/api/youtube/Video.js';
 export class Channel {
-    videos: Video[];
-    id: string;
+    videos: Video[] = [];
+    id?: string;
     tvdbId: string;
     url?: string;
     constructor(payload: ChannelType) {

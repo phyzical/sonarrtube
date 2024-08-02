@@ -1,10 +1,10 @@
-import { AlternateTitle } from './AlternateTitle.js';
-import { Episode } from './Episode.js';
-import { Image } from './Image.js';
-import { Language } from './Language.js';
-import { Season } from './Season.js';
-import { Statistics } from './Statistics.js';
-import { Rating } from './Rating.js';
+import { AlternateTitle } from '@sonarrTube/types/sonarr/AlternateTitle.js';
+import { Episode } from '@sonarrTube/types/sonarr/Episode.js';
+import { Image } from '@sonarrTube/types/sonarr/Image.js';
+import { Language } from '@sonarrTube/types/sonarr/Language.js';
+import { Season } from '@sonarrTube/types/sonarr/Season.js';
+import { Statistics } from '@sonarrTube/types/sonarr/Statistics.js';
+import { Rating } from '@sonarrTube/types/sonarr/Rating.js';
 
 export type Series = {
     episodes: Episode[],

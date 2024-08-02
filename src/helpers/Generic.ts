@@ -1,4 +1,4 @@
-import { config } from './Config.js';
+import { config } from '@sonarrTube/helpers/Config.js';
 
 export const currentFileTimestamp = (): string =>
   new Date().toJSON()
