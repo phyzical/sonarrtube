@@ -49,7 +49,6 @@ describe('#config', () => {
     describe('with caching', () => {
         let setCachedConfigSpy: jest.SpyInstance;
         beforeAll(() => {
-            Constants.ENVIRONMENT.ENV_FILE = '';
             setCachedConfigSpy = jest.spyOn(
                 // eslint-disable-next-line @typescript-eslint/no-var-requires
                 require('@sonarrTube/helpers/Config'),
@@ -66,10 +65,6 @@ describe('#config', () => {
     });
 
     describe('with no env file', () => {
-        beforeAll(() => {
-            Constants.ENVIRONMENT.ENV_FILE = '';
-        });
-
         it('should initialize config', () => {
             expect(config()).toEqual({
                 titleCleanerRegex: new RegExp(Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),
@@ -103,9 +98,9 @@ describe('#config', () => {
     });
 
     describe('with env file', () => {
+        const envFile = `./tmp/.${randomUUID()}.env`;
+
         beforeAll(() => {
-            const envFile = `./tmp/.${randomUUID()}.env`;
-            Constants.ENVIRONMENT.ENV_FILE = envFile;
             writeFileSync(envFile, [
                 `TVDB_USERNAME=${configValues.TVDB_USERNAME}`,
                 `TVDB_PASSWORD=${configValues.TVDB_PASSWORD}`,
@@ -129,6 +124,10 @@ describe('#config', () => {
                 `NOTIFICATION_WEBHOOK=${configValues.NOTIFICATION_WEBHOOK}`,
                 `RE_RUN_INTERVAL=${configValues.RE_RUN_INTERVAL}`,
             ].join('\n'));
+        });
+
+        beforeEach(() => {
+            Constants.ENVIRONMENT.ENV_FILE = envFile;
         });
 
         it('should initialize config', async () => {
@@ -164,13 +163,18 @@ describe('#config', () => {
     });
 
     describe('testing complex encoded regex', () => {
+        const envFile = `./tmp/.${randomUUID()}.env`;
+
         beforeAll(() => {
-            const envFile = `./tmp/.${randomUUID()}.env`;
             Constants.ENVIRONMENT.ENV_FILE = envFile;
             writeFileSync(envFile, [
                 // eslint-disable-next-line max-len
                 'TITLE_CLEANER_REGEX=ICooLXxfKSogKihUUk98XCgqRG9jdW1lbnRhcnlcKSp8U21hcnRlciBFdmVyeSBEYXkgKFswLTldKSt8IyhzfFMpK2hvcnRzfChBZGFtIFNhdmFnZSgnfOKAmSkqcyopKiAqKChPbmUgRGF5fExpdmV8V2Vla2VuZCkqICooQnVpbGR8UmVwYWlyKSopK3MqICooLXxffDopKiAqfENvbXB1dGVycGhpbGV8R3VnYSBGb29kc3xSZWFsIFN0b3JpZXN8QXJzIFRlY2hpbmNhfFdhciBTdG9yaWVzfEJhdHRsZXpvbmV8RG9vbXNkYXl8UEJTIERpZ2l0YWwgU3R1ZGlvc3xTcGFjZSBUaW1lfFxbNGtcXXxbXlx4MDAtXHg3Rl18TnVjbGVhciBUaHJvbmUgKihbMC05XSkqKQ==',
             ].join('\n'));
+        });
+
+        beforeEach(() => {
+            Constants.ENVIRONMENT.ENV_FILE = envFile;
         });
 
         it('should initialize config', async () => {
