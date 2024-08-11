@@ -3,13 +3,9 @@ import { randomUUID } from 'crypto';
 import path from 'path';
 import { btoa } from 'buffer';
 
-import { global } from 'global';
-
 import { atou, btou, config, isBase64Encoded } from '@sonarrTube/helpers/Config';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { Environment } from '@sonarrTube/types/config/Environment';
-
-const initialProcessEnv = process.env;
 
 describe('#config', () => {
     const configValues = {
@@ -35,20 +31,6 @@ describe('#config', () => {
         NOTIFICATION_WEBHOOK: 'webhook',
         RE_RUN_INTERVAL: '10',
     } as Environment;
-
-    afterEach(() => {
-        global.cachedConfig = {};
-        // Clear environment variables set by dotenv
-        // eslint-disable-next-line no-restricted-syntax
-        for (const key in process.env) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (process.env.hasOwnProperty(key) && !initialProcessEnv.hasOwnProperty(key)) {
-                delete process.env[key];
-            }
-        }
-        // Restore initial environment variables
-        process.env = { ...initialProcessEnv };
-    });
 
     afterAll(() => {
         const tmpDir = 'tmp';
@@ -80,9 +62,6 @@ describe('#config', () => {
             config();
             setCachedConfigSpy.mockReset();
             expect(setCachedConfigSpy).toHaveBeenCalledTimes(0);
-        });
-        afterAll(() => {
-            setCachedConfigSpy.mockRestore();
         });
     });
 
