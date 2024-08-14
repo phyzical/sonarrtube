@@ -10,18 +10,17 @@ export const getCache = (cacheKey?: string): string | void => {
     if (!cacheKey) {
         return;
     }
-    let json;
+    let content;
     try {
-        json = JSON.parse(
-            readFileSync(cachePath(cacheKey), Constants.FILES.ENCODING)
-        );
+        content = readFileSync(cachePath(cacheKey), Constants.FILES.ENCODING);
+        content = JSON.parse(content);
         // eslint-disable-next-line no-empty
     } catch (_e) { }
-    if (json) {
+    if (content) {
         log(`Found ${cacheKey} in cache. Returning cached data.`, true);
     }
 
-    return json;
+    return content;
 };
 
 export const setCache = (cacheKey?: string, data?: string): void => {

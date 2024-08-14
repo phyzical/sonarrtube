@@ -1,3 +1,5 @@
+import { consoleSpy, processSpy } from 'tests/config/jest.setup';
+
 import { currentFileTimestamp, getYoutubeDelayString, handleSignal } from '@sonarrTube/helpers/Generic';
 
 describe('currentFileTimestamp', () => {
@@ -9,13 +11,6 @@ describe('currentFileTimestamp', () => {
 });
 
 describe('handleSignal', () => {
-    let consoleSpy: jest.SpyInstance;
-    let processSpy: jest.SpyInstance;
-
-    beforeEach(() => {
-        consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => null);
-        processSpy = jest.spyOn(process, 'exit').mockImplementation(() => null as never);
-    });
 
     it('should log a message', () => {
         handleSignal('SIGINT');

@@ -3,6 +3,8 @@ import { randomUUID } from 'crypto';
 import path from 'path';
 import { btoa } from 'buffer';
 
+import { mockConfig, resetConfig } from 'tests/config/jest.setup';
+
 import { atou, btou, config, isBase64Encoded } from '@sonarrTube/helpers/Config';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { Environment } from '@sonarrTube/types/config/Environment';
@@ -32,6 +34,11 @@ describe('#config', () => {
         RE_RUN_INTERVAL: '10',
     } as Environment;
 
+    beforeEach(() => {
+        mockConfig().mockRestore();
+        resetConfig();
+    });
+
     afterAll(() => {
         const tmpDir = 'tmp';
         const files = readdirSync(tmpDir);
@@ -56,6 +63,7 @@ describe('#config', () => {
             );
         });
         it('should set cache only once', () => {
+            setCachedConfigSpy.mockReset();
             config();
             expect(setCachedConfigSpy).toHaveBeenCalledTimes(1);
             config();
