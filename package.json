@@ -41,6 +41,7 @@
     "@types/node": "20.14.9",
     "tsc-alias": "1.8.10",
     "concurrently": "8.2.2",
-    "jest-ts-webcompat-resolver": "1.0.0"
+    "jest-ts-webcompat-resolver": "1.0.0",
+    "http-request-mock": "1.8.27"
   }
 }

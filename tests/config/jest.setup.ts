@@ -1,3 +1,7 @@
+import { existsSync, readFileSync } from 'fs';
+import { btoa } from 'buffer';
+import { join } from 'path';
+
 import { config } from '@sonarrTube/helpers/Config';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { resetCache } from '@sonarrTube/helpers/Cache';
@@ -6,6 +10,8 @@ const initialProcessEnv = process.env;
 export let consoleSpy: jest.SpyInstance;
 export let doRequestSpy: jest.SpyInstance;
 export let processSpy: jest.SpyInstance;
+export let setCacheSpy: jest.SpyInstance;
+export let getCacheSpy: jest.SpyInstance;
 
 let configMock: jest.SpyInstance;
 const testConfig = {
@@ -26,20 +32,30 @@ export const mockConfig = (configData = {}): jest.SpyInstance => {
     }));
 };
 
-global.fetch = jest.fn<Promise<Response>, [URL | RequestInfo, RequestInit?]>(() =>
-    Promise.resolve<Response>(new Response(JSON.stringify({}), {
-        headers: new Headers(),
-        status: 200,
-        statusText: 'OK',
-        // add other properties of Response if needed
-    }))
-);
+global.fetch = jest.fn((url, _options) => {
+    const uuid = btoa(url.toString());
+    const fileName = join(__dirname, '..', '__mocks__', 'requests', `${uuid}.json`);
+    if (!existsSync(fileName)) {
+        throw new Error(`Payload not found for ${url}, please save as ${fileName}`);
+    }
+    const payload = readFileSync(fileName).toString();
+
+    return Promise.resolve({
+        body: payload,
+        json: () => Promise.resolve(JSON.parse(payload)),
+    });
+
+}) as jest.Mock;
 
 beforeEach(() => {
     consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => null);
     processSpy = jest.spyOn(process, 'exit').mockImplementation(() => null as never);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    doRequestSpy = jest.spyOn(require('@sonarrTube/helpers/Requests'), 'doRequest').mockImplementation(() => null);
+    doRequestSpy = jest.spyOn(require('@sonarrTube/helpers/Requests'), 'doRequest');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    setCacheSpy = jest.spyOn(require('@sonarrTube/helpers/Cache'), 'setCache');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    getCacheSpy = jest.spyOn(require('@sonarrTube/helpers/Cache'), 'getCache');
     Constants.ENVIRONMENT.ENV_FILE = '';
     mockConfig();
 });

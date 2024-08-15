@@ -13,7 +13,7 @@ export const doRequest = async (
             body
         })
             .then(async response => {
-                if (response.body) {
+                if (response?.body) {
                     json = (await response.json());
                     setCache(cacheKey, JSON.stringify(json));
                 }
