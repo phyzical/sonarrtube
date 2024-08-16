@@ -6,6 +6,7 @@ import { log } from '@sonarrTube/helpers/Log';
 describe('Log', () => {
     beforeEach(() => {
         mockConfig({ verbose: false });
+        consoleSpy.mockClear();
     });
 
     it('should log message', () => {

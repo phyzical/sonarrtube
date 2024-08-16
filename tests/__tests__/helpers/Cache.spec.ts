@@ -6,8 +6,6 @@ import { consoleSpy } from 'tests/config/jest.setup';
 import { cachePath, clearCache, getCache, resetCache, setCache } from '@sonarrTube/helpers/Cache';
 import { config } from '@sonarrTube/helpers/Config';
 
-// TODO: add spys to verify it calls things as expected, instead of actually creating files
-
 describe('Cache', () => {
     describe('getCache', () => {
         it('should return undefined if no cache key is provided', () => {

@@ -13,6 +13,8 @@ export let processSpy: jest.SpyInstance;
 export let setCacheSpy: jest.SpyInstance;
 export let getCacheSpy: jest.SpyInstance;
 
+
+
 let configMock: jest.SpyInstance;
 const testConfig = {
     cacheDir: 'tmp/cache',
@@ -77,6 +79,7 @@ export const resetConfig = (): void => {
 
 afterEach(() => {
     jest.restoreAllMocks();
+    jest.clearAllMocks();
     resetCache(testConfig.cacheDir);
     resetConfig();
 });

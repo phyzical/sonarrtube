@@ -55,7 +55,7 @@ describe('#config', () => {
 
     describe('with caching', () => {
         let setCachedConfigSpy: jest.SpyInstance;
-        beforeAll(() => {
+        beforeEach(() => {
             setCachedConfigSpy = jest.spyOn(
                 // eslint-disable-next-line @typescript-eslint/no-var-requires
                 require('@sonarrTube/helpers/Config'),
@@ -63,11 +63,11 @@ describe('#config', () => {
             );
         });
         it('should set cache only once', () => {
-            setCachedConfigSpy.mockReset();
+            setCachedConfigSpy.mockClear();
             config();
             expect(setCachedConfigSpy).toHaveBeenCalledTimes(1);
+            setCachedConfigSpy.mockClear();
             config();
-            setCachedConfigSpy.mockReset();
             expect(setCachedConfigSpy).toHaveBeenCalledTimes(0);
         });
     });

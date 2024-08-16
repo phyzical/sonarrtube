@@ -15,6 +15,11 @@ describe('Requests', () => {
             expect(result).toEqual({ test: 'data' });
         });
 
+        it('should rethrow if errors', async () => {
+            await expect(doRequest('https://INVALIDJSON.com', 'GET')).rejects.toThrow();
+        });
+
+
         it('should return a cached result if called twice', async () => {
             const key = randomUUID();
             const expected = { test: 'data' };
