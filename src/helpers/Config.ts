@@ -36,7 +36,6 @@ const processRegex = (regex: string): RegExp => {
 
 export const config = (): Config => {
     const cachedConfig = getCachedConfig();
-    console.log(cachedConfig)
     if (cachedConfig && Object.keys(cachedConfig).length > 0) {
         return cachedConfig;
     }

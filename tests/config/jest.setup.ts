@@ -50,7 +50,7 @@ global.fetch = jest.fn((url, _options) => {
 }) as jest.Mock;
 
 beforeEach(() => {
-    consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => null);
+    consoleSpy = jest.spyOn(console, 'log');
     processSpy = jest.spyOn(process, 'exit').mockImplementation(() => null as never);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     doRequestSpy = jest.spyOn(require('@sonarrTube/helpers/Requests'), 'doRequest');

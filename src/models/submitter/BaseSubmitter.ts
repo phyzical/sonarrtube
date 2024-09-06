@@ -69,7 +69,7 @@ export class BaseSubmitter {
 
   find = async (selector: string): Promise<ElementHandle<Element> | null> => await find(this.page(), selector);
 
-  click = async (selector: string, options = {}): Promise<void> => await click(this.page(), selector, options);
+  click = async (selector: string): Promise<void> => await click(this.page(), selector);
 
   loaded = async (): Promise<void> => {
     await loaded(this.page());

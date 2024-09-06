@@ -3,31 +3,27 @@ import { ElementHandle, HTTPResponse, Page } from 'puppeteer';
 import { log } from '@sonarrTube/helpers/Log.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-export const setHtmlInput = (el: Element, v: string): string => ((<HTMLInputElement>el).value = v);
 
-export const submitHtmlForm = (form: Element): void => (<HTMLFormElement>form).submit();
-export const clickHtmlElement = (button: Element): void => (<HTMLFormElement>button).click();
 export const delay = (time: number): Promise<void> => new Promise((resolve) => {
   setTimeout(resolve, time);
 });
 
-export const find = async (page: Page, selector: string, options = {}): Promise<ElementHandle<Element> | null> => {
+export const find = async (page: Page, selector: string): Promise<ElementHandle<Element> | null> => {
   log(`Finding ${selector}`, true);
 
-  try {
-    return await page.waitForSelector(selector, options);
-  } catch (e) {
-    log(`Failed to find ${selector}`, true);
-    throw e;
+  const element = await page.$(selector);
+  if (!element) {
+    throw new Error(`failed to find element matching selector "${selector}"`);
   }
+
+  return element;
 };
 
-export const click = async (page: Page, selector: string, options = {}): Promise<void> => {
-  await find(page, selector, options);
+export const click = async (page: Page, selector: string): Promise<void> => {
+  await find(page, selector);
   log(`Clicking ${selector}`, true);
 
   (await page.$$(selector))[0].click();
-  // (await page.$$(selector))[0].evaluate((b: HTMLElement) => b.click());
 };
 
 export const goto = async (page: Page, url: string): Promise<HTTPResponse | null> => {
@@ -50,9 +46,8 @@ export const loaded = async (page: Page): Promise<HTTPResponse | null | undefine
   }
 };
 
-export const getValue = async (page: Page, selector: string): Promise<string> =>
+const getValue = async (page: Page, selector: string): Promise<string> =>
   await page.$eval(selector, (el: Element) => (el as HTMLInputElement).value);
-
 
 export const type = async (page: Page, selector: string, value: string, simulate: boolean = true): Promise<void> => {
   let inputValue = await getValue(page, selector);
@@ -78,7 +73,11 @@ export const type = async (page: Page, selector: string, value: string, simulate
 };
 
 export const submitForm = async (page: Page, selector: string): Promise<void> => {
-  page.$eval(selector, (form: Element) => (<HTMLFormElement>form).submit());
+  const form = await page.$(selector);
+  if (!form) {
+    throw new Error(`failed to find element matching selector "${selector}"`);
+  }
+  await form.evaluate((formElement: Element) => (<HTMLFormElement>formElement).submit());
   await loaded(page);
 };
 
