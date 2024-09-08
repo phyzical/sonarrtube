@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import puppeteer, { Browser, Page } from 'puppeteer';
-import { consoleSpy, mockConfig } from 'tests/config/jest.setup';
+import { consoleSpy } from 'tests/config/jest.setup';
 
 import {
     cleanText, cleanTextContainsXpath, click, delay,
@@ -20,6 +20,7 @@ describe('Puppeteer', () => {
     beforeAll(async () => {
         browser = await puppeteer.launch();
         page = await browser.newPage();
+        page.setDefaultTimeout(2000);
     });
 
     afterAll(async () => {
@@ -36,7 +37,6 @@ describe('Puppeteer', () => {
         it('should match expected html', async () => {
             await page.goto(getPageUrl('cleanTextContainsXpath.html'));
             const xpath = cleanTextContainsXpath('  test1  ');
-            console.log(await page.content());
             const element = await page.waitForSelector(`xpath///div[${xpath}]`);
             expect(element).toBeTruthy();
         });
@@ -105,8 +105,35 @@ describe('Puppeteer', () => {
         it('should type text', async () => {
             await goto(page, getPageUrl('submitForm.html'));
             await type(page, '#input', 'test');
-            const content = await page.$eval('#test', (el: Element) => (el as HTMLInputElement).value);
+            const content = await page.$eval('#input', (el: Element) => (el as HTMLInputElement).value);
             expect(content).toBe('test');
+        });
+
+        it('should type non simulated text', async () => {
+            await goto(page, getPageUrl('submitForm.html'));
+            await type(page, '#input', 'test', false);
+            const content = await page.$eval('#input', (el: Element) => (el as HTMLInputElement).value);
+            expect(content).toBe('test');
+        });
+
+        it('should throw when text doesnt update correctly', async () => {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'getValue')
+                .mockImplementation(() => 'blarg' as never);
+            await goto(page, getPageUrl('submitForm.html'));
+            await expect(type(page, '#input', 'test'))
+                .rejects
+                .toThrow('selector should have test but has blarg');
+        });
+
+        it('should clear text then type', async () => {
+            const selector = '#input';
+            await goto(page, getPageUrl('submitForm.html'));
+            await type(page, selector, 'test');
+            await type(page, selector, 'test2');
+            const content = await page.$eval('#input', (el: Element) => (el as HTMLInputElement).value);
+            expect(content).toBe('test2');
+            expect(consoleSpy).toHaveBeenCalledWith(`Clearing text in ${selector}`);
         });
     });
 
@@ -114,8 +141,7 @@ describe('Puppeteer', () => {
         it('should click element', async () => {
             await goto(page, getPageUrl('click.html'));
             await click(page, '#test');
-            const content = await page.$eval('#test', (el: Element) => el.textContent);
-            expect(content).toBe('test');
+            expect(await page.waitForSelector('#newDiv')).toBeTruthy();
         });
     });
     describe('delay', () => {

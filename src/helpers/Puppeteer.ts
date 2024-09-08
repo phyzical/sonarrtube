@@ -46,14 +46,17 @@ export const loaded = async (page: Page): Promise<HTTPResponse | null | undefine
   }
 };
 
-const getValue = async (page: Page, selector: string): Promise<string> =>
-  await page.$eval(selector, (el: Element) => (el as HTMLInputElement).value);
+export const getValue = async (page: Page, selector: string): Promise<string> =>
+  await page.$eval(selector, /* istanbul ignore next */(el: Element) => (el as HTMLInputElement).value);
 
 export const type = async (page: Page, selector: string, value: string, simulate: boolean = true): Promise<void> => {
   let inputValue = await getValue(page, selector);
   if (inputValue) {
     log(`Clearing text in ${selector}`, true);
-    await page.evaluate((selector) => (<HTMLFormElement>document.querySelector(selector)).value = '', selector);
+    await page.evaluate(
+      /* istanbul ignore next */(selector) => (<HTMLFormElement>document.querySelector(selector)).value = '',
+      selector
+    );
   }
 
   log(`Typing ${value} into ${selector}`, true);
@@ -61,8 +64,9 @@ export const type = async (page: Page, selector: string, value: string, simulate
   if (simulate) {
     await page.type(selector, value);
   } else {
-    await page.evaluate((selector, value) =>
-      (<HTMLFormElement>document.querySelector(selector)).value = value, selector, value);
+    await page.evaluate(
+      /* istanbul ignore next */(selector, value) => (<HTMLFormElement>document.querySelector(selector)).value = value,
+      selector, value);
     await delay(1000);
   }
 
@@ -77,7 +81,9 @@ export const submitForm = async (page: Page, selector: string): Promise<void> =>
   if (!form) {
     throw new Error(`failed to find element matching selector "${selector}"`);
   }
-  await form.evaluate((formElement: Element) => (<HTMLFormElement>formElement).submit());
+  await form.evaluate(
+    /* istanbul ignore next */(formElement: Element) => (<HTMLFormElement>formElement).submit()
+  );
   await loaded(page);
 };
 
