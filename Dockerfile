@@ -18,6 +18,8 @@ RUN yum -y update \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
 USER app
 
 WORKDIR ${APP_DIR}
