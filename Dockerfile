@@ -79,6 +79,6 @@ USER app
 
 ARG RELEASE_VERSION="VERSION_PROVIDED_ON_BUILD"
 ENV RELEASE_VERSION=$RELEASE_VERSION
-
+RUN echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
 ENTRYPOINT [ "/app/boot.sh" ]
 CMD [ "node", "main.js" ]
