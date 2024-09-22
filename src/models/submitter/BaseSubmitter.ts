@@ -9,11 +9,11 @@ import { click, find, type, loaded, goto, submitForm } from '@sonarrTube/helpers
 import { log } from '@sonarrTube/helpers/Log.js';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig.js';
-import { ShowSubmitter } from '@sonarrTube/ShowSubmitter.js';
 import { currentFileTimestamp } from '@sonarrTube/helpers/Generic.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { notify } from '@sonarrTube/helpers/Notifications.js';
 import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
+import { cachePath } from '@sonarrTube/helpers/Cache';
 
 puppeteer.use(AdblockerPlugin()).use(StealthPlugin());
 
@@ -28,6 +28,7 @@ export class BaseSubmitter {
   downloads: string[];
   warnings: string[];
   errors: string[];
+  folder: string;
 
   constructor(tvdbConfig: TVDBConfig) {
     this.username = tvdbConfig.username;
@@ -37,6 +38,7 @@ export class BaseSubmitter {
     this.downloads = [];
     this.warnings = [];
     this.errors = [];
+    this.folder = cachePath(`${Constants.CACHE_FOLDERS.SCREENSHOTS}`);
   }
 
   page = (): Page => {
@@ -146,7 +148,7 @@ export class BaseSubmitter {
   saveHtml = async (): Promise<void> => {
     try {
       const html = await this.page().content();
-      const filename = `${ShowSubmitter.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
+      const filename = `${this.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
       const htmlPath = `${filename}.html`;
       writeFileSync(htmlPath, html);
       log(`html can be found at ${htmlPath}`);
@@ -156,7 +158,7 @@ export class BaseSubmitter {
   };
 
   takeScreenshot = async (): Promise<void> => {
-    const filename = `${ShowSubmitter.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
+    const filename = `${this.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
     const screenshotPath = `${filename}.png`;
     try {
       await this.page().screenshot({

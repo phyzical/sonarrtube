@@ -27,8 +27,6 @@ declare global {
 }
 
 export class ShowSubmitter {
-  static folder: string = cachePath(`${Constants.CACHE_FOLDERS.SCREENSHOTS}`);
-
   config: Config;
   submitter: TvdbSubmitter;
 
