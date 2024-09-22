@@ -19,6 +19,7 @@ RUN yum -y update \
     && rm -rf /var/cache/yum
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_ARGS="--no-sandbox --disable-setuid-sandbox"
 
 USER app
 

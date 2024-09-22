@@ -111,9 +111,4 @@ reference the .env.dist for envs to add
 `make build-image`
 `make run-image`
 
-## TODO
-
-* tests
-* mask it an cli, npm package
-* notifications
-* ability to run as a cron
+`ghcr.io/phyzical/sonarrtube:latest`
