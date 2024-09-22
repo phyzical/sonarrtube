@@ -28,7 +28,8 @@ const jestConfig: JestConfigWithTsJest = {
     setupFilesAfterEnv: ['./tests/config/jest.setup.ts'],
     globalSetup: './tests/config/jest.global.setup.ts',
     globalTeardown: './tests/config/jest.global.teardown.ts',
-    resolver: 'jest-ts-webcompat-resolver'
+    resolver: 'jest-ts-webcompat-resolver',
+    testSequencer: './tests/config/testSequencer.ts',
 };
 
 export default jestConfig;
