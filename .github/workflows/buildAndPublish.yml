@@ -45,7 +45,7 @@ jobs:
           docker run \
             -v ${PWD}/tests:/app/tests \
             -v ${PWD}/src:/app/src \
-            -v ${PWD}/eslint.config.js:/app/src/eslint.config.js \
+            -v ${PWD}/eslint.config.js:/app/eslint.config.js \
             ghcr.io/phyzical/sonarrtube:test "yarn run lint"
       - run: |
           docker run \
