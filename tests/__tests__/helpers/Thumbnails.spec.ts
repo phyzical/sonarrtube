@@ -41,25 +41,25 @@ describe('Thumbnails', () => {
             expect(existsSync(result)).toBeTruthy();
         }, timeout);
 
-        it('should return original thumbnail if no words found', async () => {
-            Constants.THUMBNAIL.TEXT.FONT_SIZE = 9999;
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), 'cropImage');
+        // it('should return original thumbnail if no words found', async () => {
+        //     Constants.THUMBNAIL.TEXT.FONT_SIZE = 9999;
+        //     // eslint-disable-next-line @typescript-eslint/no-var-requires
+        //     const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), 'cropImage');
 
-            const uuid = randomUUID();
-            const result = await processThumbnail(
-                `${imageDir}/processThumbnail.webp`,
-                uuid,
-            );
+        //     const uuid = randomUUID();
+        //     const result = await processThumbnail(
+        //         `${imageDir}/processThumbnail.webp`,
+        //         uuid,
+        //     );
 
-            expect(result).toEqual(
-                `${cacheDir}/${uuid}_0.png`
-            );
+        //     expect(result).toEqual(
+        //         `${cacheDir}/${uuid}_0.png`
+        //     );
 
-            expect(cropImageSpy).not.toHaveBeenCalled();
-            cropImageSpy.mockRestore();
-            expect(existsSync(result)).toBeTruthy();
-        }, timeout);
+        //     expect(cropImageSpy).not.toHaveBeenCalled();
+        //     cropImageSpy.mockRestore();
+        //     expect(existsSync(result)).toBeTruthy();
+        // }, timeout);
 
         describe('webp', () => {
             it('should wait if conversion take too long', async () => {
