@@ -60,7 +60,7 @@ export const Constants = {
     },
     CHAR_CLEANER_LIST: 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖŠÚÛÜÙÝŸŽ',
     EXTENSIONS: {
-        PNG: '.png',
-        WEBP: '.webp'
+        PNG: 'png',
+        WEBP: 'webp'
     }
 };
