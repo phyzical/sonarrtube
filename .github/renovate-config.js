@@ -59,6 +59,11 @@ module.exports = {
   ],
   packageRules: [
     {
+      matchDatasources: ['docker'],
+      matchPackageNames: ['rockylinux'],
+      versioning: 'semver'
+    },
+    {
       matchDatasources: ['github-releases'],
       extractVersion: '^v(?<version>.*)$',
     },
