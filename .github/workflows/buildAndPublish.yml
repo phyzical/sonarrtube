@@ -3,6 +3,9 @@ on:
   push:
 jobs:
   build:
+    concurrency:
+      group: ${{ github.event_name }}-${{ ( github.ref_name == 'main' ) && github.sha || github.ref_name }}-build
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     permissions:
       contents: read
