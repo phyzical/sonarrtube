@@ -20,6 +20,17 @@ run-image:
 		-v ${PWD}/downloads:/app/downloads \
 		-v ${PWD}/cookies.txt:/app/cookies.txt \
 		${TAG}
+run-image-tests:
+	docker run -it \
+		--rm \
+		--name ${NAME} \
+		-v ${PWD}/tests:/app/tests \
+		-v ${PWD}/src:/app/src \
+		-v ${PWD}/jest.config.ts:/app/jest.config.ts \
+		-v ${PWD}/tsconfig.build.json:/app/tsconfig.build.json \
+		-v ${PWD}/tsconfig.json:/app/tsconfig.json \
+		${TAG} \
+		"yarn test"
 run-image-bash: 
 	docker run -it --rm --name ${NAME}-bash \
 		-v ${PWD}/cache:/app/cache:rw \

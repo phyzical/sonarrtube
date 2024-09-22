@@ -1,4 +1,4 @@
-FROM rockylinux:9.3.20231119 as base
+FROM rockylinux/rockylinux:9.4.20240523 AS base
 ENV APP_DIR=/app
 ENV IS_DOCKER=true
 ENV XDG_DATA_HOME="/tmp"
@@ -24,12 +24,13 @@ USER app
 
 WORKDIR ${APP_DIR}
 
+RUN mkdir -p ./tmp
 COPY .FORCE_NEW_DOCKER_BUILD .FORCE_NEW_DOCKER_BUILD
 
 ENV LC_ALL="C.UTF-8"
 ENV LANG="C.UTF-8"
 
-FROM base as build
+FROM base AS build
 USER root
 
 RUN yum -y update \
@@ -56,15 +57,20 @@ COPY --chown=app ./ ./
 
 RUN yarn build
 
-FROM base as final
+USER app
+
+FROM base AS final
+USER root
+
+COPY --from=build /usr/lib/node_modules /usr/bin/node_modules
+RUN ln -s /usr/bin/node_modules/yarn/bin/yarn /usr/bin/yarn
 
 USER app
 
 COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
 COPY --from=build --chown=app ${APP_DIR}/node_modules ${APP_DIR}/node_modules
-COPY --from=build --chown=app ${APP_DIR}/build/src ${APP_DIR}/build/src
+COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
 COPY --chown=app ./main.js ./boot.sh ./package.json ./
-
 
 USER root
 
@@ -73,7 +79,7 @@ RUN find / -path /proc -prune -o -perm /u=s,g=s -type f -print -exec rm {} \;
 USER app
 
 ARG RELEASE_VERSION="VERSION_PROVIDED_ON_BUILD"
-ENV RELEASE_VERSION $RELEASE_VERSION
+ENV RELEASE_VERSION=$RELEASE_VERSION
 
 ENTRYPOINT [ "/app/boot.sh" ]
 CMD [ "node", "main.js" ]
