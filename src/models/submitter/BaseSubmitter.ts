@@ -87,6 +87,7 @@ export class BaseSubmitter {
 
   init = async (): Promise<void> => {
     this.browserObj = await puppeteer.launch({
+      executablePath: '/usr/bin/chromium-browser',
       args: [
         // Required for Docker version of Puppeteer
         '--no-sandbox',
