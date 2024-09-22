@@ -3030,10 +3030,10 @@ http-proxy@^1.18.1:
     follow-redirects "^1.0.0"
     requires-port "^1.0.0"
 
-http-request-mock@1.8.27:
-  version "1.8.27"
-  resolved "https://registry.yarnpkg.com/http-request-mock/-/http-request-mock-1.8.27.tgz#e0e395c96490e3de2634abd30ab33b7093457f61"
-  integrity sha512-ITZoUIaMBveTHR4G9h1aGKniox7aOC8WpjOpvcMql+muGjH4vULkPc1kE1+/OzUACl8Vw8ObI/8COTXIQpCmLg==
+http-request-mock@1.8.28:
+  version "1.8.28"
+  resolved "https://registry.yarnpkg.com/http-request-mock/-/http-request-mock-1.8.28.tgz#7f9fffaf0802997883d81bfc74a725c74f966616"
+  integrity sha512-BGbE/VGF9+psLcgp7z7qkZEGSXTCQUDZirnXJZ8bOnUVgf+taNzngjoIYut0YP86ozegSihq1QEU+3lbN8fccQ==
   dependencies:
     "@ngneat/falso" "^4.0.0"
     "@types/follow-redirects" "^1.14.1"
