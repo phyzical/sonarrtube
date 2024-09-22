@@ -7,9 +7,7 @@ import { config } from '@sonarrTube/helpers/Config.js';
 import { Config } from '@sonarrTube/types/config/Config.js';
 import { downloadVideos } from '@sonarrTube/api/Ytdlp.js';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
-import { cachePath } from '@sonarrTube/helpers/Cache.js';
 import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
-import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 declare global {
   interface Window {
