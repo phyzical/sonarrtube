@@ -1,4 +1,4 @@
-import { config } from './Config.js';
+import { config } from '@sonarrTube/helpers/Config.js';
 
 export const currentFileTimestamp = (): string =>
   new Date().toJSON()
@@ -20,4 +20,3 @@ export const handleSignal = (signal: string): void => {
   console.log(`Received ${signal}. Graceful shutdown...`);
   process.exit(0); // Exit the process
 };
-

@@ -1,17 +1,18 @@
-import { Episode as SonarrEpisode } from './sonarr/Episode.js';
-import { Episode as TvdbEpisode } from './tvdb/Episode.js';
-import { Series as TvdbSeries } from './tvdb/Series.js';
-import { Video } from './youtube/Video.js';
-import { cachePath, clearCache } from '../../helpers/Cache.js';
-import { Channel } from './youtube/Channel.js';
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { Constants } from '../../types/config/Constants.js';
-import { Series as SonarrSeries } from './sonarr/Series.js';
+
+import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
+import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
+import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
+import { Video } from '@sonarrTube/models/api/youtube/Video.js';
+import { cachePath, clearCache } from '@sonarrTube/helpers/Cache.js';
+import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
 
 type ActionableVideoType = {
-    youtubeVideo: Video,
-    sonarrEpisode: SonarrEpisode,
+    youtubeVideo?: Video,
+    sonarrEpisode?: SonarrEpisode,
     tvdbEpisode: TvdbEpisode,
     tvdbSeries: TvdbSeries,
     sonarrSeries: SonarrSeries,
@@ -23,7 +24,7 @@ export class ActionableVideo {
     youtubeVideo?: Video;
     sonarrEpisode?: SonarrEpisode;
     tvdbEpisode?: TvdbEpisode;
-    tvdbEpisodeFromContext: TvdbEpisode;
+    tvdbEpisodeFromContext?: TvdbEpisode;
     tvdbSeries: TvdbSeries;
     sonarrSeries: SonarrSeries;
     youtubeContext: Channel;
@@ -39,122 +40,127 @@ export class ActionableVideo {
         this.tvdbSeries = tvdbSeries;
         this.sonarrSeries = sonarrSeries;
         this.youtubeContext = youtubeContext;
-        this.tvdbEpisodeFromContext = !this.tvdbEpisode ? this.tvdbContextFromYoutube() : null;
+        this.tvdbEpisodeFromContext = !this.tvdbEpisode ? this.tvdbContextFromYoutube() : undefined;
         this.id = randomUUID();
     }
 
-    unDownloaded(): boolean {
+    unDownloaded = (): boolean => {
         if (!this.sonarrEpisode || !this.youtubeVideo) {
             return false;
         }
 
         return !this.sonarrEpisode.hasFile;
-    }
+    };
 
-    missingFromTvdb(): boolean {
+    missingFromTvdb = (): boolean => {
         if (this.tvdbEpisode) {
             return false;
         }
 
         return true;
-    }
+    };
 
-    missingYoutube(): boolean {
+    missingYoutube = (): boolean => {
         if (this.youtubeVideo) {
             return false;
         }
 
         return true;
-    }
+    };
 
-    missingProductionCode(): boolean {
+    missingProductionCode = (): boolean => {
         if (!this.tvdbEpisode) {
             return false;
         }
 
         return !this.tvdbEpisode.productionCode;
-    }
+    };
 
-    tvdbEditUrl(): string {
+    tvdbEditUrl = (): string | undefined => {
         if (!this.tvdbEpisode) {
-            return '';
+            return;
         }
 
         return this.tvdbEpisode.editURL();
-    }
+    };
 
-    tvdbInfoCache(): string {
+    tvdbInfoCache = (): string | undefined => {
         if (!this.tvdbEpisode) {
-            return '';
+            return;
         }
 
         return cachePath(this.tvdbEpisode.cacheKey());
-    }
+    };
 
-    thumbnailCacheFile(): string {
+    thumbnailCacheFile = (): string => {
+        if (!this.tvdbEpisode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+
         return cachePath(`/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbEpisode.seriesId}/thumbnails.txt`);
-    }
+    };
 
-    thumbnailUploadAttemptCount(): number {
-        if (!existsSync(this.thumbnailCacheFile())) {
+    thumbnailUploadAttemptCount = (): number => {
+        const cachePath = this.thumbnailCacheFile();
+        if (!existsSync(cachePath)) {
             return 0;
         }
 
-        return readFileSync(this.thumbnailCacheFile()).toString()
+        const episode = this.tvdbEpisode;
+
+        if (!episode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+
+        return readFileSync(cachePath).toString()
             .split('\n')
-            .filter(x => x == this.tvdbEpisode.id).length;
-    }
+            .filter(x => x == episode.id).length;
+    };
 
-    addThumbnailUploadAttempt(): void {
-        writeFileSync(this.thumbnailCacheFile(), `${this.tvdbEpisode.id}\n`, { flag: 'a' });
-    }
+    addThumbnailUploadAttempt = (): void => {
+        const episode = this.tvdbEpisode;
 
-    season(): number {
-        return this.tvdbEpisode?.seasonNumber || this.tvdbEpisodeFromContext.seasonNumber;
-    }
+        if (!episode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
 
-    aired(): string {
-        return this.tvdbEpisode?.aired || this.youtubeVideo.airedDate();
-    }
+        writeFileSync(this.thumbnailCacheFile(), `${episode.id}\n`, { flag: 'a' });
+    };
 
-    youtubeURL(): string {
-        return this.tvdbEpisode?.youtubeURL() ||
-            this.youtubeVideo?.url() ||
-            this.tvdbEpisodeFromContext?.youtubeURL();
-    }
+    season = (): number | undefined => (this.tvdbEpisode || this.tvdbEpisodeFromContext)?.seasonNumber;
 
-    summary(): string {
-        return [
-            `Title: ${this.name()}`,
-            `Aired date: ${this.aired()}`,
-            `Season: ${this.season()}`,
-            this.youtubeURL() ?
-                `Youtube url: ${this.youtubeURL()}` :
-                `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
-            this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
-            this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
-        ].filter(Boolean).join('\n  ');
-    }
+    aired = (): string | undefined => this.tvdbEpisode?.aired || this.youtubeVideo?.airedDate();
 
-    youtubeSearchURL(): string {
-        return `${Constants.YOUTUBE.HOST}/results?search_query=${encodeURI(`${this.seriesName()} ${this.name()}`)}`;
-    }
+    youtubeURL = (): string | undefined => this.tvdbEpisode?.youtubeURL() ||
+        this.youtubeVideo?.url() ||
+        this.tvdbEpisodeFromContext?.youtubeURL();
 
-    youtubeChannelSearchURL(): string {
-        return `${this.youtubeContext.url}?query=${encodeURI(this.name())}`;
-    }
+    summary = (): string => [
+        `Title: ${this.name()}`,
+        `Aired date: ${this.aired()}`,
+        `Season: ${this.season()}`,
+        this.youtubeURL() ?
+            `Youtube url: ${this.youtubeURL()}` :
+            `Search url: ${this.youtubeSearchURL()}\n  Search url: ${this.youtubeChannelSearchURL()}`,
+        this.tvdbEditUrl() ? `Tvdb url: ${this.tvdbEditUrl()}` : '',
+        this.tvdbInfoCache() ? `Tvdb cache: ${this.tvdbInfoCache()}` : '',
+    ].filter(Boolean).join('\n  ');
 
-    seriesName(): string {
-        return this.youtubeVideo?.channel || this.tvdbSeries?.name;
-    }
+    youtubeSearchURL = (): string =>
+        `${Constants.YOUTUBE.HOST}/results?search_query=${encodeURI(`${this.seriesName()} ${this.name()}`)}`;
 
-    name(): string {
-        return this.tvdbEpisode?.name || this.youtubeVideo?.title() || this.tvdbEpisodeFromContext?.name || '';
-    }
+    youtubeChannelSearchURL = (): string => `${this.youtubeContext.url}?query=${encodeURI(this.name())}`;
 
-    tvdbContextFromYoutube(): TvdbEpisode {
+    seriesName = (): string => this.youtubeVideo?.channel || this.tvdbSeries?.name;
+
+    name = (): string => this.tvdbEpisode?.name ||
+        this.youtubeVideo?.title() ||
+        this.tvdbEpisodeFromContext?.name ||
+        '';
+
+    tvdbContextFromYoutube = (): TvdbEpisode | undefined => {
         if (!this.youtubeVideo) {
-            return null;
+            return;
         }
 
         return new TvdbEpisode({
@@ -166,17 +172,27 @@ export class ActionableVideo {
             seasonNumber: this.youtubeVideo.season(),
             aired: this.youtubeVideo.airedDate(),
         }, this.tvdbSeries);
-    }
+    };
 
-    clearCache(): void {
-        clearCache(this.tvdbEpisode.cacheKey());
-    }
+    clearCache = (): void => {
+        const episode = this.tvdbEpisode;
 
-    generateSonarrEpisode(episodeNumber: string): void {
-        this.sonarrEpisode = new SonarrEpisode({
-            seasonNumber: this.season(),
+        if (!episode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+        clearCache(episode.cacheKey());
+    };
+
+    generateSonarrEpisode = (episodeNumber: string): SonarrEpisode => {
+        const seasonNumber = this.season();
+        if (!seasonNumber) {
+            throw new Error('season not found this shouldn\'t happen!');
+        }
+
+        return this.sonarrEpisode = new SonarrEpisode({
+            seasonNumber,
             episodeNumber: parseInt(episodeNumber),
             hasFile: false,
         }, this.sonarrSeries);
-    }
+    };
 }

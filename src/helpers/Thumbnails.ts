@@ -1,13 +1,15 @@
+import { existsSync, unlinkSync, writeFileSync } from 'fs';
+
 import webp from 'webp-converter';
 import Jimp from 'jimp';
-import { PSM, createWorker } from 'tesseract.js';
-import { log } from './Log.js';
-import { cachePath } from './Cache.js';
-import { existsSync, unlinkSync, writeFileSync } from 'fs';
-import { delay } from './Puppeteer.js';
-import { Constants } from '../types/config/Constants.js';
+import { PSM, Word, createWorker } from 'tesseract.js';
 
-const cropImage = async (
+import { log } from '@sonarrTube/helpers/Log.js';
+import { cachePath } from '@sonarrTube/helpers/Cache.js';
+import { delay } from '@sonarrTube/helpers/Puppeteer.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+
+export const cropImage = async (
     inputPath: string, rect: { x0: number, y0: number, x1: number, y1: number }
 ): Promise<void> => {
     const originalImage = await Jimp.read(inputPath);
@@ -55,82 +57,96 @@ const cropImage = async (
 
 type Coordinates = { x0: number; y0: number; x1: number; y1: number; }
 
-const findThumbnailText = async (imagePath: string, attempt: number): Promise<Coordinates> => {
+export const findThumbnailText = async (image: Jimp, attempt: number): Promise<Coordinates | undefined> => {
     const worker = await createWorker(Constants.THUMBNAIL.TEXT.LANGUAGE, 1, {
         cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
         // logger: m => console.log(m), // Log progress
     });
-
+    let words = [] as Word[];
     try {
-        worker.setParameters({
+        await worker.setParameters({
             tessedit_char_whitelist: Constants.THUMBNAIL.TEXT.FINDER_CHAR_LIST,
             tessedit_pageseg_mode: PSM.SPARSE_TEXT,
         });
-        const image = await Jimp.read(imagePath);
 
-        const res = await worker.recognize(
+        words = (await worker.recognize(
             await image.grayscale().invert()
                 // if even means its the first attempt of each bounding box 
                 .contrast(attempt == 2 ? 0.4 : 0.1)
                 .getBufferAsync(Jimp.MIME_PNG)
-        );
-
-        let coordinates = null;
-
-        res.data.words.forEach(element => {
-            if (
-                element.direction == Constants.THUMBNAIL.TEXT.DIRECTION &&
-                element.text.length >= (attempt == 3 ? 1 : Constants.THUMBNAIL.TEXT.LENGTH) &&
-                element.font_size > Constants.THUMBNAIL.TEXT.FONT_SIZE
-            ) {
-                if (!coordinates) {
-                    coordinates = {
-                        x0: element.bbox.x0, y0: element.bbox.y0, x1: element.bbox.x1, y1: element.bbox.y1
-                    };
-                } else {
-                    if (element.bbox.x0 < coordinates.x0) {
-                        coordinates.x0 = element.bbox.x0;
-                        coordinates.y0 = element.bbox.y0;
-                    }
-                    if (element.bbox.x1 > coordinates.x1) {
-                        coordinates.x1 = element.bbox.x1;
-                        coordinates.y1 = element.bbox.y1;
-                    }
-                }
-            }
-        });
-
-        return coordinates;
+        )).data.words;
     } finally {
         await worker.terminate();
     }
+
+    let coordinates: Coordinates | undefined;
+
+    words.filter((element: Word) =>
+        element.direction == Constants.THUMBNAIL.TEXT.DIRECTION &&
+        element.text.length >= (attempt == 3 ? 1 : Constants.THUMBNAIL.TEXT.LENGTH) &&
+        element.font_size > Constants.THUMBNAIL.TEXT.FONT_SIZE
+    ).forEach((element: Word) => {
+        if (!coordinates) {
+            coordinates = {
+                x0: element.bbox.x0, y0: element.bbox.y0, x1: element.bbox.x1, y1: element.bbox.y1
+            };
+        } else {
+            if (element.bbox.x0 < coordinates.x0) {
+                coordinates.x0 = element.bbox.x0;
+                coordinates.y0 = element.bbox.y0;
+            }
+            if (element.bbox.x1 > coordinates.x1) {
+                coordinates.x1 = element.bbox.x1;
+                coordinates.y1 = element.bbox.y1;
+            }
+        }
+    });
+
+    return coordinates;
 };
 
-export const processThumbnail = async (thumbnailUrl: string, id: string, attempt: number = 0): Promise<string> => {
+
+export const processThumbnail = async (
+    thumbnailUrl: string, id: string, attempt: number = 0
+): Promise<string> => {
     log(`downloading ${thumbnailUrl}`, true);
     const urlSplits = thumbnailUrl.split('.');
     const extension = urlSplits[urlSplits.length - 1];
     let thumbnailPath = cachePath(`${Constants.CACHE_FOLDERS.THUMBNAIL}/${id}_${attempt}.${extension}`);
     const res = await fetch(thumbnailUrl);
+
     const buffer = Buffer.from(await res.arrayBuffer());
+
     writeFileSync(thumbnailPath, buffer);
     if (extension == Constants.EXTENSIONS.WEBP) {
+        log('converting webp to png', true);
         const webpPath = thumbnailPath;
         thumbnailPath = thumbnailPath.replace(Constants.EXTENSIONS.WEBP, Constants.EXTENSIONS.PNG);
         await webp.dwebp(webpPath, thumbnailPath, '-o');
-        delay(3000);
+        let checksCount = 0;
+        while (!existsSync(thumbnailPath) && checksCount < 5) {
+            /* istanbul ignore next */
+            await delay(500);
+            /* istanbul ignore next */
+            checksCount++;
+        }
         unlinkSync(webpPath);
     }
 
-    if (!existsSync(thumbnailPath)) {
-        throw new Error('Failed to save thumbnail');
+    let image = await Jimp.read(thumbnailPath);
+
+    if (
+        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH &&
+        image.bitmap.height < Constants.THUMBNAIL.MINIMUM_HEIGHT
+    ) {
+        return '';
     }
 
-    if (attempt == 4) {
+    if (attempt >= 4) {
         return thumbnailPath;
     }
 
-    const coordinates = await findThumbnailText(thumbnailPath, attempt);
+    const coordinates = await findThumbnailText(image, attempt);
 
     if (!coordinates) {
         return thumbnailPath;
@@ -138,13 +154,13 @@ export const processThumbnail = async (thumbnailUrl: string, id: string, attempt
 
     await cropImage(thumbnailPath, coordinates);
 
-    const image = await Jimp.read(thumbnailPath);
+    image = await Jimp.read(thumbnailPath);
 
     if (
         image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH &&
         image.bitmap.height < Constants.THUMBNAIL.MINIMUM_HEIGHT
     ) {
-        return;
+        return '';
     }
 
     return thumbnailPath;

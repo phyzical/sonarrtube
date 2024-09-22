@@ -1,7 +1,7 @@
-import { getCache, setCache } from './Cache.js';
+import { getCache, setCache } from '@sonarrTube/helpers/Cache.js';
 
 export const doRequest = async (
-    url: string, method: string, headers = {}, cacheKey: string = null, body: string = null
+    url: string, method: string, headers = {}, cacheKey?: string, body?: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> => {
     let json = getCache(cacheKey);
@@ -13,7 +13,7 @@ export const doRequest = async (
             body
         })
             .then(async response => {
-                if (response.body) {
+                if (response?.body) {
                     json = (await response.json());
                     setCache(cacheKey, JSON.stringify(json));
                 }

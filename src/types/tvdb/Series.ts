@@ -1,17 +1,17 @@
-import { Alias } from './Alias.js';
-import { Character } from './Character.js';
-import { ContentRating } from './ContentRating.js';
-import { Episode } from './Episode.js';
-import { Season } from './Season.js';
-import { Tag } from './Tag.js';
-import { Trailer } from './Trailer.js';
-import { Translations } from './Translations.js';
-import { Company } from './Company.js';
-import { Artwork } from './Artwork.js';
-import { List } from './List.js';
-import { Genre } from './Genre.js';
-import { RemoteID } from './RemoteID.js';
-import { SeasonType } from './SeasonType.js';
+import { Alias } from '@sonarrTube/types/tvdb/Alias.js';
+import { Character } from '@sonarrTube/types/tvdb/Character.js';
+import { ContentRating } from '@sonarrTube/types/tvdb/ContentRating.js';
+import { Episode } from '@sonarrTube/types/tvdb/Episode.js';
+import { Season } from '@sonarrTube/types/tvdb/Season.js';
+import { Tag } from '@sonarrTube/types/tvdb/Tag.js';
+import { Trailer } from '@sonarrTube/types/tvdb/Trailer.js';
+import { Translations } from '@sonarrTube/types/tvdb/Translations.js';
+import { Company } from '@sonarrTube/types/tvdb/Company.js';
+import { Artwork } from '@sonarrTube/types/tvdb/Artwork.js';
+import { List } from '@sonarrTube/types/tvdb/List.js';
+import { Genre } from '@sonarrTube/types/tvdb/Genre.js';
+import { RemoteID } from '@sonarrTube/types/tvdb/RemoteID.js';
+import { SeasonType } from '@sonarrTube/types/tvdb/SeasonType.js';
 
 export type Series = {
     abbreviation: string

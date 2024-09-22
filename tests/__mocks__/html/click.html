@@ -1,0 +1,19 @@
+<html>
+    <head><title>test</title></head>
+    <body>
+        <button id="test" onclick="appendElement()"></button>
+    
+        <script>
+            function appendElement(event) {
+                // Create a new div element
+                var newDiv = document.createElement('div');
+                newDiv.id = "newDiv"
+                // Set the content of the new div
+                newDiv.innerHTML = '<p>This is a new paragraph added on button click.</p>';
+                
+                // Append the new div to the body
+                document.body.appendChild(newDiv);
+            }
+        </script>
+    </body>
+</html>

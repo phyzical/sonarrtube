@@ -1,6 +1,6 @@
-import { SonarrConfig } from './SonarrConfig.js';
-import { TVDBConfig } from './TVDBConfig.js';
-import { YoutubeConfig } from './YoutubeConfig.js';
+import { SonarrConfig } from '@sonarrTube/types/config/SonarrConfig.js';
+import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig.js';
+import { YoutubeConfig } from '@sonarrTube/types/config/YoutubeConfig.js';
 
 export type Config = {
     tvdb: TVDBConfig

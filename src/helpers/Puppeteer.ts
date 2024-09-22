@@ -1,35 +1,32 @@
 import { ElementHandle, HTTPResponse, Page } from 'puppeteer';
-import { log } from './Log.js';
-import { Constants } from '../types/config/Constants.js';
 
-// eslint-disable-next-line no-return-assign
-export const setHtmlInput = (el: Element, v: string): string => ((<HTMLInputElement>el).value = v);
+import { log } from '@sonarrTube/helpers/Log.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-export const submitHtmlForm = (form: Element): void => (<HTMLFormElement>form).submit();
-export const clickHtmlElement = (button: Element): void => (<HTMLFormElement>button).click();
+
 export const delay = (time: number): Promise<void> => new Promise((resolve) => {
   setTimeout(resolve, time);
 });
 
-export const find = async (page: Page, selector: string, options = {}): Promise<ElementHandle<Element>> => {
+export const find = async (page: Page, selector: string): Promise<ElementHandle<Element> | null> => {
   log(`Finding ${selector}`, true);
 
-  try {
-    return await page.waitForSelector(selector, options);
-  } catch (e) {
-    log(`Failed to find ${selector}`, true);
-    throw e;
+  const element = await page.$(selector);
+  if (!element) {
+    throw new Error(`failed to find element matching selector "${selector}"`);
   }
+
+  return element;
 };
 
-export const click = async (page: Page, selector: string, options = {}): Promise<void> => {
-  await find(page, selector, options);
+export const click = async (page: Page, selector: string): Promise<void> => {
+  await find(page, selector);
   log(`Clicking ${selector}`, true);
 
-  return (await page.$$(selector))[0].evaluate((b: HTMLElement) => b.click());
+  (await page.$$(selector))[0].click();
 };
 
-export const goto = async (page: Page, url: string): Promise<HTTPResponse> => {
+export const goto = async (page: Page, url: string): Promise<HTTPResponse | null> => {
   log(`Opening ${url}`, true);
 
   return await page.goto(url).catch((e) => {
@@ -38,26 +35,28 @@ export const goto = async (page: Page, url: string): Promise<HTTPResponse> => {
   });
 };
 
-export const loaded = async (page: Page): Promise<HTTPResponse> => {
+export const loaded = async (page: Page): Promise<HTTPResponse | null | undefined> => {
   log('Waiting for page to load', true);
   try {
     return await page.waitForNavigation({
       waitUntil: ['load', 'domcontentloaded', 'networkidle0']
     });
-  } catch (e) {
+  } catch (_e) {
     log('Warning! didn\'t detect a load', true);
   }
 };
 
 export const getValue = async (page: Page, selector: string): Promise<string> =>
-  await page.$eval(selector, (el: HTMLInputElement) => el.value);
-
+  await page.$eval(selector, /* istanbul ignore next */(el: Element) => (el as HTMLInputElement).value);
 
 export const type = async (page: Page, selector: string, value: string, simulate: boolean = true): Promise<void> => {
   let inputValue = await getValue(page, selector);
   if (inputValue) {
     log(`Clearing text in ${selector}`, true);
-    await page.evaluate((selector) => (<HTMLFormElement>document.querySelector(selector)).value = '', selector);
+    await page.evaluate(
+      /* istanbul ignore next */(selector) => (<HTMLFormElement>document.querySelector(selector)).value = '',
+      selector
+    );
   }
 
   log(`Typing ${value} into ${selector}`, true);
@@ -65,8 +64,9 @@ export const type = async (page: Page, selector: string, value: string, simulate
   if (simulate) {
     await page.type(selector, value);
   } else {
-    await page.evaluate((selector, value) =>
-      (<HTMLFormElement>document.querySelector(selector)).value = value, selector, value);
+    await page.evaluate(
+      /* istanbul ignore next */(selector, value) => (<HTMLFormElement>document.querySelector(selector)).value = value,
+      selector, value);
     await delay(1000);
   }
 
@@ -77,7 +77,13 @@ export const type = async (page: Page, selector: string, value: string, simulate
 };
 
 export const submitForm = async (page: Page, selector: string): Promise<void> => {
-  page.$eval(selector, (form: Element) => (<HTMLFormElement>form).submit());
+  const form = await page.$(selector);
+  if (!form) {
+    throw new Error(`failed to find element matching selector "${selector}"`);
+  }
+  await form.evaluate(
+    /* istanbul ignore next */(formElement: Element) => (<HTMLFormElement>formElement).submit()
+  );
   await loaded(page);
 };
 

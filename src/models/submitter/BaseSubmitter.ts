@@ -1,31 +1,34 @@
-import { click, find, type, loaded, goto, submitForm } from '../../helpers/Puppeteer.js';
-import { log } from '../../helpers/Log.js';
-import { ActionableVideo } from '../api/ActionableVideo.js';
-import { Browser, ElementHandle, Page } from 'puppeteer';
-import { TVDBConfig } from '../../types/config/TVDBConfig.js';
-import { ShowSubmitter } from '../../ShowSubmitter.js';
-import { currentFileTimestamp } from '../../helpers/Generic.js';
 import { writeFileSync } from 'fs';
+
 import puppeteer from 'puppeteer-extra';
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-import { Constants } from '../../types/config/Constants.js';
-import { notify } from '../../helpers/Notifications.js';
-import { ActionableSeries } from '../api/ActionableSeries.js';
+import { Browser, ElementHandle, Page } from 'puppeteer';
+
+import { click, find, type, loaded, goto, submitForm } from '@sonarrTube/helpers/Puppeteer.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
+import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig.js';
+import { currentFileTimestamp } from '@sonarrTube/helpers/Generic.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { notify } from '@sonarrTube/helpers/Notifications.js';
+import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
+import { cachePath } from '@sonarrTube/helpers/Cache';
 
 puppeteer.use(AdblockerPlugin()).use(StealthPlugin());
 
 export class BaseSubmitter {
-  browser: Browser;
-  page: Page;
+  browserObj: Browser | undefined;
+  pageObj: Page | undefined;
   username: string;
   email: string;
   password: string;
-  video: ActionableVideo;
+  videoObj: ActionableVideo | undefined;
   updates: string[];
   downloads: string[];
   warnings: string[];
   errors: string[];
+  folder: string;
 
   constructor(tvdbConfig: TVDBConfig) {
     this.username = tvdbConfig.username;
@@ -35,34 +38,55 @@ export class BaseSubmitter {
     this.downloads = [];
     this.warnings = [];
     this.errors = [];
+    this.folder = cachePath(`${Constants.CACHE_FOLDERS.SCREENSHOTS}`);
   }
 
-  async type(selector: string, value: string, simulate: boolean = true): Promise<void> {
-    return await type(this.page, selector, value, simulate);
-  }
+  page = (): Page => {
+    if (!this.pageObj) {
+      throw new Error('Page not initialized');
+    }
 
-  async find(selector: string): Promise<ElementHandle<Element>> {
-    return await find(this.page, selector);
-  }
+    return this.pageObj;
+  };
 
-  async click(selector: string, options = {}): Promise<void> {
-    return await click(this.page, selector, options);
-  }
+  browser = (): Browser => {
+    if (!this.browserObj) {
+      throw new Error('Browser not initialized');
+    }
 
-  async loaded(): Promise<void> {
-    await loaded(this.page);
-  }
+    return this.browserObj;
+  };
 
-  async goto(url: string): Promise<void> {
-    await goto(this.page, url);
-  }
+  video = (): ActionableVideo => {
+    if (!this.videoObj) {
+      throw new Error('Video not initialized');
+    }
 
-  async submitForm(selector: string): Promise<void> {
-    await submitForm(this.page, selector);
-  }
+    return this.videoObj;
+  };
 
-  async init(): Promise<void> {
-    this.browser = await puppeteer.launch({
+  type = async (
+    selector: string, value: string, simulate: boolean = true
+  ): Promise<void> => await type(this.page(), selector, value, simulate);
+
+  find = async (selector: string): Promise<ElementHandle<Element> | null> => await find(this.page(), selector);
+
+  click = async (selector: string): Promise<void> => await click(this.page(), selector);
+
+  loaded = async (): Promise<void> => {
+    await loaded(this.page());
+  };
+
+  goto = async (url: string): Promise<void> => {
+    await goto(this.page(), url);
+  };
+
+  submitForm = async (selector: string): Promise<void> => {
+    await submitForm(this.page(), selector);
+  };
+
+  init = async (): Promise<void> => {
+    this.browserObj = await puppeteer.launch({
       args: [
         // Required for Docker version of Puppeteer
         '--no-sandbox',
@@ -73,23 +97,23 @@ export class BaseSubmitter {
       ],
     });
 
-    const browserVersion = await this.browser.version();
+    const browserVersion = await this.browser().version();
     log(`Started ${browserVersion}`);
-    this.page = await this.browser.newPage();
-  }
+    this.pageObj = await this.browser().newPage();
+  };
 
 
-  async finish(isError: boolean = false): Promise<void> {
+  finish = async (isError: boolean = false): Promise<void> => {
     if (isError) {
       await this.takeScreenshot();
       await this.saveHtml();
     } else {
-      await this.browser.close();
+      await this.browser().close();
     }
-  }
+  };
 
-  async handleReports(actionableSeries: ActionableSeries): Promise<void> {
-    await notify(`Summary for ${this.video.seriesName};`);
+  handleReports = async (actionableSeries: ActionableSeries): Promise<void> => {
+    await notify(`Summary for ${this.video().seriesName};`);
 
     if (this.downloads.length > 0) {
       log(Constants.SEPARATOR);
@@ -119,25 +143,25 @@ export class BaseSubmitter {
     this.downloads = [];
     this.warnings = [];
     this.errors = [];
-  }
+  };
 
-  async saveHtml(): Promise<void> {
+  saveHtml = async (): Promise<void> => {
     try {
-      const html = await this.page.content();
-      const filename = `${ShowSubmitter.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
+      const html = await this.page().content();
+      const filename = `${this.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
       const htmlPath = `${filename}.html`;
       writeFileSync(htmlPath, html);
       log(`html can be found at ${htmlPath}`);
     } catch (e) {
       log(`failed to save html: ${e}`);
     }
-  }
+  };
 
-  async takeScreenshot(): Promise<void> {
-    const filename = `${ShowSubmitter.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
+  takeScreenshot = async (): Promise<void> => {
+    const filename = `${this.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
     const screenshotPath = `${filename}.png`;
     try {
-      await this.page.screenshot({
+      await this.page().screenshot({
         path: screenshotPath,
         fullPage: true,
       });
@@ -145,6 +169,6 @@ export class BaseSubmitter {
     } catch (e) {
       log(`failed to save screenshot: ${e}`);
     }
-  }
+  };
 }
 

@@ -1,6 +1,6 @@
-import { config } from '../../../helpers/Config.js';
-import { Constants } from '../../../types/config/Constants.js';
-import { Video as VideoType } from './../../../types/youtube/Video.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 
 const { titleCleanerRegex } = config();
 
@@ -34,7 +34,7 @@ export class Video {
         this.id = payload.id;
     }
 
-    description(): string {
+    description = (): string => {
         let description = this.theDescription;
         if (description.length > 100) {
             description = description.slice(0, 100);
@@ -44,35 +44,29 @@ export class Video {
         }
 
         return description;
-    }
+    };
 
-    title(): string {
-        return this.fulltitle.replace(titleCleanerRegex, '');
-    }
+    title = (): string => this.fulltitle.replace(titleCleanerRegex, '');
 
-    backupTitle(): string {
-        return this.theTitle.replace(titleCleanerRegex, '');
-    }
+    backupTitle = (): string => this.theTitle.replace(titleCleanerRegex, '');
 
-    runTime(): string {
+    runTime = (): string => {
         const runtime = Math.floor(this.duration / 60);
 
         return runtime > 1 ? runtime.toString() : '1';
-    }
+    };
 
-    airedDate(): string {
+    airedDate = (): string => {
         const airDate = this.upload_date; //'01/02/2020'
 
         return airDate.slice(0, 4) + '-' + airDate.slice(4, 6) + '-' + airDate.slice(6, 8);
-    }
+    };
 
-    season(): number {
+    season = (): number => {
         const dateSplits = this.airedDate().split('-');
 
         return parseInt(dateSplits[0]);
-    }
+    };
 
-    url(): string {
-        return `${Constants.YOUTUBE.HOST}/watch?v=${this.id}`;
-    }
+    url = (): string => `${Constants.YOUTUBE.HOST}/watch?v=${this.id}`;
 }

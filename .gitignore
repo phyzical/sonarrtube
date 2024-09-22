@@ -6,3 +6,5 @@ cookies.txt
 downloads
 .DS_STORE
 coverage
+tmp/*
+!tmp/keep

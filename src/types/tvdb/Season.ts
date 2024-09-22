@@ -1,4 +1,4 @@
-import { Company } from './Company.js';
+import { Company } from '@sonarrTube/types/tvdb/Company.js';
 
 type Type = {
     alternateName: string

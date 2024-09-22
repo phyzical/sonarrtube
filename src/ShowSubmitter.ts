@@ -1,15 +1,15 @@
-import { TvdbSubmitter } from './models/submitter/TvdbSubmitter.js';
-import { log } from './helpers/Log.js';
-import { series as getSonarrSeries } from './api/Sonarr.js';
-import { series as getTvdbSeries } from './api/Tvdb.js';
-import { channels as getYoutubeChannels } from './api/Youtube.js';
-import { config } from './helpers/Config.js';
-import { Config } from './types/config/Config.js';
-import { downloadVideos } from './api/Ytdlp.js';
-import { ActionableVideo } from './models/api/ActionableVideo.js';
-import { cachePath } from './helpers/Cache.js';
-import { ActionableSeries } from './models/api/ActionableSeries.js';
-import { Constants } from './types/config/Constants.js';
+import { TvdbSubmitter } from '@sonarrTube/models/submitter/TvdbSubmitter.js';
+import { log } from '@sonarrTube/helpers/Log.js';
+import { series as getSonarrSeries } from '@sonarrTube/api/Sonarr.js';
+import { series as getTvdbSeries } from '@sonarrTube/api/Tvdb.js';
+import { channels as getYoutubeChannels } from '@sonarrTube/api/Youtube.js';
+import { config } from '@sonarrTube/helpers/Config.js';
+import { Config } from '@sonarrTube/types/config/Config.js';
+import { downloadVideos } from '@sonarrTube/api/Ytdlp.js';
+import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
+import { cachePath } from '@sonarrTube/helpers/Cache.js';
+import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
+import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 declare global {
   interface Window {
@@ -27,32 +27,33 @@ declare global {
 }
 
 export class ShowSubmitter {
-  static folder: string = cachePath(`${Constants.CACHE_FOLDERS.SCREENSHOTS}/`);
-
   config: Config;
   submitter: TvdbSubmitter;
 
   constructor() {
     this.config = config();
+    this.submitter = new TvdbSubmitter(this.config.tvdb);
   }
 
-  private async initSubmitter(): Promise<void> {
+  private initSubmitter = async (): Promise<void> => {
     if (this.config.downloadOnly) {
-      return null;
+      return;
     }
-    this.submitter = new TvdbSubmitter(this.config.tvdb);
     await this.submitter.init();
     await this.submitter.doLogin().catch(e => this.error(e, ''));
-  }
+  };
 
-  private async addEpisodes(videos: ActionableVideo[], backfillOnly: boolean): Promise<void> {
+  private addEpisodes = async (videos: ActionableVideo[], backfillOnly: boolean): Promise<void> => {
+    if (!videos[0].youtubeVideo) {
+      throw new Error('Missing youtubeVideo aborting addEpisodes');
+    }
     const seriesName = videos[0].youtubeVideo.channel;
     log(`Updating ${seriesName}`);
     log(`Processing ${videos.length} episodes`);
     const preview = this.config.preview || backfillOnly;
     for (const video of videos) {
       const updateText = `${this.previewText(backfillOnly)} adding:\n${video.summary()}`;
-      this.submitter.video = video;
+      this.submitter.videoObj = video;
       try {
         if (!preview) {
           await this.submitter.addEpisode();
@@ -65,30 +66,36 @@ export class ShowSubmitter {
       }
     }
     log(`Finished ${seriesName}`);
-  }
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async error(e: any, summary: string): Promise<void> {
+  private error = async (e: any, summary: string): Promise<void> => {
     this.submitter.errors.push(`Error:\n${e.message}\n${summary}`);
     await this.submitter.finish(true).catch((e2) => {
       log(e2);
     });
     throw e;
-  }
+  };
 
-  private previewText(backFillMode: boolean = false): string {
+  private previewText = (backFillMode: boolean = false): string => {
     const { preview } = this.config;
 
     return preview || backFillMode ? 'Preview Mode on Would have:' : '';
-  }
+  };
 
 
-  private async backfillEpisodeProductionCode(video: ActionableVideo): Promise<void> {
+  private backfillEpisodeProductionCode = async (video: ActionableVideo): Promise<void> => {
+    if (!video.tvdbEpisode) {
+      throw new Error('Missing tvdbEpisode aborting backfillProductionCode');
+    }
+    if (!video.youtubeVideo) {
+      throw new Error('Missing youtubeVideo aborting backfillProductionCode');
+    }
     log(
       `${this.previewText()} found a backfill match, Attempting production code backfill! ` +
       `youtube: ${video.youtubeVideo.title()} -> tvdb: ${video.tvdbEpisode.name}`
     );
-    this.submitter.video = video;
+    this.submitter.videoObj = video;
     const message = `${this.previewText()} Backfilled Production Code\n${video.summary()}`;
     try {
       if (!this.config.preview) {
@@ -100,13 +107,16 @@ export class ShowSubmitter {
       this.error(e, message);
       video.clearCache();
     }
-  }
+  };
 
-  private async backfillEpisodeImage(video: ActionableVideo): Promise<void> {
+  private backfillEpisodeImage = async (video: ActionableVideo): Promise<void> => {
+    if (!video.tvdbEpisode) {
+      throw new Error('Missing tvdbEpisode aborting backfillEpisode');
+    }
     log(
       `${this.previewText()} Attempting backfill of image for tvdb: ${video.tvdbEpisode.name}`
     );
-    this.submitter.video = video;
+    this.submitter.videoObj = video;
     const message = `${this.previewText()} Backfilled Image\n${video.summary()}`;
     try {
       if (!this.config.preview) {
@@ -118,21 +128,29 @@ export class ShowSubmitter {
       this.error(e, message);
       video.clearCache();
     }
-  }
+  };
 
-  private async generateActionableSeries(): Promise<ActionableSeries[]> {
+  private generateActionableSeries = async (): Promise<ActionableSeries[]> => {
     const sonarrSerieses = await getSonarrSeries();
     const tvdbSerieses = await getTvdbSeries(sonarrSerieses);
     const youtubeChannels = await getYoutubeChannels(tvdbSerieses);
 
-    const actionableSerieses = [];
+    const actionableSerieses = [] as ActionableSeries[];
 
     for (const tvdbSeries of tvdbSerieses) {
+      log(`Starting Processing of ${tvdbSeries.name}`);
       const sonarrSeries = sonarrSerieses
         .find(series => series.tvdbId === tvdbSeries.id);
+
+      if (!sonarrSeries) {
+        log('Could not find sonarr series, this should never happen!');
+        continue;
+      }
+
       const youtubeChannel = youtubeChannels.find(channel => channel.tvdbId == tvdbSeries.id);
 
       if (!youtubeChannel) {
+        log('Could not find youtube series, this should never happen!');
         continue;
       }
 
@@ -154,9 +172,9 @@ export class ShowSubmitter {
     }
 
     return actionableSerieses;
-  }
+  };
 
-  async start(): Promise<void> {
+  start = async (): Promise<void> => {
     await this.initSubmitter();
     const actionableSerieses = await this.generateActionableSeries();
 
@@ -175,7 +193,9 @@ export class ShowSubmitter {
             .missingFromTvdbVideos()
             .filter(video => !actionableSeries
               .backfillableProductionCodeVideos()
-              .find(backfillVideo => video.youtubeVideo.id === backfillVideo.youtubeVideo.id)
+              .find(backfillVideo => video.youtubeVideo?.id &&
+                (video.youtubeVideo?.id === backfillVideo.youtubeVideo?.id)
+              )
             ),
           actionableSeries.hasMissing()
         );
@@ -188,5 +208,5 @@ export class ShowSubmitter {
     }
 
     await this.submitter.finish(false);
-  }
+  };
 }
