@@ -40,6 +40,7 @@ jobs:
           tags: ghcr.io/phyzical/sonarrtube:latest
           platforms: linux/amd64,linux/arm64
 
+      - run: docker run ghcr.io/phyzical/sonarrtube:latest "yarn run lint"
       - run: docker run ghcr.io/phyzical/sonarrtube:latest "yarn run test"
 
       - name: Push

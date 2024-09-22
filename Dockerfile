@@ -54,9 +54,7 @@ RUN yarn install
 
 COPY --chown=app ./ ./
 
-# RUN yarn test
-RUN yarn lint && \
-    yarn build
+RUN yarn build
 
 FROM base as final
 
