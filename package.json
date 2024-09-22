@@ -29,8 +29,8 @@
     "@faker-js/faker": "8.4.1",
     "@types/jest": "29.5.12",
     "@types/node": "20.14.9",
-    "@typescript-eslint/eslint-plugin": "7.15.0",
-    "@typescript-eslint/parser": "7.15.0",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
     "concurrently": "8.2.2",
     "eslint": "9.6.0",
     "eslint-config-prettier": "9.1.0",
@@ -44,6 +44,6 @@
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.10",
     "typescript": "5.5.3",
-    "typescript-eslint": "7.15.0"
+    "typescript-eslint": "7.18.0"
   }
 }
