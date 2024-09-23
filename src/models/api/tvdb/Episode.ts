@@ -2,26 +2,15 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { Season } from '@sonarrTube/types/tvdb/Season.js';
 import { Episode as EpisodeType } from '@sonarrTube/types/tvdb/Episode.js';
-import { Series } from '@sonarrTube/models/api/tvdb/Series.js';
+import { Character } from '@sonarrTube/types/tvdb/Character';
+import { Company } from '@sonarrTube/types/tvdb/Company';
+import { ContentRating } from '@sonarrTube/types/tvdb/ContentRating';
+import { Tag } from '@sonarrTube/types/tvdb/Tag';
+import { Trailer } from '@sonarrTube/types/tvdb/Trailer';
+import { Translations } from '@sonarrTube/types/tvdb/Translations';
+import { Series } from '@sonarrTube/types/tvdb/Series';
 
-export class Episode {
-    absoluteNumber?: number;
-    id?: number;
-    image: string;
-    imageType?: number;
-    productionCode: string;
-    lastUpdated?: string;
-    name: string;
-    number?: number;
-    overview: string;
-    runtime: number;
-    seasonNumber: number;
-    seasons?: Season[];
-    seriesId?: number;
-    seasonName?: string;
-    year?: string;
-    series: Series;
-    aired: string;
+export class Episode implements EpisodeType {
     constructor(payload: EpisodeType, series: Series) {
         this.absoluteNumber = payload.absoluteNumber;
         this.id = payload.id;
@@ -41,6 +30,39 @@ export class Episode {
         this.series = series;
         this.aired = payload.aired;
     }
+    series: Series;
+    absoluteNumber?: number | undefined;
+    aired: string;
+    airsAfterSeason?: number | undefined;
+    airsBeforeEpisode?: number | undefined;
+    airsBeforeSeason?: number | undefined;
+    finaleType?: string | undefined;
+    id?: number | undefined;
+    image: string;
+    imageType?: number | undefined;
+    isMovie?: number | undefined;
+    productionCode: string;
+    lastUpdated?: string | undefined;
+    linkedMovie?: number | undefined;
+    name: string;
+    nameTranslations?: string[] | undefined;
+    number?: number | undefined;
+    overview: string;
+    overviewTranslations?: string[] | undefined;
+    runtime: number;
+    seasonNumber: number;
+    seasons?: Season[] | undefined;
+    seriesId?: number | undefined;
+    seasonName?: string | undefined;
+    year?: string | undefined;
+    characters?: Character[] | undefined;
+    companies?: Company[] | undefined;
+    contentRatings?: ContentRating[] | undefined;
+    networks?: Company[] | undefined;
+    studios?: Company[] | undefined;
+    tagOptions?: Tag[] | undefined;
+    trailers?: Trailer[] | undefined;
+    translations?: Translations | undefined;
 
     cacheKey = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.seriesId}/${this.id}.json`;
 

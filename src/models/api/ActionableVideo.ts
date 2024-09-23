@@ -1,26 +1,19 @@
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
+import { Episode as SonarrEpisodeType } from '@sonarrTube/types/sonarr/Episode.js';
+import { Episode as TvdbEpisodeType } from '@sonarrTube/types/tvdb/Episode.js';
+import { Video } from '@sonarrTube/models/api/youtube/Video.js';
+import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
+import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
+import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
 import { ActionableVideo as ActionableVideoType } from '@sonarrTube/types/ActionableVideo.js';
 import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
 import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
-import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
-import { Video } from '@sonarrTube/models/api/youtube/Video.js';
 import { cachePath, clearCache } from '@sonarrTube/helpers/Cache.js';
-import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
-import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
 
-export class ActionableVideo {
-    id: string;
-    youtubeVideo?: Video;
-    sonarrEpisode?: SonarrEpisode;
-    tvdbEpisode?: TvdbEpisode;
-    tvdbEpisodeFromContext?: TvdbEpisode;
-    tvdbSeries: TvdbSeries;
-    sonarrSeries: SonarrSeries;
-    youtubeContext: Channel;
-
+export class ActionableVideo implements ActionableVideoType {
     constructor(
         {
             youtubeVideo, sonarrEpisode, tvdbEpisode,
@@ -35,6 +28,14 @@ export class ActionableVideo {
         this.tvdbEpisodeFromContext = !this.tvdbEpisode ? this.tvdbContextFromYoutube() : undefined;
         this.id = randomUUID();
     }
+    youtubeVideo?: Video | undefined;
+    sonarrEpisode?: SonarrEpisode | undefined;
+    tvdbEpisode: TvdbEpisode;
+    tvdbSeries: TvdbSeries;
+    sonarrSeries: SonarrSeries;
+    youtubeContext: Channel;
+    tvdbEpisodeFromContext?: TvdbEpisode | undefined;
+    id?: string | undefined;
 
     unDownloaded = (): boolean => {
         if (!this.sonarrEpisode || !this.youtubeVideo) {
@@ -163,7 +164,7 @@ export class ActionableVideo {
             runtime: this.youtubeVideo.duration,
             seasonNumber: this.youtubeVideo.season(),
             aired: this.youtubeVideo.airedDate(),
-        }, this.tvdbSeries);
+        } as TvdbEpisodeType, this.tvdbSeries);
     };
 
     clearCache = (): void => {
@@ -185,6 +186,6 @@ export class ActionableVideo {
             seasonNumber,
             episodeNumber: parseInt(episodeNumber),
             hasFile: false,
-        }, this.sonarrSeries);
+        } as SonarrEpisodeType, this.sonarrSeries);
     };
 }

@@ -1,3 +1,4 @@
+import { Series } from '@sonarrTube/types/tvdb/Series.js';
 import { Character } from '@sonarrTube/types/tvdb/Character.js';
 import { ContentRating } from '@sonarrTube/types/tvdb/ContentRating.js';
 import { Season } from '@sonarrTube/types/tvdb/Season.js';
@@ -39,4 +40,5 @@ export type Episode = {
     tagOptions?: Tag[]
     trailers?: Trailer[]
     translations?: Translations
+    series: Series
 }

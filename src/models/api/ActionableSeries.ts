@@ -8,7 +8,7 @@ import { cleanText } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { ActionableSeries as ActionableSeriesType } from '@sonarrTube/types/ActionableSeries.js';
 
-export class ActionableSeries {
+export class ActionableSeries implements ActionableSeriesType {
     videos: ActionableVideo[];
     sonarrSeries: SonarrSeries;
     tvdbSeries: TvdbSeries;
@@ -179,7 +179,7 @@ export class ActionableSeries {
                 continue;
             }
 
-            episode.tvdbEpisode = this.tvdbSeries
+            const match = this.tvdbSeries
                 .episodes
                 .find(
                     (tvdbEpisode) =>
@@ -188,7 +188,8 @@ export class ActionableSeries {
                         youtubeVideo.airedDate() == tvdbEpisode.aired
                 );
 
-            if (episode.tvdbEpisode) {
+            if (match) {
+                episode.tvdbEpisode = match;
                 backfillVideos.push(episode);
             }
         }

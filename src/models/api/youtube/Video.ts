@@ -4,20 +4,7 @@ import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 
 const { titleCleanerRegex } = config();
 
-export class Video {
-    title: string;
-    fulltitle: string;
-    thumbnail: string;
-    description: string;
-    channel_id: string;
-    channel_url: string;
-    channel: string;
-    duration: number;
-    view_count: number;
-    webpage_url: string;
-    id: string;
-    timestamp: number;
-    upload_date: string;
+export class Video implements VideoType {
     constructor(payload: VideoType) {
         this.title = payload.title;
         this.fulltitle = payload.fulltitle;
@@ -33,6 +20,19 @@ export class Video {
         this.upload_date = payload.upload_date;
         this.id = payload.id;
     }
+    title: string;
+    fulltitle: string;
+    thumbnail: string;
+    description: string;
+    channel_id: string;
+    channel_url: string;
+    channel: string;
+    duration: number;
+    view_count: number;
+    webpage_url: string;
+    id: string;
+    timestamp: number;
+    upload_date: string;
 
     cleanDescription = (): string => {
         let description = this.description;
