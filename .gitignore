@@ -8,3 +8,4 @@ downloads
 coverage
 tmp/*
 !tmp/keep
+.npmrc
