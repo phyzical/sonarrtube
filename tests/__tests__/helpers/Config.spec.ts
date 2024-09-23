@@ -153,9 +153,9 @@ describe('#config', () => {
                     password: configValues.TVDB_PASSWORD,
                     email: configValues.TVDB_EMAIL,
                     apiKey: configValues.TVDB_API,
-                    skipSeriesIds: ['1', '2', '3'],
-                    skippedEpisodeIds: ['4', '5', '6'],
-                    matchSeriesIds: ['7', '8', '9']
+                    skipSeriesIds: [1, 2, 3],
+                    skippedEpisodeIds: [4, 5, 6],
+                    matchSeriesIds: [7, 8, 9]
                 },
                 youtube: {
                     cookieFile: configValues.YOUTUBE_COOKIE_FILE,

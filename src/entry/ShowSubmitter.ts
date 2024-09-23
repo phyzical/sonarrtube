@@ -91,7 +91,7 @@ export class ShowSubmitter {
     }
     log(
       `${this.previewText()} found a backfill match, Attempting production code backfill! ` +
-      `youtube: ${video.youtubeVideo.title()} -> tvdb: ${video.tvdbEpisode.name}`
+      `youtube: ${video.youtubeVideo.cleanTitle()} -> tvdb: ${video.tvdbEpisode.name}`
     );
     this.submitter.videoObj = video;
     const message = `${this.previewText()} Backfilled Production Code\n${video.summary()}`;

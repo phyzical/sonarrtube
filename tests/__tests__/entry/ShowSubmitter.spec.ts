@@ -1,4 +1,4 @@
-import { ShowSubmitter } from '@sonarrTube/ShowSubmitter';
+import { ShowSubmitter } from '@sonarrTube/entry/ShowSubmitter';
 describe('ShowSubmitter', () => {
   it('TODO:', () => {
     ShowSubmitter;

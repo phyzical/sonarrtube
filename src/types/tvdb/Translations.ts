@@ -1,8 +1,8 @@
 
 type Translation = {
     aliases: string[]
-    isAlias: true
-    isPrimary: true
+    isAlias: boolean
+    isPrimary: boolean
     language: string
     name: string
     overview: string

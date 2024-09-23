@@ -90,9 +90,18 @@ export const config = (): Config => {
             password: TVDB_PASSWORD,
             email: TVDB_EMAIL,
             apiKey: TVDB_API,
-            skipSeriesIds: (SKIP_FROM_SYNC_TVDB_SERIES_IDS || '').split(',').filter(Boolean),
-            skippedEpisodeIds: (SKIP_FROM_SYNC_TVDB_EPISODES_IDS || '').split(',').filter(Boolean),
-            matchSeriesIds: (ONLY_SYNC_TVDB_SERIES_IDS || '').split(',').filter(Boolean)
+            skipSeriesIds: (SKIP_FROM_SYNC_TVDB_SERIES_IDS || '')
+                .split(',')
+                .filter(Boolean)
+                .map(x => parseInt(x)),
+            skippedEpisodeIds: (SKIP_FROM_SYNC_TVDB_EPISODES_IDS || '')
+                .split(',')
+                .filter(Boolean)
+                .map(x => parseInt(x)),
+            matchSeriesIds: (ONLY_SYNC_TVDB_SERIES_IDS || '')
+                .split(',')
+                .filter(Boolean)
+                .map(x => parseInt(x))
         },
         youtube: {
             cookieFile: YOUTUBE_COOKIE_FILE,

@@ -6,8 +6,8 @@ export type List = {
     aliases: Alias[]
     id: number
     image: string
-    imageIsFallback: true
-    isOfficial: true
+    imageIsFallback: boolean
+    isOfficial: boolean
     name: string
     nameTranslations: string[]
     overview: string
