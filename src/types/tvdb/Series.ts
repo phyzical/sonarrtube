@@ -13,7 +13,7 @@ import { Genre } from '@sonarrTube/types/tvdb/Genre.js';
 import { RemoteID } from '@sonarrTube/types/tvdb/RemoteID.js';
 import { SeasonType } from '@sonarrTube/types/tvdb/SeasonType.js';
 
-export type Series = {
+export interface Series {
     abbreviation?: string
     airsDays?: {
         friday: boolean
@@ -38,7 +38,7 @@ export type Series = {
     genres?: Genre[]
     id: number
     image: string
-    isOrderRandomized?: true
+    isOrderRandomized?: boolean
     lastAired?: string
     lastUpdated?: string
     name: string
@@ -58,7 +58,7 @@ export type Series = {
     slug: string
     status?: {
         id: number
-        keepUpdated: true
+        keepUpdated: boolean
         name: string
         recordType: string
     }

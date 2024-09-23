@@ -6,7 +6,7 @@ export type Artwork = {
     height: number
     id: number
     image: string
-    includesText: true
+    includesText: boolean
     language: string
     movieId: number
     networkId: number

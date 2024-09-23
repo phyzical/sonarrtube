@@ -13,7 +13,7 @@ export type Character = {
     episodeId: number
     id: number
     image: string
-    isFeatured: true
+    isFeatured: boolean
     movieId: number
     movie: Generic
     name: string
