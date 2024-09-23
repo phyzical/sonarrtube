@@ -4,25 +4,12 @@ import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 
 const { titleCleanerRegex } = config();
 
-export class Video {
-    theTitle: string;
-    fulltitle: string;
-    thumbnail: string;
-    theDescription: string;
-    channel_id: string;
-    channel_url: string;
-    channel: string;
-    duration: number;
-    view_count: number;
-    webpage_url: string;
-    id: string;
-    timestamp: number;
-    upload_date: string;
+export class Video implements VideoType {
     constructor(payload: VideoType) {
-        this.theTitle = payload.title;
+        this.title = payload.title;
         this.fulltitle = payload.fulltitle;
         this.thumbnail = payload.thumbnail;
-        this.theDescription = payload.description;
+        this.description = payload.description;
         this.channel_id = payload.channel_id;
         this.channel_url = payload.channel_url;
         this.channel = payload.channel;
@@ -33,22 +20,35 @@ export class Video {
         this.upload_date = payload.upload_date;
         this.id = payload.id;
     }
+    title: string;
+    fulltitle: string;
+    thumbnail: string;
+    description: string;
+    channel_id: string;
+    channel_url: string;
+    channel: string;
+    duration: number;
+    view_count: number;
+    webpage_url: string;
+    id: string;
+    timestamp: number;
+    upload_date: string;
 
-    description = (): string => {
-        let description = this.theDescription;
+    cleanDescription = (): string => {
+        let description = this.description;
         if (description.length > 100) {
             description = description.slice(0, 100);
         }
         if (!description || /(sponsor)+|(download)+/i.test(description)) {
-            description = this.title();
+            description = this.cleanTitle();
         }
 
         return description;
     };
 
-    title = (): string => this.fulltitle.replace(titleCleanerRegex, '');
+    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '');
 
-    backupTitle = (): string => this.theTitle.replace(titleCleanerRegex, '');
+    backupTitle = (): string => this.title.replace(titleCleanerRegex, '');
 
     runTime = (): string => {
         const runtime = Math.floor(this.duration / 60);

@@ -12,4 +12,12 @@ export type Video = {
     id: string
     timestamp: number
     upload_date: string
+
+    runTime: () => string
+    season: () => number
+    url: () => string
+    cleanDescription: () => string
+    cleanTitle: () => string
+    backupTitle: () => string
+    airedDate: () => string
 }

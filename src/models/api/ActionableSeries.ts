@@ -1,24 +1,18 @@
-import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
-import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
-import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
-import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
-import { Channel as YoutubeContext } from '@sonarrTube/models/api/youtube/Channel.js';
+import { Episode as SonarrEpisodeType } from '@sonarrTube/types/sonarr/Episode.js';
+import { Episode as TvdbEpisodeType } from '@sonarrTube/types/tvdb/Episode.js';
+import { Series as SonarrSeriesType } from '@sonarrTube/types/sonarr/Series.js';
+import { Series as TvdbSeriesType } from '@sonarrTube/types/tvdb/Series.js';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { cleanText } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
+import { ActionableSeries as ActionableSeriesType } from '@sonarrTube/types/ActionableSeries.js';
+import { Channel as ChannelType } from '@sonarrTube/types/youtube/Channel';
 
-type ActionableSeriesType = {
-    videos?: ActionableVideo[],
-    sonarrSeries: SonarrSeries,
-    tvdbSeries: TvdbSeries,
-    youtubeContext: YoutubeContext
-}
-
-export class ActionableSeries {
+export class ActionableSeries implements ActionableSeriesType {
     videos: ActionableVideo[];
-    sonarrSeries: SonarrSeries;
-    tvdbSeries: TvdbSeries;
-    youtubeContext: YoutubeContext;
+    sonarrSeries: SonarrSeriesType;
+    tvdbSeries: TvdbSeriesType;
+    youtubeContext: ChannelType;
     backfillDownloadOnly: boolean = false;
     warnings: string[];
 
@@ -42,12 +36,12 @@ export class ActionableSeries {
         for (const video of this.youtubeContext.videos) {
             const tvdbEpisodes = this.tvdbSeries
                 .episodes
-                .filter((episode: TvdbEpisode) => episode.productionCode == video.id);
+                .filter((episode: TvdbEpisodeType) => episode.productionCode == video.id);
 
             const tvdbEpisode = tvdbEpisodes[0];
             const sonarrEpisode = this.sonarrSeries
                 .episodes
-                .find((episode: SonarrEpisode) => episode.tvdbId == tvdbEpisode?.id);
+                .find((episode: SonarrEpisodeType) => episode.tvdbId == tvdbEpisode?.id);
 
             if (tvdbEpisodes.length > 1) {
                 this.warnings.push(
@@ -88,7 +82,7 @@ export class ActionableSeries {
             ) {
                 const sonarrEpisode = this.sonarrSeries
                     .episodes
-                    .find((episode: SonarrEpisode) => episode.tvdbId == tvdbEpisode?.id);
+                    .find((episode: SonarrEpisodeType) => episode.tvdbId == tvdbEpisode?.id);
                 this.videos.push(
                     new ActionableVideo(
                         {
@@ -166,15 +160,16 @@ export class ActionableSeries {
                 continue;
             }
 
-            episode.youtubeVideo = this.youtubeContext
+            const match = this.youtubeContext
                 .videos
                 .find(
-                    (video) => cleanText(video.title()) == cleanText(tvdbEpisode.name) ||
+                    (video) => cleanText(video.cleanTitle()) == cleanText(tvdbEpisode.name) ||
                         cleanText(video.backupTitle()) == cleanText(tvdbEpisode.name) ||
                         video.airedDate() == tvdbEpisode.aired
                 );
 
-            if (episode.youtubeVideo) {
+            if (match) {
+                episode.youtubeVideo = match;
                 backfillVideos.push(episode);
             }
         }
@@ -185,16 +180,17 @@ export class ActionableSeries {
                 continue;
             }
 
-            episode.tvdbEpisode = this.tvdbSeries
+            const match = this.tvdbSeries
                 .episodes
                 .find(
                     (tvdbEpisode) =>
-                        cleanText(youtubeVideo.title()) == cleanText(tvdbEpisode.name) ||
+                        cleanText(youtubeVideo.cleanTitle()) == cleanText(tvdbEpisode.name) ||
                         cleanText(youtubeVideo.backupTitle()) == cleanText(tvdbEpisode.name) ||
                         youtubeVideo.airedDate() == tvdbEpisode.aired
                 );
 
-            if (episode.tvdbEpisode) {
+            if (match) {
+                episode.tvdbEpisode = match;
                 backfillVideos.push(episode);
             }
         }

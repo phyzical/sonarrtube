@@ -21,7 +21,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     if (!video) {
       throw new Error('Missing youtubeVideo this shouldn\'t happen!');
     }
-    const episodeTitle = video.title();
+    const episodeTitle = video.cleanTitle();
     let episodeNumber;
     try {
       episodeNumber = (await this.page().$eval(
@@ -102,7 +102,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     if (!tvdbEpisode) {
       throw new Error('Missing tvdbEpisode this shouldn\'t happen!');
     }
-    const episodeTitle = youtubeVideo.title();
+    const episodeTitle = youtubeVideo.cleanTitle();
     const series = this.video().tvdbSeries.slug;
     const editEpisodeXpath = 'xpath///*[contains(text(),"Edit Episode")]';
     if (!this.video().missingFromTvdb()) {
@@ -138,7 +138,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     const episodeTextIdentifier = await this.getEpisodeNumber();
     // if we cant find it on a source something went wrong
     if (episodeTextIdentifier.length == 0) {
-      throw new Error(`Didnt add episode for ${youtubeVideo.title()} something went horribly wrong!`);
+      throw new Error(`Didnt add episode for ${youtubeVideo.cleanTitle()} something went horribly wrong!`);
     }
 
     return episodeTextIdentifier;
@@ -159,8 +159,8 @@ export class TvdbSubmitter extends BaseSubmitter {
     log('starting adding', true);
     await this.find('xpath///h3[text()=\'Episodes\']/ancestor::form');
     await delay(500);
-    await this.type('[name="name[]"]', youtubeVideo.title());
-    await this.type('[name="overview[]"]', youtubeVideo.description());
+    await this.type('[name="name[]"]', youtubeVideo.cleanTitle());
+    await this.type('[name="overview[]"]', youtubeVideo.cleanDescription());
     await this.type('[name="runtime[]"]', youtubeVideo.runTime());
     await this.type('[name="date[]"]', youtubeVideo.airedDate(), false);
     await delay(500);
@@ -196,7 +196,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     }
 
     try {
-      await this.find(`xpath///*[contains(text(),"${youtubeVideo.title()}")]`);
+      await this.find(`xpath///*[contains(text(),"${youtubeVideo.cleanTitle()}")]`);
     } catch (e) {
       //  fall back to tvdb title if it exists
       if (tvdbEpisode.name) {
@@ -285,7 +285,7 @@ export class TvdbSubmitter extends BaseSubmitter {
         await this.click('xpath///button[text()=\'Finish\']');
         await this.loaded();
         unlinkSync(thumbnailPath);
-        await this.find(`xpath///*[contains(text(),"${youtubeVideo.title()}")]`);
+        await this.find(`xpath///*[contains(text(),"${youtubeVideo.cleanTitle()}")]`);
         log('Successfully uploaded image');
       }
 
@@ -335,7 +335,7 @@ export class TvdbSubmitter extends BaseSubmitter {
         log(`sigh looks like they blocked images for ${this.video().tvdbSeries.name} for your user (${e})`);
       }
 
-      log(`Finished adding of ${youtubeVideo.title()}`);
+      log(`Finished adding of ${youtubeVideo.cleanTitle()}`);
     }
   };
 

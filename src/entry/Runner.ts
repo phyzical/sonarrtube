@@ -1,4 +1,4 @@
-import { ShowSubmitter } from '@sonarrTube/ShowSubmitter.js';
+import { ShowSubmitter } from '@sonarrTube/entry/ShowSubmitter.js';
 import { config } from '@sonarrTube/helpers/Config.js';
 import { handleSignal } from '@sonarrTube/helpers/Generic.js';
 
