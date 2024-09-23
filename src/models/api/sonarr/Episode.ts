@@ -4,7 +4,7 @@ import { Series } from '@sonarrTube/models/api/sonarr/Series.js';
 
 export class Episode {
     seriesId?: number;
-    tvdbId?: string;
+    tvdbId?: number;
     seasonNumber: number;
     episodeNumber: number;
     title?: string;

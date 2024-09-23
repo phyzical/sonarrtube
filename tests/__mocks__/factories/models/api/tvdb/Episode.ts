@@ -1,11 +1,11 @@
-import { seriesFactory } from 'tests/__mocks__/factories/models/api/sonarr/Series';
+import { seriesFactory } from 'tests/__mocks__/factories/models/api/tvdb/Series';
 import { typeFactory } from 'tests/__mocks__/factories/Type';
 
-import { Episode as EpisodeType } from '@sonarrTube/types/sonarr/Episode';
-import { Episode } from '@sonarrTube/models/api/sonarr/Episode';
+import { Episode as EpisodeType } from '@sonarrTube/types/tvdb/Episode';
+import { Episode } from '@sonarrTube/models/api/tvdb/Episode';
 
 
 export const episodeFactory = (): Episode => new Episode(
-    typeFactory('sonarr/Episode.ts') as EpisodeType,
+    typeFactory('tvdb/Episode.ts') as EpisodeType,
     seriesFactory()
 );

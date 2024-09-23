@@ -14,11 +14,12 @@ export class Series {
     path: string;
     seasonFolder: boolean;
     monitored: boolean;
-    tvdbId: string;
+    tvdbId: number;
     titleSlug: string;
     rootFolderPath: string;
     id: number;
     constructor(payload: SeriesType) {
+        console.dir(payload);
         this.title = payload.title;
         this.status = payload.status;
         this.overview = payload.overview;

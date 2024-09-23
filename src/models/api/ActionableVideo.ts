@@ -106,7 +106,7 @@ export class ActionableVideo {
 
         return readFileSync(cachePath).toString()
             .split('\n')
-            .filter(x => x == episode.id).length;
+            .filter(x => parseInt(x) == episode.id).length;
     };
 
     addThumbnailUploadAttempt = (): void => {

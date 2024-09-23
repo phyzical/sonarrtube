@@ -7,11 +7,13 @@ import { mock } from 'intermock';
 export const typeFactory = (typeFilePath: string, optional: boolean = true) => {
     typeFilePath = `${process.cwd()}/src/types/${typeFilePath}`;
 
-    return mock({
+    const mockedObject = mock({
         files: [[
             typeFilePath,
             readFileSync(typeFilePath, 'utf8')
         ]],
         isOptionalAlwaysEnabled: optional
     });
+
+    return mockedObject[Object.keys(mockedObject)[0]];
 };

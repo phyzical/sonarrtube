@@ -10,7 +10,7 @@ import { Episode } from '@sonarrTube/models/api/tvdb/Episode.js';
 export class Series {
     defaultSeasonType: number;
     episodes: Episode[] = [];
-    id: string;
+    id: number;
     image: string;
     name: string;
     overview: string;

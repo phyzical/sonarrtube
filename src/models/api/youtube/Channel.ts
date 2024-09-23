@@ -3,7 +3,7 @@ import { Video } from '@sonarrTube/models/api/youtube/Video.js';
 export class Channel {
     videos: Video[] = [];
     id?: string;
-    tvdbId: string;
+    tvdbId: number;
     url?: string;
     constructor(payload: ChannelType) {
         this.tvdbId = payload.tvdbId;

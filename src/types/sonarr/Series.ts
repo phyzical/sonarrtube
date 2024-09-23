@@ -28,14 +28,14 @@ export type Series = {
     monitorNewItems: string
     useSceneNumbering: boolean
     runtime: number
-    tvdbId: string
+    tvdbId: number
     tvRageId: number
     tvMazeId: number
     firstAired: string
     lastAired: string
     seriesType: string
     cleanTitle: string
-    imdbId: string
+    imdbId: number
     titleSlug: string
     rootFolderPath: string
     certification: string

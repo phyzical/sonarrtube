@@ -6,7 +6,7 @@ import { Series } from '@sonarrTube/models/api/tvdb/Series.js';
 
 export class Episode {
     absoluteNumber?: number;
-    id?: string;
+    id?: number;
     image: string;
     imageType?: number;
     productionCode: string;
