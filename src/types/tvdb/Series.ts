@@ -13,57 +13,62 @@ import { Genre } from '@sonarrTube/types/tvdb/Genre.js';
 import { RemoteID } from '@sonarrTube/types/tvdb/RemoteID.js';
 import { SeasonType } from '@sonarrTube/types/tvdb/SeasonType.js';
 
+type Status = {
+    id: number
+    keepUpdated: boolean
+    name: string
+    recordType: string
+}
+
+type Days = {
+    friday: boolean
+    monday: boolean
+    saturday: boolean
+    sunday: boolean
+    thursday: boolean
+    tuesday: boolean
+    wednesday: boolean
+}
 export type Series = {
-    abbreviation: string
-    airsDays: {
-        friday: boolean
-        monday: boolean
-        saturday: boolean
-        sunday: boolean
-        thursday: boolean
-        tuesday: boolean
-        wednesday: boolean
-    }
-    airsTime: string
-    aliases: Alias[]
-    artworks: Artwork[]
-    averageRuntime: number
-    characters: Character[]
-    contentRatings: ContentRating[]
-    country: string
+    abbreviation?: string
+    airsDays?: Days
+    airsTime?: string
+    aliases?: Alias[]
+    artworks?: Artwork[]
+    averageRuntime?: number
+    characters?: Character[]
+    contentRatings?: ContentRating[]
+    country?: string
     defaultSeasonType: number
     episodes: Episode[]
-    firstAired: string
-    lists: List[]
-    genres: Genre[]
-    id: string
+    firstAired?: string
+    lists?: List[]
+    genres?: Genre[]
+    id: number
     image: string
-    isOrderRandomized: true
-    lastAired: string
-    lastUpdated: string
+    isOrderRandomized?: boolean
+    lastAired?: string
+    lastUpdated?: string
     name: string
-    nameTranslations: string[]
-    companies: Company[]
-    nextAired: string
-    originalCountry: string
-    originalLanguage: string
-    originalNetwork: Company
+    nameTranslations?: string[]
+    companies?: Company[]
+    nextAired?: string
+    originalCountry?: string
+    originalLanguage?: string
+    originalNetwork?: Company
     overview: string
-    latestNetwork: Company
-    overviewTranslations: string[]
+    latestNetwork?: Company
+    overviewTranslations?: string[]
     remoteIds: RemoteID[]
-    score: number
+    score?: number
     seasons: Season[]
     seasonTypes: SeasonType[]
     slug: string
-    status: {
-        id: number
-        keepUpdated: true
-        name: string
-        recordType: string
-    }
-    tags: Tag[]
-    trailers: Trailer[]
-    translations: Translations
+    status?: Status
+    tags?: Tag[]
+    trailers?: Trailer[]
+    translations?: Translations
     year: string
+
+    filterEpisodes: () => Episode[]
 }

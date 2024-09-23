@@ -1,3 +1,4 @@
+import { Series } from '@sonarrTube/types/tvdb/Series.js';
 import { Character } from '@sonarrTube/types/tvdb/Character.js';
 import { ContentRating } from '@sonarrTube/types/tvdb/ContentRating.js';
 import { Season } from '@sonarrTube/types/tvdb/Season.js';
@@ -6,14 +7,14 @@ import { Trailer } from '@sonarrTube/types/tvdb/Trailer.js';
 import { Translations } from '@sonarrTube/types/tvdb/Translations.js';
 import { Company } from '@sonarrTube/types/tvdb/Company.js';
 
-export type Episode = {
+export interface Episode {
     absoluteNumber?: number
     aired: string
     airsAfterSeason?: number
     airsBeforeEpisode?: number
     airsBeforeSeason?: number
     finaleType?: string
-    id?: string
+    id?: number
     image: string
     imageType?: number
     isMovie?: number
@@ -39,4 +40,10 @@ export type Episode = {
     tagOptions?: Tag[]
     trailers?: Trailer[]
     translations?: Translations
+    series: Series
+
+    cacheKey: () => string
+    editURL: () => string
+    overviewLog: () => boolean
+    youtubeURL: () => string
 }

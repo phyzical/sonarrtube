@@ -1,13 +1,14 @@
 import { Alias } from '@sonarrTube/types/tvdb/Alias.js';
 import { Tag } from '@sonarrTube/types/tvdb/Tag.js';
 
+type Relation = {
+    id: number
+    typeName: string
+}
 type ParentCompany = {
     id: number
     name: string
-    relation: {
-        id: number
-        typeName: string
-    }
+    relation: Relation
 }
 
 export type Company = {

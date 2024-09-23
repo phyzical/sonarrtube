@@ -1,6 +1,7 @@
+import { Series } from '@sonarrTube/types/sonarr/Series';
 export type Episode = {
     seriesId?: number
-    tvdbId?: string
+    tvdbId?: number
     episodeFileId?: number
     seasonNumber: number
     episodeNumber: number
@@ -14,4 +15,5 @@ export type Episode = {
     unverifiedSceneNumbering?: boolean
     grabbed?: boolean
     id?: number
+    series: Series;
 }

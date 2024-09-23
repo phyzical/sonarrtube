@@ -1,34 +1,19 @@
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
+import { Channel as ChannelType } from '@sonarrTube/types/youtube/Channel.js';
+import { Series as SonarrSeriesType } from '@sonarrTube/types/sonarr/Series.js';
+import { Episode as SonarrEpisodeType } from '@sonarrTube/types/sonarr/Episode.js';
+import { Series as TvdbSeriesType } from '@sonarrTube/types/tvdb/Series.js';
+import { Episode as TvdbEpisodeType } from '@sonarrTube/types/tvdb/Episode.js';
+import { Video } from '@sonarrTube/models/api/youtube/Video.js';
+import { ActionableVideo as ActionableVideoType } from '@sonarrTube/types/ActionableVideo.js';
 import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
 import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
-import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
-import { Video } from '@sonarrTube/models/api/youtube/Video.js';
 import { cachePath, clearCache } from '@sonarrTube/helpers/Cache.js';
-import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
-import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
 
-type ActionableVideoType = {
-    youtubeVideo?: Video,
-    sonarrEpisode?: SonarrEpisode,
-    tvdbEpisode: TvdbEpisode,
-    tvdbSeries: TvdbSeries,
-    sonarrSeries: SonarrSeries,
-    youtubeContext: Channel;
-}
-
-export class ActionableVideo {
-    id: string;
-    youtubeVideo?: Video;
-    sonarrEpisode?: SonarrEpisode;
-    tvdbEpisode?: TvdbEpisode;
-    tvdbEpisodeFromContext?: TvdbEpisode;
-    tvdbSeries: TvdbSeries;
-    sonarrSeries: SonarrSeries;
-    youtubeContext: Channel;
-
+export class ActionableVideo implements ActionableVideoType {
     constructor(
         {
             youtubeVideo, sonarrEpisode, tvdbEpisode,
@@ -43,6 +28,14 @@ export class ActionableVideo {
         this.tvdbEpisodeFromContext = !this.tvdbEpisode ? this.tvdbContextFromYoutube() : undefined;
         this.id = randomUUID();
     }
+    youtubeVideo?: Video | undefined;
+    sonarrEpisode?: SonarrEpisodeType | undefined;
+    tvdbEpisode: TvdbEpisodeType;
+    tvdbSeries: TvdbSeriesType;
+    sonarrSeries: SonarrSeriesType;
+    youtubeContext: ChannelType;
+    tvdbEpisodeFromContext?: TvdbEpisode | undefined;
+    id?: string | undefined;
 
     unDownloaded = (): boolean => {
         if (!this.sonarrEpisode || !this.youtubeVideo) {
@@ -114,7 +107,7 @@ export class ActionableVideo {
 
         return readFileSync(cachePath).toString()
             .split('\n')
-            .filter(x => x == episode.id).length;
+            .filter(x => parseInt(x) == episode.id).length;
     };
 
     addThumbnailUploadAttempt = (): void => {
@@ -154,7 +147,7 @@ export class ActionableVideo {
     seriesName = (): string => this.youtubeVideo?.channel || this.tvdbSeries?.name;
 
     name = (): string => this.tvdbEpisode?.name ||
-        this.youtubeVideo?.title() ||
+        this.youtubeVideo?.cleanTitle() ||
         this.tvdbEpisodeFromContext?.name ||
         '';
 
@@ -166,12 +159,12 @@ export class ActionableVideo {
         return new TvdbEpisode({
             image: this.youtubeVideo.thumbnail,
             productionCode: this.youtubeVideo.id,
-            name: this.youtubeVideo.title(),
-            overview: this.youtubeVideo.description(),
+            name: this.youtubeVideo.cleanTitle(),
+            overview: this.youtubeVideo.cleanDescription(),
             runtime: this.youtubeVideo.duration,
             seasonNumber: this.youtubeVideo.season(),
             aired: this.youtubeVideo.airedDate(),
-        }, this.tvdbSeries);
+        } as TvdbEpisodeType, this.tvdbSeries);
     };
 
     clearCache = (): void => {
@@ -193,6 +186,6 @@ export class ActionableVideo {
             seasonNumber,
             episodeNumber: parseInt(episodeNumber),
             hasFile: false,
-        }, this.sonarrSeries);
+        } as SonarrEpisodeType, this.sonarrSeries);
     };
 }

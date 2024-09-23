@@ -1,3 +1,4 @@
+import { Channel as ChannelType } from '@sonarrTube/types/youtube/Channel.js';
 import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
 import { log } from '@sonarrTube/helpers/Log.js';
 import { Series } from '@sonarrTube/models/api/tvdb/Series.js';
@@ -10,7 +11,7 @@ export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
 
     for (const series of tvdbSeries) {
         log(`Fetching Episodes from youtube for ${series.name}`);
-        const channel = new Channel({ tvdbId: series.id });
+        const channel = new Channel({ tvdbId: series.id } as ChannelType);
 
         //search for a youtube link containing /videos or /playlist first
         const url = series.remoteIds.find(remote => remote.id.match(/youtube.com.*(playlist|videos).*/))?.id;
