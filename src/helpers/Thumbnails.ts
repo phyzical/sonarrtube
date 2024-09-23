@@ -1,7 +1,7 @@
 import { existsSync, unlinkSync, writeFileSync } from 'fs';
 
 import webp from 'webp-converter';
-import Jimp from 'jimp';
+import { Jimp, JimpMime } from 'jimp';
 import { PSM, Word, createWorker } from 'tesseract.js';
 
 import { log } from '@sonarrTube/helpers/Log.js';
@@ -25,39 +25,42 @@ export const cropImage = async (
     // For simplicity, this example assumes vertical alignment of top and bottom segments only
     const newHeight = topSegmentHeight + bottomSegmentHeight;
     const newWidth = leftSegmentWidth + rightSegmentWidth;
-    const newImage = new Jimp(newWidth, newHeight, 0x00000000);
+
+    const newImage = new Jimp({ width: newWidth, height: newHeight, color: 0xff0000ff });
 
     // Copy the top segment
     if (topSegmentHeight > 0) {
-        const topSegment = originalImage.clone().crop(0, 0, width, topSegmentHeight);
+        const topSegment = originalImage.clone().crop({ x: 0, y: 0, w: width, h: topSegmentHeight });
         newImage.composite(topSegment, 0, 0);
     }
 
     // Copy the bottom segment
     if (bottomSegmentHeight > 0) {
-        const bottomSegment = originalImage.clone().crop(0, rect.y1, width, bottomSegmentHeight);
+        const bottomSegment = originalImage.clone().crop({ x: 0, y: rect.y1, w: width, h: bottomSegmentHeight });
         newImage.composite(bottomSegment, 0, topSegmentHeight); // Position directly below the top segment
     }
 
     // Copy the left segment
     if (leftSegmentWidth > 0) {
-        const leftSegment = originalImage.clone().crop(0, 0, leftSegmentWidth, height);
+        const leftSegment = originalImage.clone().crop({ x: 0, y: 0, w: leftSegmentWidth, h: height });
         newImage.composite(leftSegment, 0, 0); // Position at the start
     }
 
     // Copy the right segment
     if (rightSegmentWidth > 0) {
-        const rightSegment = originalImage.clone().crop(rect.x1, 0, rightSegmentWidth, height);
+        const rightSegment = originalImage.clone().crop({ x: rect.x1, y: 0, w: rightSegmentWidth, h: height });
         newImage.composite(rightSegment, leftSegmentWidth, 0); // Position directly after the left segment
     }
 
     // Save the new image
-    await newImage.writeAsync(inputPath);
+    await newImage.write(inputPath as '`${string}.${string}`');
 };
 
 type Coordinates = { x0: number; y0: number; x1: number; y1: number; }
 
-export const findThumbnailText = async (image: Jimp, attempt: number): Promise<Coordinates | undefined> => {
+export const findThumbnailText = async (
+    image: Awaited<ReturnType<typeof Jimp.read>>, attempt: number
+): Promise<Coordinates | undefined> => {
     const worker = await createWorker(Constants.THUMBNAIL.TEXT.LANGUAGE, 1, {
         cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
         // logger: m => console.log(m), // Log progress
@@ -70,10 +73,11 @@ export const findThumbnailText = async (image: Jimp, attempt: number): Promise<C
         });
 
         words = (await worker.recognize(
-            await image.grayscale().invert()
+            await image.invert()
+                .greyscale()
                 // if even means its the first attempt of each bounding box 
                 .contrast(attempt == 2 ? 0.4 : 0.1)
-                .getBufferAsync(Jimp.MIME_PNG)
+                .getBuffer(JimpMime.png)
         )).data.words;
     } finally {
         await worker.terminate();
