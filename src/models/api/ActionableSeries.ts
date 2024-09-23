@@ -163,7 +163,7 @@ export class ActionableSeries {
             episode.youtubeVideo = this.youtubeContext
                 .videos
                 .find(
-                    (video) => cleanText(video.title()) == cleanText(tvdbEpisode.name) ||
+                    (video) => cleanText(video.cleanTitle()) == cleanText(tvdbEpisode.name) ||
                         cleanText(video.backupTitle()) == cleanText(tvdbEpisode.name) ||
                         video.airedDate() == tvdbEpisode.aired
                 );
@@ -183,8 +183,8 @@ export class ActionableSeries {
                 .episodes
                 .find(
                     (tvdbEpisode) =>
-                        cleanText(youtubeVideo.title()) == cleanText(tvdbEpisode.name) ||
-                        cleanText(youtubeVideo.backupTitle()) == cleanText(tvdbEpisode.name) ||
+                        cleanText(youtubeVideo.cleanTitle() ) == cleanText(tvdbEpisode.name ) ||
+                        cleanText(youtubeVideo.backupTitle() ) == cleanText(tvdbEpisode.name ) ||
                         youtubeVideo.airedDate() == tvdbEpisode.aired
                 );
 

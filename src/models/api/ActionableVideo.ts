@@ -146,7 +146,7 @@ export class ActionableVideo {
     seriesName = (): string => this.youtubeVideo?.channel || this.tvdbSeries?.name;
 
     name = (): string => this.tvdbEpisode?.name ||
-        this.youtubeVideo?.title() ||
+        this.youtubeVideo.cleanTitle() ||
         this.tvdbEpisodeFromContext?.name ||
         '';
 
@@ -158,8 +158,8 @@ export class ActionableVideo {
         return new TvdbEpisode({
             image: this.youtubeVideo.thumbnail,
             productionCode: this.youtubeVideo.id,
-            name: this.youtubeVideo.title(),
-            overview: this.youtubeVideo.description(),
+            name: this.youtubeVideo.cleanTitle(),
+            overview: this.youtubeVideo.cleanDescription(),
             runtime: this.youtubeVideo.duration,
             seasonNumber: this.youtubeVideo.season(),
             aired: this.youtubeVideo.airedDate(),

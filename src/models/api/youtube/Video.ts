@@ -34,21 +34,21 @@ export class Video {
         this.id = payload.id;
     }
 
-    description = (): string => {
-        let description = this.theDescription;
+    cleanDescription = (): string => {
+        let description = this.description;
         if (description.length > 100) {
             description = description.slice(0, 100);
         }
         if (!description || /(sponsor)+|(download)+/i.test(description)) {
-            description = this.title();
+            description = this.cleanTitle();
         }
 
         return description;
     };
 
-    title = (): string => this.fulltitle.replace(titleCleanerRegex, '');
+    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '');
 
-    backupTitle = (): string => this.theTitle.replace(titleCleanerRegex, '');
+    backupTitle = (): string => this.title.replace(titleCleanerRegex, '');
 
     runTime = (): string => {
         const runtime = Math.floor(this.duration / 60);
