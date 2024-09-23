@@ -41,4 +41,9 @@ export type Episode = {
     trailers?: Trailer[]
     translations?: Translations
     series: Series
+
+    cacheKey: () => string
+    editURL: () => string
+    overviewLog: () => void
+    youtubeURL: () => string
 }

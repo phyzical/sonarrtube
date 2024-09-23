@@ -1,4 +1,4 @@
-import { Series } from '@sonarrTube/models/api/sonarr/Series.js';
+import { Series } from '@sonarrTube/types/sonarr/Series';
 export type Episode = {
     seriesId?: number
     tvdbId?: number

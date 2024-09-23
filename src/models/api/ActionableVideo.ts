@@ -1,12 +1,12 @@
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
+import { Channel as ChannelType } from '@sonarrTube/types/youtube/Channel.js';
+import { Series as SonarrSeriesType } from '@sonarrTube/types/sonarr/Series.js';
 import { Episode as SonarrEpisodeType } from '@sonarrTube/types/sonarr/Episode.js';
+import { Series as TvdbSeriesType } from '@sonarrTube/types/tvdb/Series.js';
 import { Episode as TvdbEpisodeType } from '@sonarrTube/types/tvdb/Episode.js';
 import { Video } from '@sonarrTube/models/api/youtube/Video.js';
-import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
-import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
-import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
 import { ActionableVideo as ActionableVideoType } from '@sonarrTube/types/ActionableVideo.js';
 import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
 import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
@@ -29,11 +29,11 @@ export class ActionableVideo implements ActionableVideoType {
         this.id = randomUUID();
     }
     youtubeVideo?: Video | undefined;
-    sonarrEpisode?: SonarrEpisode | undefined;
-    tvdbEpisode: TvdbEpisode;
-    tvdbSeries: TvdbSeries;
-    sonarrSeries: SonarrSeries;
-    youtubeContext: Channel;
+    sonarrEpisode?: SonarrEpisodeType | undefined;
+    tvdbEpisode: TvdbEpisodeType;
+    tvdbSeries: TvdbSeriesType;
+    sonarrSeries: SonarrSeriesType;
+    youtubeContext: ChannelType;
     tvdbEpisodeFromContext?: TvdbEpisode | undefined;
     id?: string | undefined;
 

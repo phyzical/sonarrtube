@@ -1,9 +1,9 @@
-import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
-import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
-import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
-import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
-import { Video } from '@sonarrTube/models/api/youtube/Video';
-import { Channel } from '@sonarrTube/models/api/youtube/Channel';
+import { Series as SonarrSeries } from '@sonarrTube/types/sonarr/Series.js';
+import { Series as TvdbSeries } from '@sonarrTube/types/tvdb/Series.js';
+import { Episode as SonarrEpisode } from '@sonarrTube/types/sonarr/Episode.js';
+import { Episode as TvdbEpisode } from '@sonarrTube/types/tvdb/Episode.js';
+import { Video } from '@sonarrTube/types/youtube/Video';
+import { Channel } from '@sonarrTube/types/youtube/Channel';
 
 export type ActionableVideo = {
     youtubeVideo?: Video,

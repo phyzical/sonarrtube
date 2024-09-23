@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync } from 'fs
 import { execSync } from 'child_process';
 import path from 'path';
 
+import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 import { Video } from '@sonarrTube/models/api/youtube/Video.js';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { cachePath } from '@sonarrTube/helpers/Cache.js';
@@ -72,7 +73,7 @@ const processVideoInfos = (cacheKey: string): Video[] => {
             id,
             timestamp,
             upload_date,
-        }));
+        } as VideoType));
 };
 
 export const getVideoInfos = (seriesName: string, url: string): Video[] => {

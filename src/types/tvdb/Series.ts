@@ -66,4 +66,6 @@ export type Series = {
     trailers?: Trailer[]
     translations?: Translations
     year: string
+
+    filterEpisodes: () => Episode[]
 }

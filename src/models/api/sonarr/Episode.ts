@@ -1,9 +1,9 @@
 import { Episode as EpisodeType } from '@sonarrTube/types/sonarr/Episode.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
-import { Series } from '@sonarrTube/models/api/sonarr/Series.js';
+import { Series as SeriesType } from '@sonarrTube/types/sonarr/Series';
 
 export class Episode implements EpisodeType {
-    constructor(payload: EpisodeType, series: Series) {
+    constructor(payload: EpisodeType, series: SeriesType) {
         this.seriesId = payload.seriesId;
         this.tvdbId = payload.tvdbId;
         this.seasonNumber = payload.seasonNumber;
@@ -18,7 +18,7 @@ export class Episode implements EpisodeType {
         this.id = payload.id;
         this.series = series;
     }
-    series: Series;
+    series: SeriesType;
     seriesId?: number | undefined;
     tvdbId?: number | undefined;
     episodeFileId?: number | undefined;
