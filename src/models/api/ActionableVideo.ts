@@ -146,7 +146,7 @@ export class ActionableVideo {
     seriesName = (): string => this.youtubeVideo?.channel || this.tvdbSeries?.name;
 
     name = (): string => this.tvdbEpisode?.name ||
-        this.youtubeVideo.cleanTitle() ||
+        this.youtubeVideo?.cleanTitle() ||
         this.tvdbEpisodeFromContext?.name ||
         '';
 
