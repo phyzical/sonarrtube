@@ -1,6 +1,11 @@
 import { Tag } from '@sonarrTube/types/tvdb/Tag.js';
 
 
+type Status = {
+    id: number
+    name: string
+}
+
 export type Artwork = {
     episodeId: number
     height: number
@@ -15,10 +20,7 @@ export type Artwork = {
     seasonId: number
     seriesId: number
     seriesPeopleId: number
-    status: {
-        id: number
-        name: string
-    }
+    status: Status
     tagOptions: Tag[]
     thumbnail: string
     thumbnailHeight: number

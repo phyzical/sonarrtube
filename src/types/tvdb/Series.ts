@@ -13,17 +13,25 @@ import { Genre } from '@sonarrTube/types/tvdb/Genre.js';
 import { RemoteID } from '@sonarrTube/types/tvdb/RemoteID.js';
 import { SeasonType } from '@sonarrTube/types/tvdb/SeasonType.js';
 
-export interface Series {
+type Status = {
+    id: number
+    keepUpdated: boolean
+    name: string
+    recordType: string
+}
+
+type Days = {
+    friday: boolean
+    monday: boolean
+    saturday: boolean
+    sunday: boolean
+    thursday: boolean
+    tuesday: boolean
+    wednesday: boolean
+}
+export type Series = {
     abbreviation?: string
-    airsDays?: {
-        friday: boolean
-        monday: boolean
-        saturday: boolean
-        sunday: boolean
-        thursday: boolean
-        tuesday: boolean
-        wednesday: boolean
-    }
+    airsDays?: Days
     airsTime?: string
     aliases?: Alias[]
     artworks?: Artwork[]
@@ -56,12 +64,7 @@ export interface Series {
     seasons: Season[]
     seasonTypes: SeasonType[]
     slug: string
-    status?: {
-        id: number
-        keepUpdated: boolean
-        name: string
-        recordType: string
-    }
+    status?: Status
     tags?: Tag[]
     trailers?: Trailer[]
     translations?: Translations
