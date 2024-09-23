@@ -57,7 +57,7 @@ describe('#config', () => {
         let setCachedConfigSpy: jest.SpyInstance;
         beforeEach(() => {
             setCachedConfigSpy = jest.spyOn(
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
+                // eslint-disable-next-line @typescript-eslint/no-require-imports
                 require('@sonarrTube/helpers/Config'),
                 'setCachedConfig'
             );

@@ -126,7 +126,7 @@ describe('Puppeteer', () => {
         });
 
         it('should throw when text doesnt update correctly', async () => {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'getValue')
                 .mockImplementation(() => 'blarg' as never);
             await goto(page, getPageUrl('submitForm.html'));
