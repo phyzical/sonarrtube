@@ -23,7 +23,7 @@ describe('Thumbnails', () => {
 
         it('should skip cutting if at max attempts', async () => {
             const uuid = randomUUID();
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             const findThumbnailTextSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), 'findThumbnailText');
             const attempts = 4;
             const result = await processThumbnail(

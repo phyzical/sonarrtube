@@ -24,7 +24,7 @@ export const mockConfig = (configData = {}): jest.SpyInstance => {
 
     configMock?.mockReset();
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return configMock = jest.spyOn(require('@sonarrTube/helpers/Config'), 'config').mockImplementation(() => ({
         ...originalConfig,
         ...testConfig,
@@ -67,11 +67,14 @@ global.fetch = jest.fn((url, _options) => {
 beforeEach(() => {
     consoleSpy = jest.spyOn(console, 'log');
     processSpy = jest.spyOn(process, 'exit').mockImplementation(() => null as never);
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     doRequestSpy = jest.spyOn(require('@sonarrTube/helpers/Requests'), 'doRequest');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     setCacheSpy = jest.spyOn(require('@sonarrTube/helpers/Cache'), 'setCache');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     getCacheSpy = jest.spyOn(require('@sonarrTube/helpers/Cache'), 'getCache');
     Constants.ENVIRONMENT.ENV_FILE = '';
     mockConfig();
