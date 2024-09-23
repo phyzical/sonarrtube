@@ -6,13 +6,7 @@ import { Channel as YoutubeContext } from '@sonarrTube/models/api/youtube/Channe
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { cleanText } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
-
-type ActionableSeriesType = {
-    videos?: ActionableVideo[],
-    sonarrSeries: SonarrSeries,
-    tvdbSeries: TvdbSeries,
-    youtubeContext: YoutubeContext
-}
+import { ActionableSeries as ActionableSeriesType } from '@sonarrTube/types/ActionableSeries.js';
 
 export class ActionableSeries {
     videos: ActionableVideo[];

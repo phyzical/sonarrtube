@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
+import { ActionableVideo as ActionableVideoType } from '@sonarrTube/types/ActionableVideo.js';
 import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
 import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
 import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
@@ -9,15 +10,6 @@ import { cachePath, clearCache } from '@sonarrTube/helpers/Cache.js';
 import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
-
-type ActionableVideoType = {
-    youtubeVideo?: Video,
-    sonarrEpisode?: SonarrEpisode,
-    tvdbEpisode: TvdbEpisode,
-    tvdbSeries: TvdbSeries,
-    sonarrSeries: SonarrSeries,
-    youtubeContext: Channel;
-}
 
 export class ActionableVideo {
     id: string;
