@@ -14,12 +14,17 @@
     "esModuleInterop": true,
     "types": ["jest", "node", "puppeteer"],
     "paths": {
-      "@sonarrTube/tests/*": ["./tests/*"],
-      "@sonarrTube/*": ["./src/*"]
+      "@sonarrTube/factories/*": ["./tests/__mocks__/factories/*"],
+      "@sonarrTube/models/*": ["./src/models/*"],
+      "@sonarrTube/helpers/*": ["./src/helpers/*"],
+      "@sonarrTube/api/*": ["./src/api/*"],
+      "@sonarrTube/types/*": ["./src/types/*"],
+      "@sonarrTube/interfaces/*": ["./src/interfaces/*"],
+      "@sonarrTube/entry/*": ["./src/entry/*"]
     },
     "sourceMap": true,
     "strict": true
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*", "./tests/**/*"],
   "exclude": ["node_modules"]
 }

@@ -2,7 +2,7 @@ import { Series as TvdbSeries } from '@sonarrTube/models/api/tvdb/Series.js';
 import { Series as SonarrSeries } from '@sonarrTube/models/api/sonarr/Series.js';
 import { Episode as SonarrEpisode } from '@sonarrTube/models/api/sonarr/Episode.js';
 import { Episode as TvdbEpisode } from '@sonarrTube/models/api/tvdb/Episode.js';
-import { Channel as YoutubeContext } from '@sonarrTube/models/api/youtube/Channel.js';
+import { Channel } from '@sonarrTube/models/api/youtube/Channel.js';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { cleanText } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
@@ -12,7 +12,7 @@ export class ActionableSeries {
     videos: ActionableVideo[];
     sonarrSeries: SonarrSeries;
     tvdbSeries: TvdbSeries;
-    youtubeContext: YoutubeContext;
+    youtubeContext: Channel;
     backfillDownloadOnly: boolean = false;
     warnings: string[];
 
@@ -183,8 +183,8 @@ export class ActionableSeries {
                 .episodes
                 .find(
                     (tvdbEpisode) =>
-                        cleanText(youtubeVideo.cleanTitle() ) == cleanText(tvdbEpisode.name ) ||
-                        cleanText(youtubeVideo.backupTitle() ) == cleanText(tvdbEpisode.name ) ||
+                        cleanText(youtubeVideo.cleanTitle()) == cleanText(tvdbEpisode.name) ||
+                        cleanText(youtubeVideo.backupTitle()) == cleanText(tvdbEpisode.name) ||
                         youtubeVideo.airedDate() == tvdbEpisode.aired
                 );
 

@@ -1,7 +1,12 @@
+
+import { channelFactory } from 'tests/__mocks__/factories/models/api/youtube/Channel';
+
 import { Channel } from '@sonarrTube/models/api/youtube/Channel';
 
 describe('Channel', () => {
-    it('TODO:', () => {
-        Channel;
+    describe('constructor', () => {
+        it('should create an instance of Channel', () => {
+            expect(channelFactory()).toBeInstanceOf(Channel);
+        });
     });
 });
