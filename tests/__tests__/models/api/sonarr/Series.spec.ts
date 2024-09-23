@@ -1,12 +1,20 @@
-import { Series } from '@sonarrTube/models/api/sonarr/Series';
+import { seriesFactory } from 'tests/__mocks__/factories/models/api/sonarr/Series';
 
-export const generateSeries = (): Series => {
-    const payload = {} as SeriesType;
-    return new Series(payload);
-};
+import { Series } from '@sonarrTube/models/api/sonarr/Series';
+import { Constants } from '@sonarrTube/types/config/Constants';
 
 describe('Series', () => {
-    it('TODO:', () => {
-        Series;
+    describe('constructor', () => {
+        it('should create an instance of Episode', () => {
+            expect(seriesFactory()).toBeInstanceOf(Series);
+        });
+    });
+
+    describe('tvdbCacheKey', () => {
+        it('returns a valid cache key', () => {
+            const series = seriesFactory();
+            const result = series.tvdbCacheKey();
+            expect(result).toBe(`/${Constants.CACHE_FOLDERS.TVDB}/${series.tvdbId}.json`);
+        });
     });
 });

@@ -19,7 +19,6 @@ export class Series {
     rootFolderPath: string;
     id: number;
     constructor(payload: SeriesType) {
-        console.dir(payload);
         this.title = payload.title;
         this.status = payload.status;
         this.overview = payload.overview;
