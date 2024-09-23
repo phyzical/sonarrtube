@@ -7,7 +7,7 @@ import { Trailer } from '@sonarrTube/types/tvdb/Trailer.js';
 import { Translations } from '@sonarrTube/types/tvdb/Translations.js';
 import { Company } from '@sonarrTube/types/tvdb/Company.js';
 
-export type Episode = {
+export interface Episode {
     absoluteNumber?: number
     aired: string
     airsAfterSeason?: number
@@ -44,6 +44,6 @@ export type Episode = {
 
     cacheKey: () => string
     editURL: () => string
-    overviewLog: () => void
+    overviewLog: () => boolean
     youtubeURL: () => string
 }

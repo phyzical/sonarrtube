@@ -69,7 +69,7 @@ export class Episode implements EpisodeType {
     editURL = (): string =>
         `${Constants.TVDB.HOST}/series/${encodeURIComponent(this.series.slug)}/episodes/${this.id}/0/edit`;
 
-    overviewLog = (): void => {
+    overviewLog = (): boolean => {
         log(
             'Overview:' +
             [
@@ -81,6 +81,8 @@ export class Episode implements EpisodeType {
                 `Season: ${this.seasonNumber}`,
             ].join('\n  ')
         );
+
+        return true;
     };
 
     youtubeURL = (): string => {
