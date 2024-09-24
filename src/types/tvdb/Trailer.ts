@@ -3,5 +3,5 @@ export type Trailer = {
     language: string
     name: string
     url: string
-    runtime: 0
+    runtime: number
 }

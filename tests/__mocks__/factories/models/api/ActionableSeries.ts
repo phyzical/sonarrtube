@@ -11,7 +11,7 @@ export const actionableSeriesFactory = (): ActionableSeries => {
     const tvdbSeries = tvdbSeriesFactory();
     const youtubeContext = channelFactory();
 
-    return new ActionableSeries(
+    const series = new ActionableSeries(
         {
             ...typeFactory('ActionableSeries'),
             sonarrSeries,
@@ -19,4 +19,8 @@ export const actionableSeriesFactory = (): ActionableSeries => {
             youtubeContext,
         } as ActionableSeriesType
     );
+
+    series.videos.map(_ => typeFactory('ActionableVideo'));
+
+    return series;
 };
