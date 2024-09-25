@@ -1,0 +1,2 @@
+export const generateRandomArray = (min: number = 3, max: number = 10): number[] =>
+    Array.from({ length: Math.floor(Math.random() * (max - min + 1)) + min }, () => Math.floor(Math.random() * 100));

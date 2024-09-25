@@ -2,9 +2,13 @@ import { existsSync, readFileSync } from 'fs';
 import { btoa } from 'buffer';
 import { join } from 'path';
 
+import * as matchers from 'jest-extended';
+
 import { config } from '@sonarrTube/helpers/Config';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { resetCache } from '@sonarrTube/helpers/Cache';
+
+expect.extend(matchers);
 
 const initialProcessEnv = process.env;
 export let consoleSpy: jest.SpyInstance;

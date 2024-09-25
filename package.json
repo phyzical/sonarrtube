@@ -42,6 +42,7 @@
     "intermock": "0.2.5",
     "jest-resolve": "29.7.0",
     "jest-puppeteer": "10.1.1",
+    "jest-extended": "4.0.2",
     "jest-ts-webcompat-resolver": "1.0.0",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",

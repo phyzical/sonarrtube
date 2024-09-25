@@ -3,9 +3,9 @@ import { typeFactory } from 'tests/__mocks__/factories/Type';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { ActionableVideo as ActionableVideoType } from '@sonarrTube/types/ActionableVideo.js';
 
-export const actionableVideoFactory = (): ActionableVideo => {
+export const actionableVideoFactory = (params: object = {}): ActionableVideo => {
     const video = new ActionableVideo(
-        typeFactory('ActionableVideo') as ActionableVideoType
+        { ...typeFactory('ActionableVideo'), ...params } as ActionableVideoType,
     );
 
     video.youtubeVideo = typeFactory('youtube/Video');

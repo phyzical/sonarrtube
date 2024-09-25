@@ -5,8 +5,9 @@ import { typeFactory } from 'tests/__mocks__/factories/Type';
 
 import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
 import { ActionableSeries as ActionableSeriesType } from '@sonarrTube/types/ActionableSeries.js';
+import { generateRandomArray } from '@sonarrTube/factories/RandomArray';
 
-export const actionableSeriesFactory = (): ActionableSeries => {
+export const actionableSeriesFactory = (params: object = {}): ActionableSeries => {
     const sonarrSeries = sonarrSeriesFactory();
     const tvdbSeries = tvdbSeriesFactory();
     const youtubeContext = channelFactory();
@@ -14,13 +15,14 @@ export const actionableSeriesFactory = (): ActionableSeries => {
     const series = new ActionableSeries(
         {
             ...typeFactory('ActionableSeries'),
+            ...params,
             sonarrSeries,
             tvdbSeries,
             youtubeContext,
         } as ActionableSeriesType
     );
 
-    series.videos.map(_ => typeFactory('ActionableVideo'));
+    series.videos = generateRandomArray().map(_ => typeFactory('ActionableVideo'));
 
     return series;
 };

@@ -36,19 +36,17 @@ export class Video implements VideoType {
 
     cleanDescription = (): string => {
         let description = this.description;
-        if (description.length > 100) {
-            description = description.slice(0, 100);
-        }
+
         if (!description || /(sponsor)+|(download)+/i.test(description)) {
             description = this.cleanTitle();
         }
 
-        return description;
+        return description.slice(0, 100);
     };
 
-    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '');
+    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '').slice(0, 100);
 
-    backupTitle = (): string => this.title.replace(titleCleanerRegex, '');
+    backupTitle = (): string => this.title.replace(titleCleanerRegex, '').slice(0, 100);
 
     runTime = (): string => {
         const runtime = Math.floor(this.duration / 60);
