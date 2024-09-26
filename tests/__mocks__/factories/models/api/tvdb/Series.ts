@@ -17,14 +17,14 @@ export const seriesFactory = (params: object = {}): Series => {
         {
             defaultSeasonType: faker.number.int(),
             id: faker.number.int(),
-            image: faker.lorem.words(),
+            image: faker.internet.url(),
             name: faker.lorem.words(),
             overview: faker.lorem.words(),
             remoteIds: generateRandomArray(() => remoteIDFactory()) as RemoteID[],
             seasons: generateRandomArray(() => seasonFactory()) as Season[],
             seasonTypes: generateRandomArray(() => seasonTypeFactory()) as SeasonType[],
-            slug: faker.lorem.words(),
-            year: faker.lorem.words(),
+            slug: faker.lorem.slug(),
+            year: faker.number.int().toString(),
             ...params
         } as SeriesType,
     );

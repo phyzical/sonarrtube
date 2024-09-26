@@ -10,16 +10,16 @@ import { tagFactory } from '@sonarrTube/factories/models/api/tvdb/Tag';
 
 export const companyFactory = (): Company => (
     {
-        activeDate: faker.lorem.words(),
+        activeDate: faker.date.anytime().toString(),
         aliases: generateRandomArray(() => aliasFactory()) as Alias[],
-        country: faker.lorem.words(),
+        country: faker.location.country(),
         id: faker.number.int(),
-        inactiveDate: faker.lorem.words(),
-        name: faker.lorem.words(),
-        nameTranslations: generateRandomArray(() => faker.lorem.words()) as string[],
+        inactiveDate: faker.date.anytime().toString(),
+        name: faker.company.name(),
+        nameTranslations: generateRandomArray(() => faker.company.name()) as string[],
         overviewTranslations: generateRandomArray(() => faker.lorem.words()) as string[],
         primaryCompanyType: faker.number.int(),
-        slug: faker.lorem.words(),
+        slug: faker.lorem.slug(),
         parentCompany: parentCompanyFactory(),
         tagOptions: generateRandomArray(() => tagFactory()) as Tag[],
     }

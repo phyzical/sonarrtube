@@ -8,7 +8,7 @@ export const translationFactory = (): Translation => (
         aliases: generateRandomArray(() => faker.lorem.words()) as string[],
         isAlias: faker.datatype.boolean(),
         isPrimary: faker.datatype.boolean(),
-        language: faker.lorem.words(),
+        language: faker.location.country(),
         name: faker.lorem.words(),
         overview: faker.lorem.words(),
         tagline: faker.lorem.words(),

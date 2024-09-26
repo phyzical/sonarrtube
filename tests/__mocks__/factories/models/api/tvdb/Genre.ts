@@ -6,6 +6,6 @@ export const genreFactory = (): Genre => (
     {
         id: faker.number.int(),
         name: faker.lorem.words(),
-        slug: faker.lorem.words(),
+        slug: faker.lorem.slug(),
     }
 );

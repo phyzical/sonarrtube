@@ -18,14 +18,14 @@ export const seriesFactory = (params: object = {}): Series => {
             title: faker.lorem.words(),
             status: faker.lorem.words(),
             overview: faker.lorem.words(),
-            network: faker.lorem.words(),
+            network: faker.company.name(),
             year: faker.number.int(),
             path: faker.system.filePath(),
             seasonFolder: faker.datatype.boolean(),
             monitored: faker.datatype.boolean(),
             tvdbId: faker.number.int(),
-            titleSlug: faker.lorem.words(),
-            rootFolderPath: faker.lorem.words(),
+            titleSlug: faker.lorem.slug(),
+            rootFolderPath: faker.system.directoryPath(),
             id: faker.number.int(),
             ...params
         } as SeriesType

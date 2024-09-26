@@ -4,7 +4,7 @@ import { Alias } from '@sonarrTube/types/tvdb/Alias';
 
 export const aliasFactory = (): Alias => (
     {
-        language: faker.lorem.words(),
+        language: faker.location.country(),
         name: faker.lorem.words(),
     }
 );

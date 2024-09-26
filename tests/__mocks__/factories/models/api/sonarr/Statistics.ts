@@ -11,7 +11,7 @@ export const statisticsFactory = (): Statistics => (
         episodeCount: faker.number.int(),
         totalEpisodeCount: faker.number.int(),
         sizeOnDisk: faker.number.float(),
-        releaseGroups: generateRandomArray(() => faker.lorem.word()) as string[],
+        releaseGroups: generateRandomArray(() => faker.company.name()) as string[],
         percentOfEpisodes: faker.number.float()
     }
 );

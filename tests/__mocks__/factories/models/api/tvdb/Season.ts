@@ -8,9 +8,9 @@ import { typeFactory } from '@sonarrTube/factories/models/api/tvdb/Type';
 export const seasonFactory = (): Season => (
     {
         id: faker.number.int(),
-        image: faker.lorem.words(),
+        image: faker.internet.url(),
         imageType: faker.number.int(),
-        lastUpdated: faker.lorem.words(),
+        lastUpdated: faker.date.anytime().toString(),
         name: faker.lorem.words(),
         nameTranslations: generateRandomArray(() => faker.lorem.words()) as string[],
         number: faker.number.int(),
@@ -18,6 +18,6 @@ export const seasonFactory = (): Season => (
         companies: companiesFactory(),
         seriesId: faker.number.int(),
         type: typeFactory(),
-        year: faker.lorem.words(),
+        year: faker.number.int().toString(),
     }
 );

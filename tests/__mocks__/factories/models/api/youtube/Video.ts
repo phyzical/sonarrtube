@@ -11,14 +11,14 @@ export const videoFactory = (params: object = {}): Video => new Video(
         thumbnail: faker.lorem.words(),
         description: faker.lorem.words(),
         channel_id: faker.lorem.words(),
-        channel_url: faker.lorem.words(),
+        channel_url: faker.internet.url(),
         channel: faker.lorem.words(),
         duration: faker.number.float(),
         view_count: faker.number.int(),
-        webpage_url: faker.lorem.words(),
+        webpage_url: faker.internet.url(),
         id: faker.lorem.words(),
         timestamp: faker.number.float(),
-        upload_date: faker.lorem.words(),
+        upload_date: faker.date.anytime().toString(),
         ...params
     } as VideoType,
 );

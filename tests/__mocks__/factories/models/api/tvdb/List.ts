@@ -23,6 +23,6 @@ export const listFactory = (): List => (
         remoteIds: generateRandomArray(() => remoteIDFactory()) as RemoteID[],
         tags: generateRandomArray(() => tagFactory()) as Tag[],
         score: faker.number.float(),
-        url: faker.lorem.words(),
+        url: faker.internet.url(),
     }
 );

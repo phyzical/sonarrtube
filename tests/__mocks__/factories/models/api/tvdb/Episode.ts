@@ -6,10 +6,13 @@ import { Episode } from '@sonarrTube/models/api/tvdb/Episode';
 import { Series } from '@sonarrTube/types/tvdb/Series';
 
 
-export const episodeFactory = (params: object = {}, series: Series | undefined = undefined): Episode => new Episode(
+export const episodeFactory = (
+    params: object = {},
+    series: Series = seriesFactory()
+): Episode => new Episode(
     {
-        aired: faker.lorem.words(),
-        image: faker.lorem.words(),
+        aired: faker.date.anytime().toString(),
+        image: faker.internet.url(),
         productionCode: faker.lorem.words(),
         name: faker.lorem.words(),
         overview: faker.lorem.words(),
@@ -17,5 +20,5 @@ export const episodeFactory = (params: object = {}, series: Series | undefined =
         seasonNumber: faker.number.int(),
         ...params
     } as EpisodeType,
-    series || seriesFactory()
+    series
 );
