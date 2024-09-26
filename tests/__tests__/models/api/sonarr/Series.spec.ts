@@ -1,4 +1,4 @@
-import { seriesFactory } from 'tests/__mocks__/factories/models/api/sonarr/Series';
+import { seriesFactory } from '@sonarrTube/factories/models/api/sonarr/Series';
 import { faker } from '@faker-js/faker';
 
 import { Series } from '@sonarrTube/models/api/sonarr/Series';

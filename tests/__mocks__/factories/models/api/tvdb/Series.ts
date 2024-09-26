@@ -1,33 +1,35 @@
-import { episodeFactory } from 'tests/__mocks__/factories/models/api/tvdb/Episode';
-import { typeFactory } from 'tests/__mocks__/factories/Type';
+import { faker } from '@faker-js/faker';
 
+import { episodeFactory } from '@sonarrTube/factories/models/api/tvdb/Episode';
 import { Series as SeriesType } from '@sonarrTube/types/tvdb/Series';
 import { Series } from '@sonarrTube/models/api/tvdb/Series';
 import { generateRandomArray } from '@sonarrTube/factories/RandomArray';
+import { Episode } from '@sonarrTube/models/api/tvdb/Episode';
+import { RemoteID } from '@sonarrTube/types/tvdb/RemoteID';
+import { Season } from '@sonarrTube/types/tvdb/Season';
+import { SeasonType } from '@sonarrTube/types/tvdb/SeasonType';
+import { remoteIDFactory } from '@sonarrTube/factories/models/api/tvdb/RemoteID';
+import { seasonFactory } from '@sonarrTube/factories/models/api/tvdb/Season';
+import { seasonTypeFactory } from '@sonarrTube/factories/models/api/tvdb/SeasonType';
 
 export const seriesFactory = (params: object = {}): Series => {
     const series = new Series(
-        { ...typeFactory('tvdb/Series'), ...params } as SeriesType,
+        {
+            defaultSeasonType: faker.number.int(),
+            id: faker.number.int(),
+            image: faker.lorem.words(),
+            name: faker.lorem.words(),
+            overview: faker.lorem.words(),
+            remoteIds: generateRandomArray(() => remoteIDFactory()) as RemoteID[],
+            seasons: generateRandomArray(() => seasonFactory()) as Season[],
+            seasonTypes: generateRandomArray(() => seasonTypeFactory()) as SeasonType[],
+            slug: faker.lorem.words(),
+            year: faker.lorem.words(),
+            ...params
+        } as SeriesType,
     );
 
-    series.translations = typeFactory('tvdb/Translations');
-    series.airsDays = typeFactory('tvdb/Days');
-    series.originalNetwork = typeFactory('tvdb/Company');
-    series.latestNetwork = typeFactory('tvdb/Company');
-    series.status = typeFactory('tvdb/Status');
-    series.aliases = generateRandomArray().map(_ => typeFactory('tvdb/Alias'));
-    series.artworks = generateRandomArray().map(_ => typeFactory('tvdb/Artwork'));
-    series.characters = generateRandomArray().map(_ => typeFactory('tvdb/Character'));
-    series.contentRatings = generateRandomArray().map(_ => typeFactory('tvdb/ContentRating'));
-    series.episodes = generateRandomArray().map(_ => episodeFactory({}, series));
-    series.lists = generateRandomArray().map(_ => typeFactory('tvdb/List'));
-    series.genres = generateRandomArray().map(_ => typeFactory('tvdb/Genre'));
-    series.companies = generateRandomArray().map(_ => typeFactory('tvdb/Company'));
-    series.remoteIds = generateRandomArray().map(_ => typeFactory('tvdb/RemoteID'));
-    series.seasons = generateRandomArray().map(_ => typeFactory('tvdb/Season'));
-    series.seasonTypes = generateRandomArray().map(_ => typeFactory('tvdb/SeasonType'));
-    series.tags = generateRandomArray().map(_ => typeFactory('tvdb/Tag'));
-    series.trailers = generateRandomArray().map(_ => typeFactory('tvdb/Trailer'));
+    series.episodes = generateRandomArray(() => episodeFactory({}, series)) as Episode[];
 
     return series;
 };

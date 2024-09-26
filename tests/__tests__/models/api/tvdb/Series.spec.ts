@@ -1,5 +1,5 @@
 
-import { seriesFactory } from 'tests/__mocks__/factories/models/api/tvdb/Series';
+import { seriesFactory } from '@sonarrTube/factories/models/api/tvdb/Series';
 
 import { Series } from '@sonarrTube/models/api/tvdb/Series';
 import { Constants } from '@sonarrTube/types/config/Constants';

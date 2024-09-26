@@ -1,7 +1,7 @@
 
-import { videoFactory } from 'tests/__mocks__/factories/models/api/youtube/Video';
 import { mockConfig } from 'tests/config/jest.setup';
 
+import { videoFactory } from '@sonarrTube/factories/models/api/youtube/Video';
 import { Video } from '@sonarrTube/models/api/youtube/Video';
 import { Constants } from '@sonarrTube/types/config/Constants';
 

@@ -1,4 +1,4 @@
-import { actionableSeriesFactory } from 'tests/__mocks__/factories/models/api/ActionableSeries';
+import { actionableSeriesFactory } from '@sonarrTube/factories/models/api/ActionableSeries';
 
 import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries';
 

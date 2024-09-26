@@ -1,5 +1,5 @@
 
-import { episodeFactory } from 'tests/__mocks__/factories/models/api/tvdb/Episode';
+import { episodeFactory } from '@sonarrTube/factories/models/api/tvdb/Episode';
 import { consoleSpy } from 'tests/config/jest.setup';
 
 import { Episode } from '@sonarrTube/models/api/tvdb/Episode';

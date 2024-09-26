@@ -1,5 +1,5 @@
 
-import { channelFactory } from 'tests/__mocks__/factories/models/api/youtube/Channel';
+import { channelFactory } from '@sonarrTube/factories/models/api/youtube/Channel';
 
 import { Channel } from '@sonarrTube/models/api/youtube/Channel';
 
