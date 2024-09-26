@@ -1,5 +1,4 @@
 import { episodeFactory } from '@sonarrTube/factories/models/api/sonarr/Episode';
-
 import { Episode } from '@sonarrTube/models/api/sonarr/Episode';
 import { Constants } from '@sonarrTube/types/config/Constants';
 

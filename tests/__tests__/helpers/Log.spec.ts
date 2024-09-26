@@ -3,6 +3,7 @@ import { consoleSpy, mockConfig } from 'tests/config/jest.setup';
 
 import { log } from '@sonarrTube/helpers/Log';
 
+
 describe('Log', () => {
     beforeEach(() => {
         mockConfig({ verbose: false });

@@ -1,4 +1,3 @@
-
 import { mockConfig } from 'tests/config/jest.setup';
 
 import { videoFactory } from '@sonarrTube/factories/models/api/youtube/Video';
@@ -75,24 +74,24 @@ describe('Video', () => {
         });
     });
     describe('airedDate', () => {
-        it('should return a string', () => {
-            const video = videoFactory();
+        it('should return a string in date format', () => {
+            const video = videoFactory({ upload_date: '20200102' });
             const result = video.airedDate();
-            expect(result).toBeString();
+            expect(result).toBe('2020-01-02');
         });
     });
     describe('season', () => {
-        it('should return a number', () => {
-            const video = videoFactory();
+        it('should return the year as season', () => {
+            const video = videoFactory({ upload_date: '20200102' });
             const result = video.season();
-            expect(result).toBeNumber();
+            expect(result).toBe(2020);
         });
     });
     describe('url', () => {
         it('should return a string', () => {
             const video = videoFactory();
             const result = video.url();
-            expect(result).toBeString();
+            expect(result).toBe(`${Constants.YOUTUBE.HOST}/watch?v=${video.id}`);
         });
     });
 });

@@ -1,7 +1,7 @@
 
-import { episodeFactory } from '@sonarrTube/factories/models/api/tvdb/Episode';
 import { consoleSpy } from 'tests/config/jest.setup';
 
+import { episodeFactory } from '@sonarrTube/factories/models/api/tvdb/Episode';
 import { Episode } from '@sonarrTube/models/api/tvdb/Episode';
 import { Constants } from '@sonarrTube/types/config/Constants';
 
@@ -55,6 +55,12 @@ describe('Episode', () => {
             const episode = episodeFactory();
             const result = episode.youtubeURL();
             expect(result).toBe(`${Constants.YOUTUBE.HOST}/watch?v=${episode.productionCode}`);
+        });
+
+        it('returns empty sting when no url', () => {
+            const episode = episodeFactory({ productionCode: '' });
+            const result = episode.youtubeURL();
+            expect(result).toBe('');
         });
     });
 });

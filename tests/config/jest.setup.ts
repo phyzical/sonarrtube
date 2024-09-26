@@ -7,6 +7,7 @@ import * as matchers from 'jest-extended';
 import { config } from '@sonarrTube/helpers/Config';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { resetCache } from '@sonarrTube/helpers/Cache';
+import { Config } from '@sonarrTube/types/config/Config';
 
 expect.extend(matchers);
 
@@ -23,7 +24,7 @@ const testConfig = {
     verbose: true,
 };
 
-export const mockConfig = (configData = {}): jest.SpyInstance => {
+export const mockConfig = (configData = {} as Partial<Config>): jest.SpyInstance => {
     const originalConfig = config();
 
     configMock?.mockReset();

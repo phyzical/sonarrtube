@@ -1,6 +1,6 @@
-import { seriesFactory } from '@sonarrTube/factories/models/api/sonarr/Series';
 import { faker } from '@faker-js/faker';
 
+import { seriesFactory } from '@sonarrTube/factories/models/api/sonarr/Series';
 import { Series } from '@sonarrTube/models/api/sonarr/Series';
 import { Constants } from '@sonarrTube/types/config/Constants';
 
