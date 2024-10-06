@@ -17,5 +17,9 @@ export const actionableVideoFactory = (params: object = {}): ActionableVideo => 
         } as ActionableVideoType,
     );
 
+    video.tvdbEpisode = video.tvdbSeries.episodes[0];
+    video.youtubeVideo = video.youtubeContext.videos[0];
+    video.sonarrEpisode = video.sonarrSeries.episodes[0];
+
     return video;
 };

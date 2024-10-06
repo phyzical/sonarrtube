@@ -13,15 +13,18 @@ const jestConfig: JestConfigWithTsJest = {
         '<rootDir>/tests/**/*.spec.ts',
     ],
     moduleDirectories: ['node_modules', '<rootDir>'],
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>' }),
+    moduleNameMapper: {
+        ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>', useESM: true }),
+    },
+    modulePathIgnorePatterns: ['<rootDir>/build'],
     collectCoverage: true,
     coverageDirectory: 'coverage',
     coverageThreshold: {
         global: {
-            branches: 0,
-            functions: 0,
-            lines: 0,
-            statements: 0
+            branches: 100,
+            functions: 100,
+            lines: 100,
+            statements: 100
         }
     },
     verbose: true,

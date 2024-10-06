@@ -9,7 +9,7 @@ import { Series } from '@sonarrTube/models/api/sonarr/Series';
 import { generateRandomArray } from '@sonarrTube/factories/RandomArray';
 import { Episode } from '@sonarrTube/models/api/sonarr/Episode';
 
-export const seriesFactory = (params: object = {}): Series => {
+export const seriesFactory = (params: object = {}, videoCount: undefined | number = undefined): Series => {
     const series = new Series(
         {
             seasons: generateRandomArray(() => seasonFactory()),
@@ -31,7 +31,7 @@ export const seriesFactory = (params: object = {}): Series => {
         } as SeriesType
     );
 
-    series.episodes = generateRandomArray(() => episodeFactory({}, series)) as Episode[];
+    series.episodes = generateRandomArray(() => episodeFactory({}, series), videoCount, videoCount) as Episode[];
 
     return series;
 };

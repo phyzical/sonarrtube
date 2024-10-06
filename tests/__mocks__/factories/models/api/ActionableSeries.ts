@@ -1,23 +1,30 @@
 import { channelFactory } from '@sonarrTube/factories/models/api/youtube/Channel';
-import { videoFactory } from '@sonarrTube/factories/models/api/youtube/Video';
 import { seriesFactory as sonarrSeriesFactory } from '@sonarrTube/factories/models/api/sonarr/Series';
 import { seriesFactory as tvdbSeriesFactory } from '@sonarrTube/factories/models/api/tvdb/Series';
 import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
-import { ActionableSeries as ActionableSeriesType } from '@sonarrTube/types/ActionableSeries.js';
+import { ActionableSeries as ActionableSeriesType } from '@sonarrTube/types/ActionableSeries';
 import { generateRandomArray } from '@sonarrTube/factories/RandomArray';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo';
+import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
+import { ActionableVideo as ActionableVideoType } from '@sonarrTube/types/ActionableVideo';
 
 export const actionableSeriesFactory = (params: object = {}): ActionableSeries => {
+    const videoCount = Math.floor(Math.random() * 100);
+    const sonarrSeries = sonarrSeriesFactory({}, videoCount);
+    const tvdbSeries = tvdbSeriesFactory({}, videoCount);
+    const youtubeContext = channelFactory({}, videoCount);
     const series = new ActionableSeries(
         {
-            sonarrSeries: sonarrSeriesFactory(),
-            tvdbSeries: tvdbSeriesFactory(),
-            youtubeContext: channelFactory(),
+            sonarrSeries,
+            tvdbSeries,
+            youtubeContext,
             ...params,
         } as ActionableSeriesType
     );
 
-    series.videos = generateRandomArray(() => videoFactory()) as ActionableVideo[];
+    series.videos = generateRandomArray(() => actionableVideoFactory({
+        sonarrSeries, tvdbSeries, youtubeContext
+    } as ActionableVideoType)) as ActionableVideo[];
 
     return series;
 };

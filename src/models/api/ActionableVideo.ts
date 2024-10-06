@@ -30,7 +30,7 @@ export class ActionableVideo implements ActionableVideoType {
     }
     youtubeVideo?: Video | undefined;
     sonarrEpisode?: SonarrEpisodeType | undefined;
-    tvdbEpisode: TvdbEpisodeType;
+    tvdbEpisode: TvdbEpisodeType | undefined;
     tvdbSeries: TvdbSeriesType;
     sonarrSeries: SonarrSeriesType;
     youtubeContext: ChannelType;
@@ -46,11 +46,11 @@ export class ActionableVideo implements ActionableVideoType {
     };
 
     missingFromTvdb = (): boolean => {
-        if (this.tvdbEpisode) {
-            return false;
+        if (!this.tvdbEpisode) {
+            return true;
         }
 
-        return true;
+        return false;
     };
 
     missingYoutube = (): boolean => {

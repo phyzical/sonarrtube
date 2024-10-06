@@ -12,7 +12,7 @@ import { remoteIDFactory } from '@sonarrTube/factories/models/api/tvdb/RemoteID'
 import { seasonFactory } from '@sonarrTube/factories/models/api/tvdb/Season';
 import { seasonTypeFactory } from '@sonarrTube/factories/models/api/tvdb/SeasonType';
 
-export const seriesFactory = (params: object = {}): Series => {
+export const seriesFactory = (params: object = {}, videoCount: undefined | number = undefined): Series => {
     const series = new Series(
         {
             defaultSeasonType: faker.number.int(),
@@ -29,7 +29,7 @@ export const seriesFactory = (params: object = {}): Series => {
         } as SeriesType,
     );
 
-    series.episodes = generateRandomArray(() => episodeFactory({}, series)) as Episode[];
+    series.episodes = generateRandomArray(() => episodeFactory({}, series), videoCount, videoCount) as Episode[];
 
     return series;
 };
