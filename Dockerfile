@@ -37,7 +37,7 @@ RUN yum -y update \
     && dnf module install -y nodejs:20 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    yarnpkg-1.22.19-5.el9  \
+    yarnpkg-1.22.22-5.el9  \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
