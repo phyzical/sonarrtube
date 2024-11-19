@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:9.4.20240523 AS base
+FROM rockylinux/rockylinux:9.5.20241118 AS base
 ENV APP_DIR=/app
 ENV IS_DOCKER=true
 ENV XDG_DATA_HOME="/tmp"
