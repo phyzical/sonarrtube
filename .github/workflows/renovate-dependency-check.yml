@@ -39,7 +39,7 @@ jobs:
           echo "LOG_LEVEL=$LOG_LEVEL" >> $GITHUB_OUTPUT
 
       - name: Renovate
-        uses: renovatebot/github-action@e1db501385ddcccbaae6fb9c06befae04f379f23 # v40.2.10
+        uses: renovatebot/github-action@936628dfbff213ab2eb95033c5e123cfcaf09ebb # v41.0.5
         with:
           configurationFile: .github/renovate-config.js
           token: ${{ secrets.REPO_SCOPED_TOKEN }}
