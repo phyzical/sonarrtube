@@ -45,21 +45,9 @@ export class ActionableVideo implements ActionableVideoType {
         return !this.sonarrEpisode.hasFile;
     };
 
-    missingFromTvdb = (): boolean => {
-        if (!this.tvdbEpisode) {
-            return true;
-        }
+    missingFromTvdb = (): boolean => !this.tvdbEpisode;
 
-        return false;
-    };
-
-    missingYoutube = (): boolean => {
-        if (this.youtubeVideo) {
-            return false;
-        }
-
-        return true;
-    };
+    missingYoutube = (): boolean => !this.youtubeVideo;
 
     missingProductionCode = (): boolean => {
         if (!this.tvdbEpisode) {
@@ -68,6 +56,8 @@ export class ActionableVideo implements ActionableVideoType {
 
         return !this.tvdbEpisode.productionCode;
     };
+
+    unmatchedYoutubeVideo = (): boolean => !this.missingProductionCode() && this.missingYoutube();
 
     tvdbEditUrl = (): string | undefined => {
         if (!this.tvdbEpisode) {

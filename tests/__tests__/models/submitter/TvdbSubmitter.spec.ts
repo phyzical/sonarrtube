@@ -31,7 +31,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.getEpisodeNumber('')).toBe('');
+    expect(tvdbSubmitter.getEpisodeNumber()).toBe('');
   });
   it('doLogin', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -47,7 +47,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.openSeriesSeasonPage('')).toBe('');
+    expect(tvdbSubmitter.openSeriesSeasonPage()).toBe('');
   });
   it('addSeriesSeason', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -55,7 +55,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.addSeriesSeason('')).toBe('');
+    expect(tvdbSubmitter.addSeriesSeason()).toBe('');
   });
   it('openSeriesPage', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -63,7 +63,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.openSeriesPage('')).toBe('');
+    expect(tvdbSubmitter.openSeriesPage()).toBe('');
   });
   it('openEpisodePage', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -71,7 +71,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.openEpisodePage('')).toBe('');
+    expect(tvdbSubmitter.openEpisodePage()).toBe('');
   });
   it('verifyAddedEpisode', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -79,7 +79,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.verifyAddedEpisode('')).toBe('');
+    expect(tvdbSubmitter.verifyAddedEpisode()).toBe('');
   });
   it('addEpisode', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -87,7 +87,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.addEpisode('')).toBe('');
+    expect(tvdbSubmitter.addEpisode()).toBe('');
   });
   it('backfillEpisodeProductionCode', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -95,7 +95,7 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.backfillEpisodeProductionCode('')).toBe('');
+    expect(tvdbSubmitter.backfillEpisodeProductionCode()).toBe('');
   });
   it('backfillEpisodeImage', () => {
     const tvdbSubmitter = new TvdbSubmitter({
@@ -103,6 +103,6 @@ describe('TvdbSubmitter', () => {
       password: '',
       email: '',
     } as TVDBConfig);
-    expect(tvdbSubmitter.backfillEpisodeImage('')).toBe('');
+    expect(tvdbSubmitter.backfillEpisodeImage()).toBe('');
   });
 });

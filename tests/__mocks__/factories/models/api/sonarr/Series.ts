@@ -31,6 +31,9 @@ export const seriesFactory = (params: object = {}, videoCount: undefined | numbe
         } as SeriesType
     );
 
+    // series.episodes = [1, 2, 3, 4, 5].map(() => episodeFactory({}, series)) as Episode[];
+
+
     series.episodes = generateRandomArray(() => episodeFactory({}, series), videoCount, videoCount) as Episode[];
 
     return series;

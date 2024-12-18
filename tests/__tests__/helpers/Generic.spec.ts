@@ -1,6 +1,5 @@
-import { consoleSpy, processSpy } from 'tests/config/jest.setup';
-
 import { currentFileTimestamp, getYoutubeDelayString, handleSignal } from '@sonarrTube/helpers/Generic';
+import { consoleSpy, processSpy } from '@sonarrTube/mocks/Spies';
 
 describe('currentFileTimestamp', () => {
     it('should return a string in the format of a timestamp', () => {

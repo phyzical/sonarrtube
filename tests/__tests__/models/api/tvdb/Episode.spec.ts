@@ -1,7 +1,6 @@
 
-import { consoleSpy } from 'tests/config/jest.setup';
-
 import { episodeFactory } from '@sonarrTube/factories/models/api/tvdb/Episode';
+import { consoleSpy } from '@sonarrTube/mocks/Spies';
 import { Episode } from '@sonarrTube/models/api/tvdb/Episode';
 import { Constants } from '@sonarrTube/types/config/Constants';
 

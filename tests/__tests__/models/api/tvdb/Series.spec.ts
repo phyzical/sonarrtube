@@ -1,10 +1,10 @@
 
-import { consoleSpy, mockConfig } from 'tests/config/jest.setup';
-
 import { seriesFactory } from '@sonarrTube/factories/models/api/tvdb/Series';
 import { Series } from '@sonarrTube/models/api/tvdb/Series';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { config } from '@sonarrTube/helpers/Config';
+import { mockConfig } from '@sonarrTube/mocks/Config';
+import { consoleSpy } from '@sonarrTube/mocks/Spies';
 
 describe('Series', () => {
     describe('constructor', () => {
