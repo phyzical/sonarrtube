@@ -1,10 +1,5 @@
 import { Tag } from '@sonarrTube/types/tvdb/Tag.js';
-
-
-type Status = {
-    id: number
-    name: string
-}
+import { TagStatus } from '@sonarrTube/types/tvdb/TagStatus.js';
 
 export type Artwork = {
     episodeId: number
@@ -20,7 +15,7 @@ export type Artwork = {
     seasonId: number
     seriesId: number
     seriesPeopleId: number
-    status: Status
+    status: TagStatus
     tagOptions: Tag[]
     thumbnail: string
     thumbnailHeight: number

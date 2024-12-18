@@ -30,7 +30,7 @@ export class ActionableVideo implements ActionableVideoType {
     }
     youtubeVideo?: Video | undefined;
     sonarrEpisode?: SonarrEpisodeType | undefined;
-    tvdbEpisode: TvdbEpisodeType;
+    tvdbEpisode: TvdbEpisodeType | undefined;
     tvdbSeries: TvdbSeriesType;
     sonarrSeries: SonarrSeriesType;
     youtubeContext: ChannelType;
@@ -45,21 +45,9 @@ export class ActionableVideo implements ActionableVideoType {
         return !this.sonarrEpisode.hasFile;
     };
 
-    missingFromTvdb = (): boolean => {
-        if (this.tvdbEpisode) {
-            return false;
-        }
+    missingFromTvdb = (): boolean => !this.tvdbEpisode;
 
-        return true;
-    };
-
-    missingYoutube = (): boolean => {
-        if (this.youtubeVideo) {
-            return false;
-        }
-
-        return true;
-    };
+    missingYoutube = (): boolean => !this.youtubeVideo;
 
     missingProductionCode = (): boolean => {
         if (!this.tvdbEpisode) {
@@ -68,6 +56,8 @@ export class ActionableVideo implements ActionableVideoType {
 
         return !this.tvdbEpisode.productionCode;
     };
+
+    unmatchedYoutubeVideo = (): boolean => !this.missingProductionCode() && this.missingYoutube();
 
     tvdbEditUrl = (): string | undefined => {
         if (!this.tvdbEpisode) {

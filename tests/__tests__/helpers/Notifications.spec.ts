@@ -1,6 +1,6 @@
-import { consoleSpy, doRequestSpy, mockConfig } from 'tests/config/jest.setup';
-
 import { notify } from '@sonarrTube/helpers/Notifications';
+import { mockConfig } from '@sonarrTube/mocks/Config';
+import { consoleSpy, doRequestSpy } from '@sonarrTube/mocks/Spies';
 
 describe('Notifications', () => {
 
