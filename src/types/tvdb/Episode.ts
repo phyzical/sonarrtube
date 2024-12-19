@@ -43,6 +43,7 @@ export interface Episode {
     series: Series
 
     cacheKey: () => string
+    cacheFolder: () => string
     editURL: () => string
     overviewLog: () => boolean
     youtubeURL: () => string

@@ -64,7 +64,8 @@ export class Episode implements EpisodeType {
     trailers?: Trailer[] | undefined;
     translations?: Translations | undefined;
 
-    cacheKey = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.seriesId}/${this.id}.json`;
+    cacheFolder = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.seriesId}`;
+    cacheKey = (): string => `${this.cacheFolder()}/${this.id}.json`;
 
     editURL = (): string =>
         `${Constants.TVDB.HOST}/series/${encodeURIComponent(this.series.slug)}/episodes/${this.id}/0/edit`;

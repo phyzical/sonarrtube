@@ -18,6 +18,8 @@ export const episodeFactory = (
         overview: faker.lorem.words(),
         runtime: faker.number.float(),
         seasonNumber: faker.number.int(),
+        id: faker.number.int(),
+        seriesId: faker.number.int(),
         ...params
     } as EpisodeType,
     series

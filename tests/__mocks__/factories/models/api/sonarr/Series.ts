@@ -9,7 +9,8 @@ import { Series } from '@sonarrTube/models/api/sonarr/Series';
 import { generateRandomArray } from '@sonarrTube/factories/RandomArray';
 import { Episode } from '@sonarrTube/models/api/sonarr/Episode';
 
-export const seriesFactory = (params: object = {}, videoCount: undefined | number = undefined): Series => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const seriesFactory = (params: any = {}, videoCount: undefined | number = undefined): Series => {
     const series = new Series(
         {
             seasons: generateRandomArray(() => seasonFactory()),
@@ -27,14 +28,14 @@ export const seriesFactory = (params: object = {}, videoCount: undefined | numbe
             titleSlug: faker.lorem.slug(),
             rootFolderPath: faker.system.directoryPath(),
             id: faker.number.int(),
+
             ...params
         } as SeriesType
     );
 
-    // series.episodes = [1, 2, 3, 4, 5].map(() => episodeFactory({}, series)) as Episode[];
-
-
-    series.episodes = generateRandomArray(() => episodeFactory({}, series), videoCount, videoCount) as Episode[];
+    series.episodes = params.episodes || generateRandomArray(
+        () => episodeFactory({}, series), videoCount, videoCount
+    ) as Episode[];
 
     return series;
 };

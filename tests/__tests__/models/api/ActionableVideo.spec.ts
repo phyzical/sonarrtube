@@ -1,4 +1,9 @@
+import { writeFileSync } from 'fs';
+
 import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
+import { seriesFactory as TvdbSeriesFactory } from '@sonarrTube/factories/models/api/tvdb/Series';
+import { seriesFactory as SonarrSeriesFactory } from '@sonarrTube/factories/models/api/sonarr/Series';
+import { channelFactory } from '@sonarrTube/factories/models/api/youtube/Channel';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo';
 
 describe('ActionableVideo', () => {
@@ -9,12 +14,14 @@ describe('ActionableVideo', () => {
     });
     describe('unDownloaded', () => {
         it('should return false if sonarrEpisode is missing', () => {
-            const actionableVideo = actionableVideoFactory(0, { sonarrEpisode: undefined });
+            const sonarrSeries = SonarrSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { sonarrSeries });
             expect(actionableVideo.unDownloaded()).toBe(false);
         });
 
         it('should return false if youtube is missing', () => {
-            const actionableVideo = actionableVideoFactory(0, { youtubeVideo: undefined });
+            const youtubeContext = channelFactory({ videos: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { youtubeContext });
             expect(actionableVideo.unDownloaded()).toBe(false);
         });
 
@@ -22,30 +29,40 @@ describe('ActionableVideo', () => {
             const actionableVideo = actionableVideoFactory(0, { sonarrEpisode: { hasFile: true } });
             expect(actionableVideo.unDownloaded()).toBe(false);
         });
+
+        it('should return true if sonarrEpisode missing a file', () => {
+            const actionableVideo = actionableVideoFactory(0, { sonarrEpisode: { hasFile: false } });
+            console.log(actionableVideo);
+            expect(actionableVideo.unDownloaded()).toBe(true);
+        });
     });
     describe('missingFromTvdb', () => {
         it('should return false if tvdbEpisode is present', () => {
-            const actionableVideo = actionableVideoFactory(0, { tvdbEpisode: {} });
+            const actionableVideo = actionableVideoFactory();
             expect(actionableVideo.missingFromTvdb()).toBe(false);
         });
         it('should return true if tvdbEpisode is missing', () => {
-            const actionableVideo = actionableVideoFactory(0, { tvdbEpisode: undefined });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
+
             expect(actionableVideo.missingFromTvdb()).toBe(true);
         });
     });
     describe('missingYoutube', () => {
         it('should return false if youtubeVideo is present', () => {
-            const actionableVideo = actionableVideoFactory(0, { youtubeVideo: {} });
+            const actionableVideo = actionableVideoFactory();
             expect(actionableVideo.missingYoutube()).toBe(false);
         });
         it('should return true if youtubeVideo is missing', () => {
-            const actionableVideo = actionableVideoFactory(0, { youtubeVideo: undefined });
+            const youtubeContext = channelFactory({ videos: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { youtubeContext });
             expect(actionableVideo.missingYoutube()).toBe(true);
         });
     });
     describe('missingProductionCode', () => {
         it('should return false if tvdbEpisode is missing', () => {
-            const actionableVideo = actionableVideoFactory(0, { tvdbEpisode: undefined });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(actionableVideo.missingProductionCode()).toBe(false);
         });
         it('should return false if tvdbEpisode has a production code', () => {
@@ -58,35 +75,84 @@ describe('ActionableVideo', () => {
         });
     });
     describe('tvdbEditUrl', () => {
+        it('should return null', () => {
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
+            expect(actionableVideo.tvdbEditUrl()).toBe(undefined);
+        });
         it('should return a URL', () => {
             const actionableVideo = actionableVideoFactory();
+            expect(actionableVideo.tvdbEditUrl()).toBeString();
             expect(actionableVideo.tvdbEditUrl())
-                .toBe('https://www.thetvdb.com/series/undefined/episodes/undefined/edit');
+                .toBe(actionableVideo.tvdbEpisode?.editURL());
         });
     });
     describe('tvdbInfoCache', () => {
+        it('should return null', () => {
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
+            expect(actionableVideo.tvdbInfoCache()).toBe(undefined);
+        });
         it('should return a cache key', () => {
-            const actionableVideo = actionableVideoFactory(0, { tvdbEpisode: { seriesId: 1, id: 2 } });
-            expect(actionableVideo.tvdbInfoCache()).toBe('/tvdb/1/2.json');
+            const actionableVideo = actionableVideoFactory();
+            if (actionableVideo.tvdbEpisode) {
+                actionableVideo.tvdbEpisode.seriesId = 1;
+                actionableVideo.tvdbEpisode.id = 2;
+            }
+
+            expect(actionableVideo.tvdbInfoCache()).toContain('/tvdb/1/2.json');
         });
     });
     describe('thumbnailCacheFile', () => {
+        it('should throw', () => {
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
+            expect(() => actionableVideo.thumbnailCacheFile()).toThrow('Episode not found this shouldn\'t happen!');
+        });
         it('should return a cache key', () => {
-            const actionableVideo = actionableVideoFactory(0, { youtubeVideo: { id: '123' } });
-            expect(actionableVideo.thumbnailCacheFile()).toBe('/thumbnails/123.jpg');
+            const actionableVideo = actionableVideoFactory();
+            if (actionableVideo.tvdbEpisode) {
+                actionableVideo.tvdbEpisode.seriesId = 1;
+            }
+            expect(actionableVideo.thumbnailCacheFile()).toContain('/tvdb/1/thumbnails.txt');
         });
     });
     describe('thumbnailUploadAttemptCount', () => {
-        it('should return a number', () => {
+        it('should return 0 when cache doesn\t exist', () => {
             const actionableVideo = actionableVideoFactory();
             expect(actionableVideo.thumbnailUploadAttemptCount()).toBe(0);
         });
+        it('should throw', () => {
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
+            expect(() => actionableVideo.thumbnailUploadAttemptCount())
+                .toThrow('Episode not found this shouldn\'t happen!');
+        });
+
+        it('should return the correct count', () => {
+            const actionableVideo = actionableVideoFactory();
+            if (actionableVideo.tvdbEpisode) {
+                actionableVideo.tvdbEpisode.seriesId = 1;
+                actionableVideo.tvdbEpisode.id = 2;
+            }
+            const cachePath = actionableVideo.thumbnailCacheFile();
+            writeFileSync(cachePath, [1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 5, 6, 7].join('\n'));
+            expect(actionableVideo.thumbnailUploadAttemptCount()).toBe(3);
+        });
     });
     describe('addThumbnailUploadAttempt', () => {
+        it('should throw', () => {
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
+            expect(() => actionableVideo.addThumbnailUploadAttempt())
+                .toThrow('Episode not found this shouldn\'t happen!');
+        });
         it('should increment the count', () => {
             const actionableVideo = actionableVideoFactory();
             actionableVideo.addThumbnailUploadAttempt();
-            expect(actionableVideo.thumbnailUploadAttemptCount()).toBe(1);
+            actionableVideo.addThumbnailUploadAttempt();
+            actionableVideo.addThumbnailUploadAttempt();
+            expect(actionableVideo.thumbnailUploadAttemptCount()).toBe(3);
         });
     });
     describe('season', () => {
