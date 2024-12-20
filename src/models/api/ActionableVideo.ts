@@ -78,9 +78,6 @@ export class ActionableVideo implements ActionableVideoType {
 
     addThumbnailUploadAttempt = (): void => {
         this.assertMissingTvdbEpisode();
-
-        console.log(this.thumbnailCacheFile());
-
         writeFileSync(this.thumbnailCacheFile(), `${this.tvdbEpisode?.id}\n`, { flag: 'a' });
     };
 
@@ -132,12 +129,8 @@ export class ActionableVideo implements ActionableVideoType {
     };
 
     clearCache = (): void => {
-        const episode = this.tvdbEpisode;
-
-        if (!episode) {
-            throw new Error('Episode not found this shouldn\'t happen!');
-        }
-        clearCache(episode.cacheKey());
+        this.assertMissingTvdbEpisode();
+        clearCache(this.tvdbEpisode?.cacheKey() ?? '');
     };
 
     generateSonarrEpisode = (episodeNumber: string): SonarrEpisode => {
