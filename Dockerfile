@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:9.4.20240523 AS base
+FROM rockylinux/rockylinux:9.5.20241118 AS base
 ENV APP_DIR=/app
 ENV IS_DOCKER=true
 ENV XDG_DATA_HOME="/tmp"
@@ -12,7 +12,7 @@ RUN yum -y update \
     epel-release-9-7.el9 \
     && yum -y install \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    chromium-130.0.6723.58-1.el9 \
+    chromium-130.0.6723.116-1.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     git-2.43.5-1.el9_4 \
     && yum -y clean all \
@@ -37,7 +37,7 @@ RUN yum -y update \
     && dnf module install -y nodejs:20 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    yarnpkg-1.22.19-5.el9  \
+    yarnpkg-1.22.22-5.el9  \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
