@@ -12,7 +12,7 @@ describe('Thumbnails', () => {
     });
 
     // for some reason this shit fails in docker...
-    describe.skip('processThumbnail', () => {
+    describe('processThumbnail', () => {
         let cacheDir;
         let imageDir;
         const timeout = 15000;
