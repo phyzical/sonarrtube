@@ -119,8 +119,6 @@ export const processThumbnail = async (
     let thumbnailPath = cachePath(`${Constants.CACHE_FOLDERS.THUMBNAIL}/${id}_${attempt}.${extension}`);
     const res = await fetch(thumbnailUrl);
 
-    console.log(res)
-
     const buffer = Buffer.from(await res.arrayBuffer());
 
     writeFileSync(thumbnailPath, buffer);
