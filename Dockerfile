@@ -67,6 +67,7 @@ RUN ln -s /usr/bin/node_modules/yarn/bin/yarn /usr/bin/yarn
 
 USER app
 
+COPY --from=build /deps/lib64 /usr/lib64/
 COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
 COPY --from=build --chown=app ${APP_DIR}/node_modules ${APP_DIR}/node_modules
 COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
