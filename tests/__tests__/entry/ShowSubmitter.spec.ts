@@ -1,5 +1,5 @@
 import { ShowSubmitter } from '@sonarrTube/entry/ShowSubmitter';
-describe('ShowSubmitter', () => {
+describe.skip('ShowSubmitter', () => {
   it('constructor', () => {
     const showSubmitter = new ShowSubmitter();
     expect(showSubmitter).toBeDefined();

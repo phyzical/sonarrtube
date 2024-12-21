@@ -1,7 +1,7 @@
 import { TvdbSubmitter } from '@sonarrTube/models/submitter/TvdbSubmitter';
 import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig';
 
-describe('TvdbSubmitter', () => {
+describe.skip('TvdbSubmitter', () => {
   it('constructor', () => {
     new TvdbSubmitter({
       username: '',

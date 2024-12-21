@@ -50,7 +50,7 @@ jobs:
             -v ${PWD}/tests:/app/tests \
             -v ${PWD}/src:/app/src \
             -v ${PWD}/eslint.config.js:/app/eslint.config.js \
-            ghcr.io/phyzical/sonarrtube:test "yarn run lint"
+            ghcr.io/phyzical/sonarrtube:test yarn run lint
       - run: |
           docker run \
             -v ${PWD}/tests:/app/tests \
@@ -58,7 +58,7 @@ jobs:
             -v ${PWD}/jest.config.ts:/app/jest.config.ts \
             -v ${PWD}/tsconfig.build.json:/app/tsconfig.build.json \
             -v ${PWD}/tsconfig.json:/app/tsconfig.json \
-            ghcr.io/phyzical/sonarrtube:test "yarn run test"
+            ghcr.io/phyzical/sonarrtube:test yarn test
 
       - name: Docker meta
         id: meta
