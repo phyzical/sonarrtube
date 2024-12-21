@@ -42,6 +42,7 @@ jobs:
         with:
           push: true
           tags: ghcr.io/phyzical/sonarrtube:test
+          target: build
           platforms: linux/amd64
 
       - run: |
@@ -49,7 +50,7 @@ jobs:
             -v ${PWD}/tests:/app/tests \
             -v ${PWD}/src:/app/src \
             -v ${PWD}/eslint.config.js:/app/eslint.config.js \
-            ghcr.io/phyzical/sonarrtube:test "yarn run lint"
+            ghcr.io/phyzical/sonarrtube:test yarn run lint
       - run: |
           docker run \
             -v ${PWD}/tests:/app/tests \
@@ -57,11 +58,19 @@ jobs:
             -v ${PWD}/jest.config.ts:/app/jest.config.ts \
             -v ${PWD}/tsconfig.build.json:/app/tsconfig.build.json \
             -v ${PWD}/tsconfig.json:/app/tsconfig.json \
-            ghcr.io/phyzical/sonarrtube:test "yarn run test"
+            ghcr.io/phyzical/sonarrtube:test yarn test
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}:latest
 
       - name: Push
         uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355 # v6.10.0
         with:
           push: ${{ steps.main_check.outputs.IS_MAIN }}
-          tags: ghcr.io/phyzical/sonarrtube:latest
+          tags: ghcr.io/${{ github.repository }}:latest
           platforms: linux/amd64
+          labels: |
+            ${{ steps.meta.outputs.labels }}

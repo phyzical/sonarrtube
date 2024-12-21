@@ -12,23 +12,9 @@ import { List } from '@sonarrTube/types/tvdb/List.js';
 import { Genre } from '@sonarrTube/types/tvdb/Genre.js';
 import { RemoteID } from '@sonarrTube/types/tvdb/RemoteID.js';
 import { SeasonType } from '@sonarrTube/types/tvdb/SeasonType.js';
+import { Days } from '@sonarrTube/types/tvdb/Days.js';
+import { Status } from '@sonarrTube/types/tvdb/Status.js';
 
-type Status = {
-    id: number
-    keepUpdated: boolean
-    name: string
-    recordType: string
-}
-
-type Days = {
-    friday: boolean
-    monday: boolean
-    saturday: boolean
-    sunday: boolean
-    thursday: boolean
-    tuesday: boolean
-    wednesday: boolean
-}
 export type Series = {
     abbreviation?: string
     airsDays?: Days

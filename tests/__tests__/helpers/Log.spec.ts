@@ -1,7 +1,8 @@
 
-import { consoleSpy, mockConfig } from 'tests/config/jest.setup';
-
 import { log } from '@sonarrTube/helpers/Log';
+import { mockConfig } from '@sonarrTube/mocks/Config';
+import { consoleSpy } from '@sonarrTube/mocks/Spies';
+
 
 describe('Log', () => {
     beforeEach(() => {

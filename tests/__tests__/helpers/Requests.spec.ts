@@ -1,9 +1,8 @@
 import { randomUUID } from 'crypto';
 
-import { doRequestSpy, getCacheSpy, setCacheSpy } from 'tests/config/jest.setup';
-
 import { setCache } from '@sonarrTube/helpers/Cache';
 import { doRequest } from '@sonarrTube/helpers/Requests';
+import { doRequestSpy, getCacheSpy, setCacheSpy } from '@sonarrTube/mocks/Spies';
 
 describe('Requests', () => {
     beforeEach(() => {

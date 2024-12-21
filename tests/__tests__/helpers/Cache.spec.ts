@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto';
 import { join } from 'path';
 
-import { consoleSpy } from 'tests/config/jest.setup';
 
 import { cachePath, clearCache, getCache, resetCache, setCache } from '@sonarrTube/helpers/Cache';
 import { config } from '@sonarrTube/helpers/Config';
+import { consoleSpy } from '@sonarrTube/mocks/Spies';
 
 describe('Cache', () => {
     describe('getCache', () => {

@@ -1,13 +1,13 @@
 import path from 'node:path';
 
 import puppeteer, { Browser, Page } from 'puppeteer';
-import { consoleSpy } from 'tests/config/jest.setup';
 
 import {
     cleanText, cleanTextContainsXpath, click, delay,
     find, goto, loaded, submitForm,
     type,
 } from '@sonarrTube/helpers/Puppeteer';
+import { consoleSpy } from '@sonarrTube/mocks/Spies';
 
 describe('Puppeteer', () => {
     let browser: Browser;
