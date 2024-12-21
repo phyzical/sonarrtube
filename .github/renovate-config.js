@@ -78,6 +78,16 @@ module.exports = {
       groupName: 'lint',
       addLabels: ['devDependencies'],
     },
+    {
+      matchPackagePatterns: ['@types'],
+      groupName: 'types',
+      addLabels: ['devDependencies'],
+    },
+    {
+      matchPackagePatterns: ['jest'],
+      groupName: 'jest',
+      addLabels: ['devDependencies'],
+    },
     { matchFileNames: ['Dockerfile'], addLabels: ['dockerDependencies'] },
     { matchDepTypes: ['development'], addLabels: ['devDependencies'] },
     { matchDepTypes: ['test'], addLabels: ['testDependencies'] },
