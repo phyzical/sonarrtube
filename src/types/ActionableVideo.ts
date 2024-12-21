@@ -8,7 +8,7 @@ import { Channel } from '@sonarrTube/types/youtube/Channel';
 export type ActionableVideo = {
     youtubeVideo?: Video,
     sonarrEpisode?: SonarrEpisode,
-    tvdbEpisode: TvdbEpisode,
+    tvdbEpisode?: TvdbEpisode,
     tvdbSeries: TvdbSeries,
     sonarrSeries: SonarrSeries,
     youtubeContext: Channel;

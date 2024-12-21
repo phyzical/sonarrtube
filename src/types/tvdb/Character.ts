@@ -1,11 +1,6 @@
 import { Alias } from '@sonarrTube/types/tvdb/Alias.js';
 import { Tag } from '@sonarrTube/types/tvdb/Tag.js';
-
-type Generic = {
-    image: string
-    name: string
-    year: string
-}
+import { Generic } from '@sonarrTube/types/tvdb/Generic.js';
 
 export type Character = {
     aliases: Alias[]

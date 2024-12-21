@@ -30,67 +30,37 @@ export class ActionableVideo implements ActionableVideoType {
     }
     youtubeVideo?: Video | undefined;
     sonarrEpisode?: SonarrEpisodeType | undefined;
-    tvdbEpisode: TvdbEpisodeType;
+    tvdbEpisode: TvdbEpisodeType | undefined;
     tvdbSeries: TvdbSeriesType;
     sonarrSeries: SonarrSeriesType;
     youtubeContext: ChannelType;
     tvdbEpisodeFromContext?: TvdbEpisode | undefined;
     id?: string | undefined;
 
-    unDownloaded = (): boolean => {
-        if (!this.sonarrEpisode || !this.youtubeVideo) {
-            return false;
-        }
+    unDownloaded = (): boolean => this.sonarrEpisode && this.youtubeVideo && !this.sonarrEpisode.hasFile || false;
 
-        return !this.sonarrEpisode.hasFile;
-    };
+    missingFromTvdb = (): boolean => !this.tvdbEpisode;
 
-    missingFromTvdb = (): boolean => {
-        if (this.tvdbEpisode) {
-            return false;
-        }
+    missingYoutube = (): boolean => !this.youtubeVideo;
 
-        return true;
-    };
+    missingProductionCode = (): boolean => this.tvdbEpisode && !this.tvdbEpisode.productionCode || false;
 
-    missingYoutube = (): boolean => {
-        if (this.youtubeVideo) {
-            return false;
-        }
+    unmatchedYoutubeVideo = (): boolean => !this.missingProductionCode() && this.missingYoutube();
 
-        return true;
-    };
+    tvdbEditUrl = (): string | undefined => this.tvdbEpisode && this.tvdbEpisode.editURL();
 
-    missingProductionCode = (): boolean => {
-        if (!this.tvdbEpisode) {
-            return false;
-        }
+    tvdbInfoCache = (): string | undefined => this.tvdbEpisode && cachePath(this.tvdbEpisode.cacheKey());
 
-        return !this.tvdbEpisode.productionCode;
-    };
-
-    tvdbEditUrl = (): string | undefined => {
-        if (!this.tvdbEpisode) {
-            return;
-        }
-
-        return this.tvdbEpisode.editURL();
-    };
-
-    tvdbInfoCache = (): string | undefined => {
-        if (!this.tvdbEpisode) {
-            return;
-        }
-
-        return cachePath(this.tvdbEpisode.cacheKey());
-    };
-
-    thumbnailCacheFile = (): string => {
+    assertMissingTvdbEpisode = (): void => {
         if (!this.tvdbEpisode) {
             throw new Error('Episode not found this shouldn\'t happen!');
         }
+    };
 
-        return cachePath(`/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbEpisode.seriesId}/thumbnails.txt`);
+    thumbnailCacheFile = (): string => {
+        this.assertMissingTvdbEpisode();
+
+        return cachePath(`${this.tvdbEpisode?.cacheFolder()}/thumbnails.txt`);
     };
 
     thumbnailUploadAttemptCount = (): number => {
@@ -99,25 +69,16 @@ export class ActionableVideo implements ActionableVideoType {
             return 0;
         }
 
-        const episode = this.tvdbEpisode;
-
-        if (!episode) {
-            throw new Error('Episode not found this shouldn\'t happen!');
-        }
+        this.assertMissingTvdbEpisode();
 
         return readFileSync(cachePath).toString()
             .split('\n')
-            .filter(x => parseInt(x) == episode.id).length;
+            .filter(x => parseInt(x) == this.tvdbEpisode?.id).length;
     };
 
     addThumbnailUploadAttempt = (): void => {
-        const episode = this.tvdbEpisode;
-
-        if (!episode) {
-            throw new Error('Episode not found this shouldn\'t happen!');
-        }
-
-        writeFileSync(this.thumbnailCacheFile(), `${episode.id}\n`, { flag: 'a' });
+        this.assertMissingTvdbEpisode();
+        writeFileSync(this.thumbnailCacheFile(), `${this.tvdbEpisode?.id}\n`, { flag: 'a' });
     };
 
     season = (): number | undefined => (this.tvdbEpisode || this.tvdbEpisodeFromContext)?.seasonNumber;
@@ -168,12 +129,8 @@ export class ActionableVideo implements ActionableVideoType {
     };
 
     clearCache = (): void => {
-        const episode = this.tvdbEpisode;
-
-        if (!episode) {
-            throw new Error('Episode not found this shouldn\'t happen!');
-        }
-        clearCache(episode.cacheKey());
+        this.assertMissingTvdbEpisode();
+        clearCache(this.tvdbEpisode?.cacheKey() ?? '');
     };
 
     generateSonarrEpisode = (episodeNumber: string): SonarrEpisode => {

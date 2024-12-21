@@ -1,19 +1,5 @@
-import { Company } from '@sonarrTube/types/tvdb/Company.js';
-
-type Type = {
-    alternateName: string
-    id: number
-    name: string
-    type: string
-}
-
-type Companies = {
-    studio: Company[]
-    network: Company[]
-    production: Company[]
-    distributor: Company[]
-    special_effects: Company[]
-}
+import { Companies } from '@sonarrTube/types/tvdb/Companies.js';
+import { Type } from '@sonarrTube/types/tvdb/Type.js';
 
 export type Season = {
     id: number

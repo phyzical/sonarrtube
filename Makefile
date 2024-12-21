@@ -30,7 +30,7 @@ run-image-tests:
 		-v ${PWD}/tsconfig.build.json:/app/tsconfig.build.json \
 		-v ${PWD}/tsconfig.json:/app/tsconfig.json \
 		${TAG} \
-		"yarn test"
+		yarn test
 run-image-bash: 
 	docker run -it --rm --name ${NAME}-bash \
 		-v ${PWD}/cache:/app/cache:rw \

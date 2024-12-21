@@ -15,6 +15,7 @@
     "types": ["jest", "node", "puppeteer"],
     "paths": {
       "@sonarrTube/factories/*": ["./tests/__mocks__/factories/*"],
+      "@sonarrTube/mocks/*": ["./tests/__mocks__/*"],
       "@sonarrTube/models/*": ["./src/models/*"],
       "@sonarrTube/helpers/*": ["./src/helpers/*"],
       "@sonarrTube/api/*": ["./src/api/*"],
@@ -26,5 +27,5 @@
     "strict": true
   },
   "include": ["src/**/*", "./tests/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["./node_modules"]
 }

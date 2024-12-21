@@ -36,19 +36,17 @@ export class Video implements VideoType {
 
     cleanDescription = (): string => {
         let description = this.description;
-        if (description.length > 100) {
-            description = description.slice(0, 100);
-        }
+
         if (!description || /(sponsor)+|(download)+/i.test(description)) {
             description = this.cleanTitle();
         }
 
-        return description;
+        return description.slice(0, 100);
     };
 
-    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '');
+    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '').slice(0, 100);
 
-    backupTitle = (): string => this.title.replace(titleCleanerRegex, '');
+    backupTitle = (): string => this.title.replace(titleCleanerRegex, '').slice(0, 100);
 
     runTime = (): string => {
         const runtime = Math.floor(this.duration / 60);
@@ -57,7 +55,7 @@ export class Video implements VideoType {
     };
 
     airedDate = (): string => {
-        const airDate = this.upload_date; //'01/02/2020'
+        const airDate = this.upload_date; //'20241217'
 
         return airDate.slice(0, 4) + '-' + airDate.slice(4, 6) + '-' + airDate.slice(6, 8);
     };

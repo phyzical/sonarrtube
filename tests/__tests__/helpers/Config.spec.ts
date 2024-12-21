@@ -3,11 +3,10 @@ import { randomUUID } from 'crypto';
 import path from 'path';
 import { btoa } from 'buffer';
 
-import { mockConfig, resetConfig } from 'tests/config/jest.setup';
-
 import { atou, btou, config, isBase64Encoded } from '@sonarrTube/helpers/Config';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { Environment } from '@sonarrTube/types/config/Environment';
+import { mockConfig, resetConfig } from '@sonarrTube/mocks/Config';
 
 describe('#config', () => {
     const configValues = {
