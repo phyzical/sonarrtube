@@ -34,7 +34,7 @@ FROM base AS build
 USER root
 
 RUN yum -y update \
-    && dnf module install -y nodejs:20 \
+    && dnf module install -y nodejs:22 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
     yarnpkg-1.22.22-5.el9  \
