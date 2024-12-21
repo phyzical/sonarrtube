@@ -34,7 +34,7 @@ FROM base AS build
 USER root
 
 RUN yum -y update \
-    && dnf module install -y nodejs:20 \
+    && dnf module install -y nodejs:22 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
     yarnpkg-1.22.22-5.el9  \
@@ -67,6 +67,7 @@ RUN ln -s /usr/bin/node_modules/yarn/bin/yarn /usr/bin/yarn
 
 USER app
 
+COPY --from=build /deps/lib64 /usr/lib64/
 COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
 COPY --from=build --chown=app ${APP_DIR}/node_modules ${APP_DIR}/node_modules
 COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
