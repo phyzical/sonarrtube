@@ -5,11 +5,14 @@ import { actionableSeriesFactory } from '@sonarrTube/factories/models/api/Action
 import { consoleSpy } from '@sonarrTube/mocks/Spies';
 
 describe('BaseSubmitter', () => {
-  const baseSubmitter = new BaseSubmitter({
-    username: 'username',
-    password: 'password',
-    email: 'email',
-  } as TVDBConfig);
+  let baseSubmitter = {} as BaseSubmitter;
+  beforeEach(() => {
+    baseSubmitter = new BaseSubmitter({
+      username: 'username',
+      password: 'password',
+      email: 'email',
+    } as TVDBConfig);
+  });
 
   it('constructor', () => {
     expect(baseSubmitter.username).toEqual('username');
@@ -64,7 +67,7 @@ describe('BaseSubmitter', () => {
   });
 
   describe('with init', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       await baseSubmitter.init();
     });
 
@@ -151,8 +154,9 @@ describe('BaseSubmitter', () => {
         baseSubmitter.warnings = [];
         baseSubmitter.errors = [];
         baseSubmitter.videoObj = series.videos[0];
+        consoleSpy.mockClear();
         await baseSubmitter.handleReports(series);
-        expect(consoleSpy).toHaveBeenCalledOnce();
+        expect(consoleSpy).toHaveBeenCalledTimes(1);
         expect(notify).toHaveBeenCalledOnce();
         expect(baseSubmitter.updates).toBeEmpty();
         expect(baseSubmitter.downloads).toBeEmpty();
@@ -170,6 +174,8 @@ describe('BaseSubmitter', () => {
         baseSubmitter.warnings = ['asdas'];
         baseSubmitter.errors = ['asdasd'];
         baseSubmitter.videoObj = series.videos[0];
+        consoleSpy.mockClear();
+
         await baseSubmitter.handleReports(series);
         expect(consoleSpy).toHaveBeenCalledTimes(5);
         expect(notify).toHaveBeenCalledTimes(5);
