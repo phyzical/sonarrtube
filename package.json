@@ -30,8 +30,8 @@
     "@types/jest": "29.5.14",
     "@types/dotenv": "8.2.3",
     "@types/node": "22.10.2",
-    "@typescript-eslint/eslint-plugin": "8.18.1",
-    "@typescript-eslint/parser": "8.18.1",
+    "@typescript-eslint/eslint-plugin": "8.18.2",
+    "@typescript-eslint/parser": "8.18.2",
     "concurrently": "9.1.0",
     "eslint": "9.17.0",
     "eslint-config-prettier": "9.1.0",
@@ -47,6 +47,6 @@
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.10",
     "typescript": "5.7.2",
-    "typescript-eslint": "8.18.1"
+    "typescript-eslint": "8.18.2"
   }
 }
