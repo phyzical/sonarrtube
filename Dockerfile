@@ -12,7 +12,7 @@ RUN yum -y update \
     epel-release-9-7.el9 \
     && yum -y install \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    chromium-131.0.6778.204-1.el9 \
+    chromium-131.0.6778.264-1.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     git-2.43.5-2.el9_5 \
     && yum -y clean all \
