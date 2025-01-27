@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Dashboard - TheTVDB.com</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <meta name="csrf-token" content="4vYpKt9vJ7acrv9jzwBYFQwMBFlZgAsNkcBVlTV0">
+
+
+  <style type="text/css">
+    .jqstooltip {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      visibility: hidden;
+      background: rgb(0, 0, 0) transparent;
+      background-color: rgba(0, 0, 0, 0.6);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+      -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+      color: white;
+      font: 10px arial, san serif;
+      text-align: left;
+      white-space: nowrap;
+      padding: 5px;
+      border: 1px solid white;
+      z-index: 10000;
+    }
+
+    .jqsfield {
+      color: white;
+      font: 10px arial, san serif;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body class="skin-green sidebar-mini">
+  <div class="wrapper">
+
+    <header class="main-header">
+      <!-- Logo -->
+      <a href="https://thetvdb.com/home" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini">TheTVDB</span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg">TheTVDB</span>
+      </a>
+      <!-- Header Navbar: style can be found in header.less -->
+      <nav class="navbar navbar-static-top">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <li class="dropdown user user-menu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="hidden-xs">email</span>
+              </a>
+              <ul class="dropdown-menu custom_dropdown_menu">
+                <!-- User image -->
+                <li class="user-header custom_li_user_header">
+                  <p>
+                    user
+                    <small>user</small>
+                  </p>
+                </li>
+                <!-- Menu Footer-->
+                <li class="user-footer">
+                  <div class="pull-left">
+                  </div>
+                  <div class="pull-right">
+                    <a href="https://thetvdb.com/auth/logout" class="btn btn-default btn-flat">Sign out</a>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <aside class="main-sidebar">
+      <!-- sidebar: style can be found in sidebar.less -->
+      <section class="sidebar" style="height: auto;">
+
+        <ul class="sidebar-menu">
+          <li class="treeview active ">
+            <a href="https://thetvdb.com/dashboard">
+              <i class="fa fa-home"></i>
+              <span>Dashboard Home</span>
+            </a>
+          </li>
+
+          <li class="treeview  ">
+            <a href="#">
+              <i class="fa fa-laptop"></i>
+              <span>Account</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <li class=""><a href="https://thetvdb.com/dashboard/account/editinfo"><i class="fa fa-circle-o"></i> Edit
+                  Information</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/account/changepass"><i class="fa fa-circle-o"></i>
+                  Change password</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/account/subscription"><i class="fa fa-circle-o"></i>
+                  Subscription</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/account/apikey"><i class="fa fa-circle-o"></i> API
+                  keys</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="https://thetvdb.com/dashboard/notifications">
+              <i class="fa fa-bell"></i>
+              <span>Notifications</span>
+              <span id="notification-indicator"><span class="badge active">93</span></span>
+            </a>
+          </li>
+          <li class="treeview ">
+            <a href="#"><i class="fa fa-picture-o"></i> Your Artwork
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu" style="&quot;display:" none;&quot;="">
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/16"><i class="fa fa-circle-o"></i> Movie
+                  Banner</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/14"><i class="fa fa-circle-o"></i> Movie
+                  Poster</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/15"><i class="fa fa-circle-o"></i> Movie
+                  Background</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/18"><i class="fa fa-circle-o"></i> Movie
+                  Icon</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/21"><i class="fa fa-circle-o"></i> Movie
+                  Cinemagraph</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/24"><i class="fa fa-circle-o"></i> Movie
+                  Clearart</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/25"><i class="fa fa-circle-o"></i> Movie
+                  Clearlogo</a></li>
+
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/1"><i class="fa fa-circle-o"></i> Series
+                  Banner</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/2"><i class="fa fa-circle-o"></i> Series
+                  Poster</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/3"><i class="fa fa-circle-o"></i> Series
+                  Background</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/5"><i class="fa fa-circle-o"></i> Series
+                  Icon</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/20"><i class="fa fa-circle-o"></i> Series
+                  Cinemagraph</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/22"><i class="fa fa-circle-o"></i> Series
+                  Clearart</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/23"><i class="fa fa-circle-o"></i> Series
+                  Clearlogo</a></li>
+
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/6"><i class="fa fa-circle-o"></i> Season
+                  Banner</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/7"><i class="fa fa-circle-o"></i> Season
+                  Poster</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/8"><i class="fa fa-circle-o"></i> Season
+                  Background</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/10"><i class="fa fa-circle-o"></i> Season
+                  Icon</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/11"><i class="fa fa-circle-o"></i> Episode
+                  16:9</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/12"><i class="fa fa-circle-o"></i> Episode
+                  4:3</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/13a"><i class="fa fa-circle-o"></i> Person
+                  Headshot</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/13c"><i class="fa fa-circle-o"></i> Character
+                  Photo</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/19"><i class="fa fa-circle-o"></i> Company
+                  Icon</a></li>
+
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/26"><i class="fa fa-circle-o"></i> Award
+                  Icon</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/artwork/27"><i class="fa fa-circle-o"></i> List
+                  Poster</a></li>
+            </ul>
+          </li>
+
+          <li class="treeview ">
+            <a href="#">
+              <i class="fa fa-star"></i> <span>Favorites</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <li class=""><a href="https://thetvdb.com/dashboard/favorites/series"><i class="fa fa-circle-o"></i>
+                  Series</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/favorites/movies"><i class="fa fa-circle-o"></i>
+                  Movies</a></li>
+              <li class=""><a href="https://thetvdb.com/dashboard/favorites/artworks"><i class="fa fa-circle-o"></i>
+                  Artwork</a></li>
+            </ul>
+          </li>
+
+          <li class="treeview ">
+            <a href="#">
+              <i class="fa fa-list"></i> <span>Lists</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <li class="treeview">
+                <a href="#"><i class="fa fa-flag"></i> Official</a>
+                <ul class="treeview-menu">
+                </ul>
+              </li>
+              <li class="treeview">
+                <a href="#"><i class="fa fa-flag"></i> Personal</a>
+                <ul class="treeview-menu">
+                </ul>
+              </li>
+            </ul>
+          </li>
+
+
+
+        </ul>
+      </section>
+      <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="min-height: 1325px;">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+      </section>
+
+      <div style="margin: 0 20px 0">
+        <div class="flash-message">
+
+        </div>
+      </div>
+      <section class="content">
+        <div class="row">
+          <div class="col-xs-12  col-sm-6 col-md-4">
+            <div class="info-box">
+              <span class="info-box-icon bg-blue"><i class="fa fa-trophy" aria-hidden="true"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text" style="white-space: normal">Overall Reputation <span data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Positive, verified contributions to the site increase your reputation and negative actions resulting in moderator deletions or reports result will decrease your reputation."><i
+                      class="fa fa-info-circle text-gray" aria-hidden="true"></i></span></span>
+                <span class="info-box-number">
+                  40150
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12  col-sm-6 col-md-4">
+            <div class="info-box">
+              <span class="info-box-icon bg-purple"><i class="fa fa-picture-o"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text" style="white-space: normal">Artwork Reputation <span data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Add good quality and properly tagged artwork to increase your reputation.  Deleted artwork will result in a decrease in your reputation."><i
+                      class="fa fa-info-circle text-gray" aria-hidden="true"></i></span></span>
+                <span class="info-box-number">
+                  12083
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12  col-sm-6 col-md-4">
+            <div class="info-box">
+              <span class="info-box-icon bg-red"><i class="fa fa-ambulance"></i></span>
+              <div class="info-box-content">
+                <span>
+                  Need help? Please create an account and ticket in our <a href="https://support.thetvdb.com/"
+                    target="_blank">support system</a>.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>
+          Unread Notifications
+        </h3>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 28, 2024 1:23AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525708
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667d618262b65.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 28, 2024 1:23AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525707
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667d6171a4893.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 28, 2024 1:23AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525706
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667d616129454.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 28, 2024 1:23AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525705
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667d6152995d0.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 28, 2024 1:23AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525704
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667d61431408d.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 28, 2024 1:23AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525703
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667d6132e8f4e.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:15AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525255
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667aba9397d9c.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:14AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525254
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667aba184ecaa.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:14AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525253
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667ab9f91bbc0.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:13AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525252
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667ab9cd00c30.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:13AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525251
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667ab9bea29b9.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:13AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525250
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667ab9acec696.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:13AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525249
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667ab99f2fdd7.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:12AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525248
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667ab990408de.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              June 26, 2024 12:12AM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2525247
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/667ab982365b3.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              February 27, 2024 9:48PM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2494936
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/65de0172b4871.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              February 27, 2024 9:48PM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2494935
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/65de004129a3f.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              February 27, 2024 9:47PM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2494934
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/65ddff6262fde.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Poorly framed or cropped. Our artwork rules are available in
+            our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this is incorrect,
+            please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              February 27, 2024 9:47PM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2494933
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/65ddfe46c872d.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <div class="box box-danger notification" style="">
+          <div class="box-header with-border" style="font-size:10px">
+            <span class="notification-info">
+              <i class="fa fa-envelope read-indicator" aria-hidden="true"></i>
+              PolarGeek
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              February 27, 2024 9:47PM UTC
+            </span>
+
+            <span class="notification-info">
+              <i class="fa fa-hashtag" aria-hidden="true"></i>
+              REF-2494932
+            </span>
+          </div>
+          <div class="box-body">
+            <img class="artwork" src="Dashboard%20-%20TheTVDB.com_files/65ddfdb327aac.jpg">This
+            artwork has been removed by a moderator as it was found to violate a
+            site rule: Title card or disallowed text. Our artwork rules are
+            available in our <a href="https://support.thetvdb.com/kb/faq.php?cid=1">knowledgebase</a>. If you feel this
+            is incorrect, please <a href="https://support.thetvdb.com/">open a support ticket</a>.
+          </div>
+        </div>
+        <ul class="pagination pagination-lg">
+          <li class="disabled"><span>«</span></li>
+          <li class="active"><span>1</span></li>
+          <li><a href="https://thetvdb.com/dashboard?page=2">2</a></li>
+          <li><a href="https://thetvdb.com/dashboard?page=3">3</a></li>
+          <li><a href="https://thetvdb.com/dashboard?page=4">4</a></li>
+          <li><a href="https://thetvdb.com/dashboard?page=5">5</a></li>
+          <li><a href="https://thetvdb.com/dashboard?page=2" rel="next">»</a></li>
+        </ul>
+      </section>
+    </div>
+
+
+    <div class="modal fade modal_success">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title">Success</h4>
+          </div>
+          <div class="modal-body">
+            <p></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-modal">
+      <div class="modal modal-success">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+              <h4 class="modal-title">Success</h4>
+            </div>
+            <div class="modal-body">
+              <p></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+    </div>
+    <div class="example-modal">
+      <div class="modal modal-danger modaldanger">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+              <h4 class="modal-title">Danger</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline pull-left btn_no_remove">No</button>
+              <button type="button" class="btn btn-outline remove_post">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="example-modal">
+      <div class="modal modal-danger" id="modaldanger_disallowed_phrases">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+              <h4 class="modal-title">Danger</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline pull-left btn_no_remove_disallowed_phrases">No</button>
+              <button type="button" class="btn btn-outline remove_disallowed_phrases">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- /.content-wrapper -->
+    <div class="control-sidebar-bg" style="position: fixed; height: auto;"></div>
+  </div>
+  <!-- ./wrapper -->
+
+</body>
+
+</html>
