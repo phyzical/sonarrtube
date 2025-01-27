@@ -15,7 +15,6 @@ export class TvdbSubmitter extends BaseSubmitter {
   getEpisodeNumber = async (): Promise<string> => {
     const video = this.currentYoutubeVideo();
     const episodeTitle = video.cleanTitle();
-    console.log(episodeTitle);
     let episodeNumber;
     try {
       episodeNumber = (await this.page().$eval(
