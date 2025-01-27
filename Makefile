@@ -42,3 +42,6 @@ run-image-bash:
 		-v ${PWD}/cookies.txt:/app/cookies.txt:ro \
 		--entrypoint=/bin/bash \
 		${TAG}
+# Use this if the tests bug out and you have a bazilion chromes running
+kill-chromes:
+	pkill -f "chrome"
