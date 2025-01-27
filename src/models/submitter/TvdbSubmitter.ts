@@ -177,7 +177,6 @@ export class TvdbSubmitter extends BaseSubmitter {
 
   };
 
-
   checkForUploadBan = async (): Promise<void> => {
     if (this.imageUploadsDisabled == null) {
       try {
@@ -190,7 +189,6 @@ export class TvdbSubmitter extends BaseSubmitter {
       } catch (_e) { }
     }
   };
-
 
   handleCropperTool = async (): Promise<void> => {
     await this.page().evaluate(() => {
@@ -206,8 +204,6 @@ export class TvdbSubmitter extends BaseSubmitter {
       });
     });
   };
-
-
 
   uploadEpisodeThumbnail = async (count: number = 0): Promise<string> => {
     if (this.imageUploadsDisabled == true) {
