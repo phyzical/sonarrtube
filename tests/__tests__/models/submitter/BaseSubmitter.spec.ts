@@ -6,12 +6,20 @@ import { consoleSpy } from '@sonarrTube/mocks/Spies';
 
 describe('BaseSubmitter', () => {
   let baseSubmitter = {} as BaseSubmitter;
-  beforeEach(() => {
+  beforeEach(async () => {
     baseSubmitter = new BaseSubmitter({
       username: 'username',
       password: 'password',
       email: 'email',
     } as TVDBConfig);
+
+    baseSubmitter.videoObj = actionableVideoFactory();
+  });
+
+  const saveFailure = false;
+
+  afterEach(async () => {
+    await baseSubmitter.finish(saveFailure);
   });
 
   it('constructor', () => {
@@ -22,7 +30,7 @@ describe('BaseSubmitter', () => {
     expect(baseSubmitter.downloads).toEqual([]);
     expect(baseSubmitter.warnings).toEqual([]);
     expect(baseSubmitter.errors).toEqual([]);
-    expect(baseSubmitter.folder).toContain('/cache/screenshots');
+    expect(baseSubmitter.errorFolder).toContain('/tmp/screenshots');
   });
 
 
@@ -46,7 +54,7 @@ describe('BaseSubmitter', () => {
   });
 
   describe('browser', () => {
-    it('throws', () => {
+    it('throws', async () => {
       expect(() => baseSubmitter.browser()).toThrow('Browser not initialized');
     });
 
@@ -57,12 +65,18 @@ describe('BaseSubmitter', () => {
   });
   describe('video', () => {
     it('video', () => {
+      baseSubmitter.videoObj = undefined;
       expect(() => baseSubmitter.video()).toThrow('Video not initialized');
     });
 
     it('doesn\'t throw once init is called', async () => {
-      baseSubmitter.videoObj = actionableVideoFactory();
-      expect(() => baseSubmitter.browser()).not.toThrow('Video not initialized');
+      expect(() => baseSubmitter.video()).not.toThrow('Video not initialized');
+    });
+  });
+
+  describe('finish', () => {
+    it('does not error if no browser', async () => {
+      await baseSubmitter.finish();
     });
   });
 
@@ -79,6 +93,14 @@ describe('BaseSubmitter', () => {
       expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector', 'value', true);
       await baseSubmitter.type('selector', 'value', false);
       expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector', 'value', false);
+    });
+
+    it('getValue', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'getValue')
+        .mockImplementation(() => Promise.resolve());
+      await baseSubmitter.getValue('selector');
+      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector');
     });
 
     it('find', async () => {
@@ -123,19 +145,19 @@ describe('BaseSubmitter', () => {
 
     describe('finish', () => {
       it('when error saves html and screenshot', async () => {
-        const takeScreenshot = jest.spyOn(baseSubmitter, 'takeScreenshot').mockImplementation(() => Promise.resolve());
-        const saveHtml = jest.spyOn(baseSubmitter, 'saveHtml').mockImplementation(() => Promise.resolve());
-        const close = jest.spyOn(baseSubmitter.browser(), 'close').mockImplementation(() => Promise.resolve());
+        const takeScreenshot = jest.spyOn(baseSubmitter, 'takeScreenshot');
+        const saveHtml = jest.spyOn(baseSubmitter, 'saveHtml');
+        const close = jest.spyOn(baseSubmitter.browser(), 'close');
         await baseSubmitter.finish(true);
         expect(takeScreenshot).toHaveBeenCalled();
         expect(saveHtml).toHaveBeenCalled();
-        expect(close).not.toHaveBeenCalled();
+        expect(close).toHaveBeenCalled();
       });
 
       it('when error saves html and screenshot', async () => {
-        const takeScreenshot = jest.spyOn(baseSubmitter, 'takeScreenshot').mockImplementation(() => Promise.resolve());
-        const saveHtml = jest.spyOn(baseSubmitter, 'saveHtml').mockImplementation(() => Promise.resolve());
-        const close = jest.spyOn(baseSubmitter.browser(), 'close').mockImplementation(() => Promise.resolve());
+        const takeScreenshot = jest.spyOn(baseSubmitter, 'takeScreenshot');
+        const saveHtml = jest.spyOn(baseSubmitter, 'saveHtml');
+        const close = jest.spyOn(baseSubmitter.browser(), 'close');
         await baseSubmitter.finish(false);
         expect(takeScreenshot).not.toHaveBeenCalled();
         expect(saveHtml).not.toHaveBeenCalled();
@@ -217,6 +239,59 @@ describe('BaseSubmitter', () => {
         jest.spyOn(baseSubmitter.page(), 'screenshot').mockImplementation(async () => { throw new Error('error'); });
         await baseSubmitter.takeScreenshot();
         expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('failed to save screenshot'));
+      });
+    });
+
+    describe('currentYoutubeVideo', () => {
+      it('throws when no youtubeVideo', async () => {
+        if (baseSubmitter.videoObj) {
+          baseSubmitter.videoObj.youtubeVideo = undefined;
+        }
+        await expect(async () => baseSubmitter.currentYoutubeVideo()).rejects
+          .toThrow('Missing youtubeVideo this shouldn\'t happen!');
+      });
+
+      it('returns youtubeVideo', () => {
+        const youtubeVideo = baseSubmitter.videoObj?.youtubeVideo;
+        const res = baseSubmitter.currentYoutubeVideo();
+        expect(res).toBeTruthy();
+        expect(res).toBe(youtubeVideo);
+      });
+    });
+
+    describe('currentTvdbEpisode', () => {
+      it('throws when no tvdbEpisode', async () => {
+        if (baseSubmitter.videoObj) {
+          baseSubmitter.videoObj.tvdbEpisode = undefined;
+        }
+        await expect(async () => baseSubmitter.currentTvdbEpisode()).rejects
+          .toThrow('Missing youtubeVideo this shouldn\'t happen!');
+      });
+
+      it('returns tvdbEpisode', () => {
+        const tvdbEpisode = baseSubmitter.videoObj?.tvdbEpisode;
+        const res = baseSubmitter.currentTvdbEpisode();
+        expect(res).toBeTruthy();
+        expect(res).toBe(tvdbEpisode);
+      });
+    });
+
+    describe('currentSeason', () => {
+      it('throws when no season', async () => {
+        if (baseSubmitter.videoObj) {
+          jest.spyOn(baseSubmitter.videoObj, 'season').mockImplementation(() => undefined);
+        }
+        await expect(async () => baseSubmitter.currentSeason()).rejects
+          .toThrow('Missing season this shouldn\'t happen!');
+      });
+
+      it('returns tvdbEpisode', () => {
+        if (baseSubmitter.videoObj) {
+          jest.spyOn(baseSubmitter.videoObj, 'season').mockImplementation(() => 2023);
+        }
+        const res = baseSubmitter.currentSeason();
+        expect(res).toBeTruthy();
+        expect(res).toBe(2023);
       });
     });
   });

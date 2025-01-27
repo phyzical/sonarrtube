@@ -13,6 +13,7 @@ describe('Thumbnails', () => {
 
     // for some reason this shit fails in docker...
     describe('processThumbnail', () => {
+        jest.retryTimes(3);
         let cacheDir;
         let imageDir;
         const timeout = 15000;

@@ -76,6 +76,9 @@ export default [
     settings: {},
   },
   {
-    ignores: ['.DS_Store', 'node_modules/', 'tmp/', 'coverage/', '.vscode/', '.env*', '!.env*.dist', 'build/'],
+    ignores: [
+      '.DS_Store', 'node_modules/', 'tmp/', 'coverage/', '.vscode/', '.env*',
+      '!.env*.dist', 'build/', 'tests/__mocks__/html'
+    ],
   },
 ];

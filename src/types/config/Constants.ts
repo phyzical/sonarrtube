@@ -55,8 +55,7 @@ export const Constants = {
         THUMBNAIL: 'thumbnail',
         TVDB: 'tvdb',
         YOUTUBE: 'youtube',
-        TESS: 'tesseract',
-        SCREENSHOTS: 'screenshots'
+        TESS: 'tesseract'
     },
     CHAR_CLEANER_LIST: 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖŠÚÛÜÙÝŸŽ',
     EXTENSIONS: {

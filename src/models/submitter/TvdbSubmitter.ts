@@ -12,20 +12,13 @@ import { BaseSubmitter } from '@sonarrTube/models/submitter/BaseSubmitter.js';
 export class TvdbSubmitter extends BaseSubmitter {
   imageUploadsDisabled: boolean = false;
 
-  getEpisodeXpath = (episodeTitle: string): string => `xpath///tr[.//a[${cleanTextContainsXpath(episodeTitle)}]]/td`;
-
-  getSeriesXpath = (seriesTitle: string): string => `xpath///*[${cleanTextContainsXpath(seriesTitle)}]`;
-
   getEpisodeNumber = async (): Promise<string> => {
-    const video = this.video().youtubeVideo;
-    if (!video) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-    }
+    const video = this.currentYoutubeVideo();
     const episodeTitle = video.cleanTitle();
     let episodeNumber;
     try {
-      episodeNumber = (await this.page().$eval(
-        this.getEpisodeXpath(episodeTitle), element => element.textContent)
+      episodeNumber = (
+        await this.getValue(`xpath///tr[.//a[${cleanTextContainsXpath(episodeTitle)}]]/td`)
       )?.split('E')[1];
       if (!episodeNumber) {
         throw new Error('No episode number found');
@@ -33,11 +26,13 @@ export class TvdbSubmitter extends BaseSubmitter {
       log(`Found episode for ${episodeTitle} (${episodeNumber})`, true);
     } catch (_e) {
       log(`Didn't find episode for ${episodeTitle}`, true);
+      episodeNumber = '';
     }
 
     return episodeNumber;
   };
 
+  //  Need to work out an efficent way to auto mock goto's at the puppeteer level
   doLogin = async (): Promise<void> => {
     log('starting login', true);
     await this.goto([Constants.TVDB.HOST, 'auth', 'login'].join('/'));
@@ -53,10 +48,7 @@ export class TvdbSubmitter extends BaseSubmitter {
   };
 
   openSeriesSeasonPage = async (): Promise<void> => {
-    const season = this.video().season();
-    if (!season) {
-      throw new Error('Missing season this shouldn\'t happen!');
-    }
+    const season = this.currentSeason();
     const series = this.video().tvdbSeries.slug;
     const showSeasonURL = [Constants.TVDB.HOST, 'series', series, 'seasons', 'official', season].join('/');
     await this.goto(showSeasonURL);
@@ -68,10 +60,7 @@ export class TvdbSubmitter extends BaseSubmitter {
   };
 
   addSeriesSeason = async (): Promise<void> => {
-    const season = this.video().season();
-    if (!season) {
-      throw new Error('Missing season this shouldn\'t happen!');
-    }
+    const season = this.currentSeason();
     const series = this.video().tvdbSeries.slug;
     log(`Adding ${series} - ${season}`, true);
     await this.openSeriesPage();
@@ -88,24 +77,27 @@ export class TvdbSubmitter extends BaseSubmitter {
     const series = this.video().tvdbSeries.slug;
     const showSeriesURL = [Constants.TVDB.HOST, 'series', series].join('/');
     await this.goto(showSeriesURL);
-    await this.find(this.getSeriesXpath(series));
+    await this.find(`xpath///*[${cleanTextContainsXpath(series)}]`);
     log(`opened ${showSeriesURL}`, true);
   };
 
   openEpisodePage = async (edit: boolean = true): Promise<void> => {
-    const youtubeVideo = this.video().youtubeVideo;
-    const tvdbEpisode = this.video().tvdbEpisode;
-
-    if (!youtubeVideo) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-    }
-    if (!tvdbEpisode) {
-      throw new Error('Missing tvdbEpisode this shouldn\'t happen!');
-    }
+    const youtubeVideo = this.currentYoutubeVideo();
+    const tvdbEpisode = this.currentTvdbEpisode();
     const episodeTitle = youtubeVideo.cleanTitle();
     const series = this.video().tvdbSeries.slug;
+    const toolbarMenuButtonXpath = 'xpath///i[contains(@class,"fa-cog")]/..';
     const editEpisodeXpath = 'xpath///*[contains(text(),"Edit Episode")]';
-    if (!this.video().missingFromTvdb()) {
+    const openEpisodeXpath = `xpath///a[${cleanTextContainsXpath(episodeTitle)}]`;
+    if (this.video().missingFromTvdb()) {
+      await delay(500);
+      await this.openSeriesSeasonPage();
+      await this.click(openEpisodeXpath);
+      await this.loaded();
+      await this.click(toolbarMenuButtonXpath);
+      await this.click(editEpisodeXpath);
+      await this.loaded();
+    } else {
       const showSeriesURL = [
         Constants.TVDB.HOST, 'series', series, 'episodes', tvdbEpisode.id,
       ].concat(edit ? ['0', 'edit'] : []).join('/');
@@ -118,22 +110,12 @@ export class TvdbSubmitter extends BaseSubmitter {
       }
 
       await this.find(`xpath///*[contains(text(), "Season ${tvdbEpisode.seasonNumber}")]`);
-
-    } else {
-      await delay(500);
-      await this.openSeriesSeasonPage();
-      await this.click(this.getEpisodeXpath(episodeTitle));
-      await this.click(editEpisodeXpath);
     }
     log(`opened EpisodePage ${episodeTitle}`, true);
   };
 
   verifyAddedEpisode = async (): Promise<string> => {
-    const youtubeVideo = this.video().youtubeVideo;
-
-    if (!youtubeVideo) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-    }
+    const youtubeVideo = this.currentYoutubeVideo();
     await this.openSeriesSeasonPage();
     const episodeTextIdentifier = await this.getEpisodeNumber();
     // if we cant find it on a source something went wrong
@@ -144,18 +126,14 @@ export class TvdbSubmitter extends BaseSubmitter {
     return episodeTextIdentifier;
   };
 
-  private openAddEpisodePage = async (): Promise<void> => {
+  openAddEpisodePage = async (): Promise<void> => {
     await this.openSeriesSeasonPage();
     await this.click('xpath///*[contains(text(),"Add Episode")]');
     log('opened addEpisodePage', true);
   };
 
-  private addInitialEpisode = async (): Promise<void> => {
-    const youtubeVideo = this.video().youtubeVideo;
-
-    if (!youtubeVideo) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-    }
+  addInitialEpisode = async (): Promise<void> => {
+    const youtubeVideo = this.currentYoutubeVideo();
     log('starting adding', true);
     await this.find('xpath///h3[text()=\'Episodes\']/ancestor::form');
     await delay(500);
@@ -168,12 +146,9 @@ export class TvdbSubmitter extends BaseSubmitter {
     log('finished adding', true);
   };
 
-  private updateEpisode = async (): Promise<void> => {
-    const youtubeVideo = this.video().youtubeVideo;
 
-    if (!youtubeVideo) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-    }
+  updateEpisode = async (): Promise<void> => {
+    const youtubeVideo = this.currentYoutubeVideo();
     log('updating episode', true);
     await this.find('form.episode-edit-form');
     await delay(500);
@@ -184,16 +159,9 @@ export class TvdbSubmitter extends BaseSubmitter {
     log('updated episode', true);
   };
 
-  private checkForEpisode = async (): Promise<void> => {
-    const youtubeVideo = this.video().youtubeVideo;
-    const tvdbEpisode = this.video().tvdbEpisode;
-
-    if (!youtubeVideo) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-    }
-    if (!tvdbEpisode) {
-      throw new Error('Missing tvdbEpisode this shouldn\'t happen!');
-    }
+  checkForEpisode = async (): Promise<void> => {
+    const youtubeVideo = this.currentYoutubeVideo();
+    const tvdbEpisode = this.currentTvdbEpisode();
 
     try {
       await this.find(`xpath///*[contains(text(),"${youtubeVideo.cleanTitle()}")]`);
@@ -208,7 +176,7 @@ export class TvdbSubmitter extends BaseSubmitter {
 
   };
 
-  private checkForUploadBan = async (): Promise<void> => {
+  checkForUploadBan = async (): Promise<void> => {
     if (this.imageUploadsDisabled == null) {
       try {
         if (await this.find(
@@ -221,7 +189,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     }
   };
 
-  private handleCropperTool = async (): Promise<void> => {
+  handleCropperTool = async (): Promise<void> => {
     await this.page().evaluate(() => {
       const cropperInstance = window.cropper.cropper;
       const imageData = cropperInstance.getImageData();
@@ -236,17 +204,14 @@ export class TvdbSubmitter extends BaseSubmitter {
     });
   };
 
-  private uploadEpisodeThumbnail = async (count: number = 0): Promise<string> => {
+  uploadEpisodeThumbnail = async (count: number = 0): Promise<string> => {
     if (this.imageUploadsDisabled == true) {
       log('Image uploads disabled, skipping');
 
       return Constants.THUMBNAIL.FAILED_TEXT;
     }
-    const youtubeVideo = this.video().youtubeVideo;
 
-    if (!youtubeVideo) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-    }
+    const youtubeVideo = this.currentYoutubeVideo();
 
     log(`Starting image upload attempt ${count + 1}`, true);
     const thumbnailUrl = youtubeVideo.thumbnail;
@@ -309,11 +274,7 @@ export class TvdbSubmitter extends BaseSubmitter {
 
     if ((await this.getEpisodeNumber()).length == 0) {
       await delay(500);
-      const youtubeVideo = this.video().youtubeVideo;
-
-      if (!youtubeVideo) {
-        throw new Error('Missing youtubeVideo this shouldn\'t happen!');
-      }
+      const youtubeVideo = this.currentYoutubeVideo();
       log('Starting adding of');
       await this.openAddEpisodePage();
       await this.addInitialEpisode();

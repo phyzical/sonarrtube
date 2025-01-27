@@ -1,11 +1,12 @@
-import { writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
+import path from 'path';
 
 import puppeteer from 'puppeteer-extra';
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { Browser, ElementHandle, Page } from 'puppeteer';
 
-import { click, find, type, loaded, goto, submitForm } from '@sonarrTube/helpers/Puppeteer.js';
+import { click, find, type, loaded, goto, submitForm, getValue } from '@sonarrTube/helpers/Puppeteer.js';
 import { log } from '@sonarrTube/helpers/Log.js';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig.js';
@@ -13,7 +14,8 @@ import { currentFileTimestamp } from '@sonarrTube/helpers/Generic.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { notify } from '@sonarrTube/helpers/Notifications.js';
 import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries.js';
-import { cachePath } from '@sonarrTube/helpers/Cache';
+import { Video } from '@sonarrTube/types/youtube/Video';
+import { Episode as TvdbEpisodeType } from '@sonarrTube/types/tvdb/Episode.js';
 
 puppeteer.use(AdblockerPlugin()).use(StealthPlugin());
 
@@ -28,7 +30,7 @@ export class BaseSubmitter {
   downloads: string[];
   warnings: string[];
   errors: string[];
-  folder: string;
+  errorFolder: string;
 
   constructor(tvdbConfig: TVDBConfig) {
     this.username = tvdbConfig.username;
@@ -38,7 +40,8 @@ export class BaseSubmitter {
     this.downloads = [];
     this.warnings = [];
     this.errors = [];
-    this.folder = cachePath(`${Constants.CACHE_FOLDERS.SCREENSHOTS}`);
+    this.errorFolder = path.join(process.cwd(), 'tmp', 'screenshots');
+    mkdirSync(this.errorFolder, { recursive: true });
   }
 
   page = (): Page => {
@@ -65,6 +68,39 @@ export class BaseSubmitter {
     return this.videoObj;
   };
 
+  currentSeason = (): number => {
+    const season = this.video().season();
+    if (typeof season !== 'number') {
+      throw new Error('Missing season this shouldn\'t happen!');
+    }
+
+    return season;
+  };
+
+  currentYoutubeVideo = (): Video => {
+    const youtubeVideo = this.video().youtubeVideo;
+
+    if (!youtubeVideo) {
+      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
+    }
+
+    return youtubeVideo;
+  };
+
+  currentTvdbEpisode = (): TvdbEpisodeType => {
+    const tvdbEpisode = this.video().tvdbEpisode;
+
+    if (!tvdbEpisode) {
+      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
+    }
+
+    return tvdbEpisode;
+  };
+
+  getValue = async (
+    selector: string
+  ): Promise<string> => await getValue(this.page(), selector);
+
   type = async (
     selector: string, value: string, simulate: boolean = true
   ): Promise<void> => await type(this.page(), selector, value, simulate);
@@ -87,6 +123,7 @@ export class BaseSubmitter {
 
   init = async (): Promise<void> => {
     this.browserObj = await puppeteer.launch({
+      headless: true,
       args: [
         // Required for Docker version of Puppeteer
         '--no-sandbox',
@@ -104,12 +141,14 @@ export class BaseSubmitter {
 
 
   finish = async (isError: boolean = false): Promise<void> => {
+    if (!this.browserObj) {
+      return;
+    }
     if (isError) {
       await this.takeScreenshot();
       await this.saveHtml();
-    } else {
-      await this.browser().close();
     }
+    await this.browser().close();
   };
 
   handleReports = async (actionableSeries: ActionableSeries): Promise<void> => {
@@ -148,7 +187,7 @@ export class BaseSubmitter {
   saveHtml = async (): Promise<void> => {
     try {
       const html = await this.page().content();
-      const filename = `${this.folder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
+      const filename = `${this.errorFolder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
       const htmlPath = `${filename}.html`;
       writeFileSync(htmlPath, html);
       log(`html can be found at ${htmlPath}`);
@@ -158,7 +197,7 @@ export class BaseSubmitter {
   };
 
   takeScreenshot = async (): Promise<void> => {
-    const filename = `${this.folder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
+    const filename = `${this.errorFolder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
     const screenshotPath = `${filename}.png`;
     try {
       await this.page().screenshot({
