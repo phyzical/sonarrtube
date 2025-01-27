@@ -17,8 +17,8 @@ export class TvdbSubmitter extends BaseSubmitter {
     const episodeTitle = video.cleanTitle();
     let episodeNumber;
     try {
-      episodeNumber = (await this.page().$eval(
-        `xpath///tr[.//a[${cleanTextContainsXpath(episodeTitle)}]]/td`, element => element.textContent)
+      episodeNumber = (
+        await this.getValue(`xpath///tr[.//a[${cleanTextContainsXpath(episodeTitle)}]]/td`)
       )?.split('E')[1];
       if (!episodeNumber) {
         throw new Error('No episode number found');

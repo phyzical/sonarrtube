@@ -204,9 +204,8 @@ describe('TvdbSubmitter', () => {
       expect(await tvdbSubmitter.verifyAddedEpisode()).toBe('01');
     });
 
-    // TODO: this keeps removing the first letter something weird is going down
-    xit('throws if it fails to detect the episode', async () => {
-      const episodeTitle = 'saxds aasd sad';
+    it('throws if it fails to detect the episode', async () => {
+      const episodeTitle = 'axds aasd sad';
       if (tvdbSubmitter.videoObj) {
         if (tvdbSubmitter.videoObj.tvdbSeries) {
           jest.spyOn(tvdbSubmitter.videoObj, 'season').mockImplementation(() => season);
