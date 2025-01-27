@@ -119,7 +119,7 @@ export class BaseSubmitter {
 
   init = async (): Promise<void> => {
     this.browserObj = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: [
         // Required for Docker version of Puppeteer
         '--no-sandbox',
