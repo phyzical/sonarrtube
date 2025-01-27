@@ -41,6 +41,7 @@ jobs:
         uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6.13.0
         with:
           push: true
+          cache-from: type=registry,ref=ghcr.io/phyzical/sonarrtube:latest
           tags: ghcr.io/phyzical/sonarrtube:test
           target: build
           platforms: linux/amd64
