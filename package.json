@@ -9,7 +9,7 @@
     "dotenv": "16.4.7",
     "jimp": "1.6.0",
     "node-fetch": "3.3.2",
-    "puppeteer": "23.11.1",
+    "puppeteer": "24.1.1",
     "puppeteer-extra": "3.3.6",
     "puppeteer-extra-plugin-adblocker": "2.13.6",
     "puppeteer-extra-plugin-stealth": "2.11.2",
@@ -26,15 +26,15 @@
     "start": "node main.js"
   },
   "devDependencies": {
-    "@faker-js/faker": "9.3.0",
+    "@faker-js/faker": "9.4.0",
     "@types/jest": "29.5.14",
     "@types/dotenv": "8.2.3",
-    "@types/node": "22.10.2",
-    "@typescript-eslint/eslint-plugin": "8.18.2",
-    "@typescript-eslint/parser": "8.18.2",
+    "@types/node": "22.10.10",
+    "@typescript-eslint/eslint-plugin": "8.21.0",
+    "@typescript-eslint/parser": "8.21.0",
     "concurrently": "9.1.0",
-    "eslint": "9.17.0",
-    "eslint-config-prettier": "9.1.0",
+    "eslint": "9.19.0",
+    "eslint-config-prettier": "10.0.1",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-n": "17.15.1",
     "http-request-mock": "2.0.2",
@@ -46,7 +46,7 @@
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.10",
-    "typescript": "5.7.2",
-    "typescript-eslint": "8.18.2"
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.21.0"
   }
 }
