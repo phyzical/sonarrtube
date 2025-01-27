@@ -189,58 +189,6 @@ describe('TvdbSubmitter', () => {
 
   });
 
-  describe('currentYoutubeVideo', () => {
-    it('throws when no youtubeVideo', async () => {
-      if (tvdbSubmitter.videoObj) {
-        tvdbSubmitter.videoObj.youtubeVideo = undefined;
-      }
-      await expect(async () => tvdbSubmitter.currentYoutubeVideo()).rejects
-        .toThrow('Missing youtubeVideo this shouldn\'t happen!');
-    });
-
-    it('returns youtubeVideo', () => {
-      const youtubeVideo = tvdbSubmitter.videoObj?.youtubeVideo;
-      const res = tvdbSubmitter.currentYoutubeVideo();
-      expect(res).toBeTruthy();
-      expect(res).toBe(youtubeVideo);
-    });
-  });
-
-  describe('currentTvdbEpisode', () => {
-    it('throws when no tvdbEpisode', async () => {
-      if (tvdbSubmitter.videoObj) {
-        tvdbSubmitter.videoObj.tvdbEpisode = undefined;
-      }
-      await expect(async () => tvdbSubmitter.currentTvdbEpisode()).rejects
-        .toThrow('Missing youtubeVideo this shouldn\'t happen!');
-    });
-
-    it('returns tvdbEpisode', () => {
-      const tvdbEpisode = tvdbSubmitter.videoObj?.tvdbEpisode;
-      const res = tvdbSubmitter.currentTvdbEpisode();
-      expect(res).toBeTruthy();
-      expect(res).toBe(tvdbEpisode);
-    });
-  });
-
-  describe('currentSeason', () => {
-    it('throws when no season', async () => {
-      if (tvdbSubmitter.videoObj) {
-        jest.spyOn(tvdbSubmitter.videoObj, 'season').mockImplementation(() => undefined);
-      }
-      await expect(async () => tvdbSubmitter.currentSeason()).rejects.toThrow('Missing season this shouldn\'t happen!');
-    });
-
-    it('returns tvdbEpisode', () => {
-      if (tvdbSubmitter.videoObj) {
-        jest.spyOn(tvdbSubmitter.videoObj, 'season').mockImplementation(() => season);
-      }
-      const res = tvdbSubmitter.currentSeason();
-      expect(res).toBeTruthy();
-      expect(res).toBe(season);
-    });
-  });
-
   describe('verifyAddedEpisode', () => {
     it('verifyAddedEpisode', async () => {
       const episodeTitle = 'Hasbro Proton Pack Upgrades';

@@ -137,6 +137,9 @@ export class BaseSubmitter {
 
 
   finish = async (isError: boolean = false): Promise<void> => {
+    if (!this.browserObj) {
+      return;
+    }
     if (isError) {
       await this.takeScreenshot();
       await this.saveHtml();
