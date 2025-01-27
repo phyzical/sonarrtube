@@ -4,7 +4,7 @@ import puppeteer, { Browser, Page } from 'puppeteer';
 
 import {
     cleanText, cleanTextContainsXpath, click, delay,
-    find, goto, loaded, submitForm,
+    find, getValue, goto, loaded, submitForm,
     type,
 } from '@sonarrTube/helpers/Puppeteer';
 import { consoleSpy } from '@sonarrTube/mocks/Spies';
@@ -107,6 +107,23 @@ describe('Puppeteer', () => {
             await goto(page, getPageUrl('click.html'));
             await expect(find(page, '#testsaddsadas')).
                 rejects.toThrow('failed to find element matching selector "#testsaddsadas"');
+        });
+    });
+
+    describe('getValue', () => {
+        it('from value attr', async () => {
+            await goto(page, getPageUrl('submitForm.html'));
+            expect(await getValue(page, '#input2')).toBe('input2');
+        });
+
+        it('from text content', async () => {
+            await goto(page, getPageUrl('submitForm.html'));
+            expect(await getValue(page, '#input3')).toBe('input3');
+        });
+
+        it('should return fallback ', async () => {
+            await goto(page, getPageUrl('submitForm.html'));
+            expect(await getValue(page, '#input4')).toBe('');
         });
     });
 

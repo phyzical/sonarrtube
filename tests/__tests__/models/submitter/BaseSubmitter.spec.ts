@@ -95,6 +95,14 @@ describe('BaseSubmitter', () => {
       expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector', 'value', false);
     });
 
+    it('getValue', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'getValue')
+        .mockImplementation(() => Promise.resolve());
+      await baseSubmitter.getValue('selector');
+      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector');
+    });
+
     it('find', async () => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'find')

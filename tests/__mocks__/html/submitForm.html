@@ -1,15 +1,23 @@
 <html>
-    <head><title>test</title></head>
-    <body>
-        <form id="test" onsubmit="appendElement(event)"> 
-            <input id="input" type="text" value="" />
-            <button type="submit">Submit</button>
-        </form>
-    
-        <script>
-            function appendElement(event) {
-                location.reload();
-            }
-        </script>
-    </body>
+
+<head>
+    <title>test</title>
+</head>
+
+<body>
+    <form id="test" onsubmit="appendElement(event)">
+        <input id="input" type="text" value="" />
+        <input id="input2" type="text" value="input2" />
+        <div id="input3" type="text">input3</div>
+        <input id="input4" type="text" />
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function appendElement(event) {
+            location.reload();
+        }
+    </script>
+</body>
+
 </html>

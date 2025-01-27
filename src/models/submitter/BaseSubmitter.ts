@@ -6,7 +6,7 @@ import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { Browser, ElementHandle, Page } from 'puppeteer';
 
-import { click, find, type, loaded, goto, submitForm } from '@sonarrTube/helpers/Puppeteer.js';
+import { click, find, type, loaded, goto, submitForm, getValue } from '@sonarrTube/helpers/Puppeteer.js';
 import { log } from '@sonarrTube/helpers/Log.js';
 import { ActionableVideo } from '@sonarrTube/models/api/ActionableVideo.js';
 import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig.js';
@@ -96,6 +96,10 @@ export class BaseSubmitter {
 
     return tvdbEpisode;
   };
+
+  getValue = async (
+    selector: string
+  ): Promise<string> => await getValue(this.page(), selector);
 
   type = async (
     selector: string, value: string, simulate: boolean = true
