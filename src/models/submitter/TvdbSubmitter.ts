@@ -12,15 +12,52 @@ import { BaseSubmitter } from '@sonarrTube/models/submitter/BaseSubmitter.js';
 export class TvdbSubmitter extends BaseSubmitter {
   imageUploadsDisabled: boolean = false;
 
-  //  Need to work out an efficent way to auto mock goto's at the puppeteer level
+  selectors = {
+    addEpisodeButton: 'xpath///*[contains(text(),"Add Episode")]',
+    addInitialEpisode: {
+      addEpisodes: 'xpath///button[text()=\'Add Episodes\']',
+      date: '[name="date[]"]',
+      form: 'xpath///h3[text()=\'Episodes\']/ancestor::form',
+      name: '[name="name[]"]',
+      overview: '[name="overview[]"]',
+      runtime: '[name="runtime[]"]',
+    },
+    addSeries: {
+      addSeasonButton: 'xpath///button[@title="Add Season"]',
+      addSeasonButtonByText: 'xpath///button[text()="Add Season"]',
+      seasonNumberInput: '[name="season_number"]',
+      seasonsButton: 'xpath///a[text()="Seasons"]',
+    },
+    editEpisodeButton: 'xpath///*[contains(text(),"Edit Episode")]',
+    login: {
+      email: '[name="email"]',
+      form: 'form[action="/auth/login"]',
+      password: '[name="password"]',
+    },
+    specials: 'xpath///*[contains(text(), "Specials")]',
+    toolbarMenuButton: 'xpath///i[contains(@class,"fa-cog")]/..',
+    updateEpisode: {
+      form: 'form.episode-edit-form',
+      productionCode: '[name="productioncode"]',
+      saveButton: 'xpath///button[text()=\'Save\']',
+    },
+    uploadRestricted: 'xpath///*[contains(text(), "your account has been temporarily restricted from uploading")]',
+    uploadThumbnail: {
+      addArtwork: 'xpath///a[text()=\'Add Artwork\']',
+      continueButton: 'xpath///button[text()=\'Continue\']',
+      fileInput: 'input[name=\'file\']',
+      finishButton: 'xpath///button[text()=\'Finish\']',
+    },
+    whoops: 'xpath///*[contains(text(),"Whoops, looks like something went wrong")]',
+  };
+
   doLogin = async (): Promise<void> => {
     log('starting login', true);
     await this._goto([Constants.TVDB.HOST, 'auth', 'login'].join('/'));
-    const loginFormSelector = 'form[action="/auth/login"]';
-    await this._find(loginFormSelector);
-    await this._type('[name="email"]', this.email);
-    await this._type('[name="password"]', this.password);
-    await this._submitForm(loginFormSelector);
+    await this._find(this.selectors.login.form);
+    await this._type(this.selectors.login.email, this.email);
+    await this._type(this.selectors.login.password, this.password);
+    await this._submitForm(this.selectors.login.form);
     await this._goto([Constants.TVDB.HOST, 'dashboard'].join('/'));
     await this._find(`xpath///*[contains(text(),"${this.email}")]`);
     await this._goto([Constants.TVDB.HOST].join('/'));
@@ -54,8 +91,7 @@ export class TvdbSubmitter extends BaseSubmitter {
       await this._openAddEpisodePage();
       await this._addInitialEpisode();
       try {
-        const addEpisodeSelector = 'xpath///*[contains(text(),"Whoops, looks like something went wrong")]';
-        await this._find(addEpisodeSelector);
+        await this._find(this.selectors.whoops);
         try {
           await this._openEpisodePage(true);
         } catch (e) {
@@ -105,7 +141,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     const showSeasonURL = [Constants.TVDB.HOST, 'series', series, 'seasons', 'official', season].join('/');
     await this._goto(showSeasonURL);
     let seasonSelector = `xpath///*[contains(text(), "Season ${season}")]`;
-    if (season == 0) { seasonSelector = 'xpath///*[contains(text(), "Specials")]'; }
+    if (season == 0) { seasonSelector = this.selectors.specials; }
 
     await this._find(seasonSelector);
     log(`opened ${showSeasonURL}`, true);
@@ -116,11 +152,11 @@ export class TvdbSubmitter extends BaseSubmitter {
     const series = this._video().tvdbSeries.slug;
     log(`Adding ${series} - ${season}`, true);
     await this._openSeriesPage();
-    await this._click('xpath///a[text()="Seasons"]');
+    await this._click(this.selectors.addSeries.seasonsButton);
     await delay(1500);
-    await this._click('xpath///button[@title="Add Season"]');
-    await this._type('[name="season_number"]', season.toString());
-    await this._click('xpath///button[text()="Add Season"]');
+    await this._click(this.selectors.addSeries.addSeasonButton);
+    await this._type(this.selectors.addSeries.seasonNumberInput, season.toString());
+    await this._click(this.selectors.addSeries.addSeasonButtonByText);
     await this._find(`xpath///*[contains(text(), "Season ${season}")]`);
     log(`Added ${series} - ${season}`, true);
   };
@@ -138,16 +174,14 @@ export class TvdbSubmitter extends BaseSubmitter {
     const tvdbEpisode = this._currentTvdbEpisode();
     const episodeTitle = youtubeVideo.cleanTitle();
     const series = this._video().tvdbSeries.slug;
-    const toolbarMenuButtonXpath = 'xpath///i[contains(@class,"fa-cog")]/..';
-    const editEpisodeXpath = 'xpath///*[contains(text(),"Edit Episode")]';
     const openEpisodeXpath = `xpath///a[${cleanTextContainsXpath(episodeTitle)}]`;
     if (this._video().missingFromTvdb()) {
       await delay(500);
       await this._openSeriesSeasonPage();
       await this._click(openEpisodeXpath);
       await this._loaded();
-      await this._click(toolbarMenuButtonXpath);
-      await this._click(editEpisodeXpath);
+      await this._click(this.selectors.toolbarMenuButton);
+      await this._click(this.selectors.editEpisodeButton);
       await this._loaded();
     } else {
       const showSeriesURL = [
@@ -158,7 +192,7 @@ export class TvdbSubmitter extends BaseSubmitter {
       if (edit) {
         await this._find(`xpath///*[contains(text(), "Episode ${tvdbEpisode.number}")]`);
       } else {
-        await this._find(editEpisodeXpath);
+        await this._find(this.selectors.editEpisodeButton);
       }
 
       await this._find(`xpath///*[contains(text(), "Season ${tvdbEpisode.seasonNumber}")]`);
@@ -168,32 +202,32 @@ export class TvdbSubmitter extends BaseSubmitter {
 
   _openAddEpisodePage = async (): Promise<void> => {
     await this._openSeriesSeasonPage();
-    await this._click('xpath///*[contains(text(),"Add Episode")]');
+    await this._click(this.selectors.addEpisodeButton);
     log('opened addEpisodePage', true);
   };
 
   _addInitialEpisode = async (): Promise<void> => {
     const youtubeVideo = this._currentYoutubeVideo();
     log('starting adding', true);
-    await this._find('xpath///h3[text()=\'Episodes\']/ancestor::form');
+    await this._find(this.selectors.addInitialEpisode.form);
     await delay(500);
-    await this._type('[name="name[]"]', youtubeVideo.cleanTitle());
-    await this._type('[name="overview[]"]', youtubeVideo.cleanDescription());
-    await this._type('[name="runtime[]"]', youtubeVideo.runTime());
-    await this._type('[name="date[]"]', youtubeVideo.airedDate(), false);
+    await this._type(this.selectors.addInitialEpisode.name, youtubeVideo.cleanTitle());
+    await this._type(this.selectors.addInitialEpisode.overview, youtubeVideo.cleanDescription());
+    await this._type(this.selectors.addInitialEpisode.runtime, youtubeVideo.runTime());
+    await this._type(this.selectors.addInitialEpisode.date, youtubeVideo.airedDate(), false);
     await delay(500);
-    await this._click('xpath///button[text()=\'Add Episodes\']');
+    await this._click(this.selectors.addInitialEpisode.addEpisodes);
     log('finished adding', true);
   };
 
   _updateEpisode = async (): Promise<void> => {
     const youtubeVideo = this._currentYoutubeVideo();
     log('updating episode', true);
-    await this._find('form.episode-edit-form');
+    await this._find(this.selectors.updateEpisode.form);
     await delay(500);
-    await this._type('[name="productioncode"]', youtubeVideo.id);
+    await this._type(this.selectors.updateEpisode.productionCode, youtubeVideo.id);
     await delay(500);
-    await this._click('xpath///button[text()=\'Save\']');
+    await this._click(this.selectors.updateEpisode.saveButton);
     await this._checkForEpisode();
     log('updated episode', true);
   };
@@ -234,7 +268,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     if (this.imageUploadsDisabled == null) {
       try {
         if (await this._find(
-          'xpath///*[contains(text(), "your account has been temporarily restricted from uploading")]'
+          this.selectors.uploadRestricted
         )) {
           this.imageUploadsDisabled = true;
         }
@@ -242,6 +276,7 @@ export class TvdbSubmitter extends BaseSubmitter {
       } catch (_e) { }
     }
   };
+
 
   _uploadEpisodeThumbnail = async (count: number = 0): Promise<string> => {
     if (this.imageUploadsDisabled == true) {
@@ -258,7 +293,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     let thumbnailPath;
 
     try {
-      await this._click('xpath///a[text()=\'Add Artwork\']');
+      await this._click(this.selectors.uploadThumbnail.addArtwork);
 
       await this._checkForUploadBan();
       if (this.imageUploadsDisabled) {
@@ -280,13 +315,15 @@ export class TvdbSubmitter extends BaseSubmitter {
       }
 
       if (thumbnailPath) {
-        const elementHandle = await this._find('input[name=\'file\']') as ElementHandle<HTMLInputElement>;
+        const elementHandle = await this._find(
+          this.selectors.uploadThumbnail.fileInput
+        ) as ElementHandle<HTMLInputElement>;
         await elementHandle.uploadFile(thumbnailPath);
         await setTimeout(3000);
-        await this._click('xpath///button[text()=\'Continue\']');
+        await this._click(this.selectors.uploadThumbnail.continueButton);
         await this._loaded();
         await this._handleCropperTool();
-        await this._click('xpath///button[text()=\'Finish\']');
+        await this._click(this.selectors.uploadThumbnail.finishButton);
         await this._loaded();
         unlinkSync(thumbnailPath);
         await this._find(`xpath///*[contains(text(),"${youtubeVideo.cleanTitle()}")]`);
