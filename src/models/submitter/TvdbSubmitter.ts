@@ -310,7 +310,7 @@ export class TvdbSubmitter extends BaseSubmitter {
     // then two contrasts attempting to remove text
     // then once more setting no max length of text to 1
     // finally if all else fails just use raw
-    if (this.video().thumbnailUploadAttemptCount() < Constants.THUMBNAIL.MAX_ATTEMPTS) {
+    if (backfillAttempts < Constants.THUMBNAIL.MAX_ATTEMPTS) {
       await this.openEpisodePage(false);
       const res = await this.uploadEpisodeThumbnail(backfillAttempts);
       if (res != Constants.THUMBNAIL.FAILED_TEXT) {
