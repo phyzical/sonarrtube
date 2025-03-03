@@ -57,7 +57,6 @@ export class Video implements VideoType {
     airedDate = (): string => {
         const airDate = this.upload_date; //'20241217'
 
-        console.log(this.upload_date);
 
         return airDate.slice(0, 4) + '-' + airDate.slice(4, 6) + '-' + airDate.slice(6, 8);
     };
