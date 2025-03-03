@@ -14,6 +14,8 @@ RUN yum -y update \
     chromium \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     git-2.43.5-2.el9_5 \
+    # renovate: datasource=yum repo=rocky-9-appstream-x86_64
+    python3-pip-21.3.1-1.el9 \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
@@ -71,6 +73,9 @@ COPY --from=build /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
 COPY --from=build --chown=app ${APP_DIR}/node_modules ${APP_DIR}/node_modules
 COPY --from=build --chown=app ${APP_DIR}/build ${APP_DIR}/build
 COPY --chown=app ./main.js ./boot.sh ./package.json ./
+
+COPY requirements.txt ./
+RUN python3 -m pip install -r requirements.txt
 
 USER root
 
