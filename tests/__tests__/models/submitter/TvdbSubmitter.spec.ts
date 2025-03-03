@@ -1,3 +1,5 @@
+import { ElementHandle } from 'puppeteer';
+
 import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
 import { consoleSpy } from '@sonarrTube/mocks/Spies';
 import { TvdbSubmitter } from '@sonarrTube/models/submitter/TvdbSubmitter';
@@ -38,7 +40,7 @@ describe('TvdbSubmitter', () => {
     }
   };
 
-  const saveFailure = false;
+  const saveFailure = true;
 
   afterEach(async () => {
     await tvdbSubmitter.finish(saveFailure);
@@ -104,29 +106,62 @@ describe('TvdbSubmitter', () => {
   });
 
   xdescribe('addEpisode', () => {
-    it('addEpisode', async () => {
-      const episodeTitle = 'Hasbro Proton Pack Upgrades';
-      if (tvdbSubmitter.videoObj) {
-        if (tvdbSubmitter.videoObj.tvdbSeries) {
-          jest.spyOn(tvdbSubmitter.videoObj, 'season').mockImplementation(() => season);
-          tvdbSubmitter.videoObj.tvdbSeries.slug = series;
-        }
-        if (tvdbSubmitter.videoObj.youtubeVideo) {
-          tvdbSubmitter.videoObj.youtubeVideo.fulltitle = episodeTitle;
-        }
-      }
-      await tvdbSubmitter.addEpisode();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        `Added ${episodeTitle} - 01`
-      );
-    });
-  });
-
-  xdescribe('backfillEpisodeProductionCode', () => {
-    it('doesn\'t error', async () => {
+    it('if episode exists does nothing', async () => {
       const episodeTitle = 'Hasbro Proton Pack Upgrades';
       mockEpisode(episodeTitle);
-      await tvdbSubmitter.backfillEpisodeProductionCode();
+      await tvdbSubmitter.addEpisode();
+      expect(consoleSpy).not.toHaveBeenCalledWith(
+        `Finished adding of ${episodeTitle}`
+      );
+    });
+
+    describe('new episode', () => {
+      it('adds', async () => {
+        const episodeTitle = 'Super duper soaker';
+        mockEpisode(episodeTitle);
+        await tvdbSubmitter.addEpisode();
+        expect(consoleSpy).toHaveBeenCalledWith(
+          `Finished adding of ${episodeTitle}`
+        );
+      }, 50000);
+
+      it('if Whoops is thrown adds', async () => {
+        const originalFind = tvdbSubmitter._find;
+        jest.spyOn(tvdbSubmitter, '_find')
+          .mockImplementation(async (selector: string): Promise<ElementHandle<Element> | null> => {
+            if (selector === tvdbSubmitter.selectors.whoops) {
+              throw new Error('Whoops');
+            }
+
+            return await originalFind(selector);
+          });
+
+        const episodeTitle = 'Super duper soaker';
+        mockEpisode(episodeTitle);
+        await tvdbSubmitter.addEpisode();
+        expect(consoleSpy).toHaveBeenCalledWith(
+          `Finished adding of ${episodeTitle}`
+        );
+      });
+
+      it('if season is missing adds', async () => {
+        const episodeTitle = 'Super duper soaker';
+        const season = 2999;
+        mockEpisode(episodeTitle, season);
+        await tvdbSubmitter.addEpisode();
+        expect(consoleSpy).toHaveBeenCalledWith(
+          `Added ${series} - ${season}`,
+          `Finished adding of ${episodeTitle}`
+        );
+      });
+    });
+
+    xdescribe('backfillEpisodeProductionCode', () => {
+      it('doesn\'t error', async () => {
+        const episodeTitle = 'Hasbro Proton Pack Upgrades';
+        mockEpisode(episodeTitle);
+        await tvdbSubmitter.backfillEpisodeProductionCode();
+      });
     });
   });
 });

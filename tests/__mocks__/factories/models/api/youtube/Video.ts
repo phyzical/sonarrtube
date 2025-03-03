@@ -18,7 +18,16 @@ export const videoFactory = (params: object = {}): Video => new Video(
         webpage_url: faker.internet.url(),
         id: faker.lorem.words(),
         timestamp: faker.number.float(),
-        upload_date: faker.date.anytime().toString(),
+        upload_date: generateFormattedDate(),
         ...params
     } as VideoType,
 );
+
+const generateFormattedDate = (): string => {
+    const date = faker.date.anytime();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}${month}${day}`;
+};

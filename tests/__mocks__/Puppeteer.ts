@@ -28,7 +28,8 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter): Promise<void> => {
 
             return;
         }
-        if (url.includes('/tvtapi')) {
+
+        if (url.includes('/tvtapi') || url.includes('/savebulkadd')) {
             request.respond({
                 status: 200,
                 contentType: 'application/json',
@@ -113,7 +114,16 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter): Promise<void> => {
             splits.shift();
             splits = splits[0].split('/').filter(x => x);
             fileName = join(__dirname, '..', '__mocks__', 'html', `${splits.join('_')}.html`);
+
+            if (url.includes('9760537/update')) {
+                splits = fileName.split('_official');
+                //  need to save last season to make the 2023 mroe magic
+                // inspect wht save doesnt try to move
+                fileName = `${splits[0]}s_official_2023_with_episode.html`;
+            }
             if (!existsSync(fileName)) {
+                request.abort();
+
                 throw new Error(`Payload not found for ${url}, please save as ${fileName}`);
             }
         }

@@ -13,7 +13,7 @@ export class TvdbSubmitter extends BaseSubmitter {
   imageUploadsDisabled: boolean = false;
 
   selectors = {
-    addEpisodeButton: 'xpath///*[contains(text(),"Add Episode")]',
+    addEpisodeButton: 'xpath///*[@id="episodes"]/ul/li/a',
     addInitialEpisode: {
       addEpisodes: 'xpath///button[text()=\'Add Episodes\']',
       date: '[name="date[]"]',
@@ -92,17 +92,15 @@ export class TvdbSubmitter extends BaseSubmitter {
       await this._addInitialEpisode();
       try {
         await this._find(this.selectors.whoops);
-        try {
-          await this._openEpisodePage(true);
-        } catch (e) {
-          log((e as Error).toString());
-        }
         // eslint-disable-next-line no-empty
       } catch (_e) { }
+      await this._openEpisodePage(true);
       await this._updateEpisode();
 
       try {
-        await this._uploadEpisodeThumbnail();
+        await this._openEpisodePage;
+        // await delay(2000);
+        // await this._uploadEpisodeThumbnail();
       } catch (e) {
         log(`sigh looks like they blocked images for ${this._video().tvdbSeries.name} for your user (${e})`);
       }
@@ -209,13 +207,14 @@ export class TvdbSubmitter extends BaseSubmitter {
   _addInitialEpisode = async (): Promise<void> => {
     const youtubeVideo = this._currentYoutubeVideo();
     log('starting adding', true);
+    await delay(300);
     await this._find(this.selectors.addInitialEpisode.form);
-    await delay(500);
+    await delay(300);
     await this._type(this.selectors.addInitialEpisode.name, youtubeVideo.cleanTitle());
     await this._type(this.selectors.addInitialEpisode.overview, youtubeVideo.cleanDescription());
     await this._type(this.selectors.addInitialEpisode.runtime, youtubeVideo.runTime());
     await this._type(this.selectors.addInitialEpisode.date, youtubeVideo.airedDate(), false);
-    await delay(500);
+    await delay(300);
     await this._click(this.selectors.addInitialEpisode.addEpisodes);
     log('finished adding', true);
   };
@@ -224,9 +223,9 @@ export class TvdbSubmitter extends BaseSubmitter {
     const youtubeVideo = this._currentYoutubeVideo();
     log('updating episode', true);
     await this._find(this.selectors.updateEpisode.form);
-    await delay(500);
+    await delay(300);
     await this._type(this.selectors.updateEpisode.productionCode, youtubeVideo.id);
-    await delay(500);
+    await delay(300);
     await this._click(this.selectors.updateEpisode.saveButton);
     await this._checkForEpisode();
     log('updated episode', true);
@@ -235,7 +234,7 @@ export class TvdbSubmitter extends BaseSubmitter {
   _checkForEpisode = async (): Promise<void> => {
     const youtubeVideo = this._currentYoutubeVideo();
     const tvdbEpisode = this._currentTvdbEpisode();
-
+    await delay(300);
     try {
       await this._find(`xpath///*[contains(text(),"${youtubeVideo.cleanTitle()}")]`);
     } catch (e) {
