@@ -21,7 +21,7 @@ const {
 export const series = async (): Promise<Series[]> => {
     log(`Fetching Youtube Channel Ids from ${host} (sonarr)`);
 
-    const youtubeSeries = (await doRequest(`${host}${Constants.SONARR.SERIES_ENDPOINT}`,
+    let youtubeSeries = (await doRequest(`${host}/${Constants.SONARR.SERIES_ENDPOINT}`,
         Constants.REQUESTS.GET,
         { ...Constants.SONARR.HEADERS, 'x-api-key': apiKey }
     ))
@@ -35,7 +35,7 @@ export const series = async (): Promise<Series[]> => {
 
     for (const series of youtubeSeries) {
         log(`Fetching Episodes for ${series.title} from sonarr`, true);
-        series.episodes = (await doRequest(`${host}${Constants.SONARR.EPISODE_BY_SERIES_ENDPOINT}/${series.id}`,
+        series.episodes = (await doRequest(`${host}/${Constants.SONARR.EPISODE_BY_SERIES_ENDPOINT}${series.id}`,
             Constants.REQUESTS.GET,
             { ...Constants.SONARR.HEADERS, 'x-api-key': apiKey }
         ))
