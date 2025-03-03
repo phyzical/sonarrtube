@@ -13,7 +13,8 @@ export type Config = {
     downloadOnly: boolean
     titleCleanerRegex: RegExp
     notificationWebhook: string
-    reRunInterval: number
+    reRunInterval: number,
+    isDocker: boolean
 }
 
 

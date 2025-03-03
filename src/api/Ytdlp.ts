@@ -11,14 +11,16 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { getYoutubeDelayString } from '@sonarrTube/helpers/Generic.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
+const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose, isDocker } = config();
+
+const ytdlp_path = isDocker ? '/app/.local/bin/yt-dlp' : 'yt-dlp';
 
 const cacheKeyBase = (cacheKey: string): string => cachePath(`youtube/${cacheKey}`);
 const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
     const cacheBase = cacheKeyBase(cacheKey);
 
     return [
-        'yt-dlp',
+        ytdlp_path,
         '--write-info-json',
         '--skip-download',
         '--force-write-archive',
@@ -92,7 +94,7 @@ export const channelIdByAlias = (alias: string): string | undefined => {
 
     return execSync(
         [
-            'yt-dlp',
+            ytdlp_path,
             '-print "%(channel_id)s"',
             '--playlist-end 1',
             `${Constants.YOUTUBE.HOST}/${alias}/`
@@ -138,7 +140,7 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
 
         execSync(
             [
-                'yt-dlp',
+                ytdlp_path,
                 '--add-metadata',
                 '--no-write-playlist-metafiles',
                 '--write-auto-sub',
