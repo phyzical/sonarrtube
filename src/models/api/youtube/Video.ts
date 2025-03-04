@@ -1,4 +1,5 @@
 import { config } from '@sonarrTube/helpers/Config.js';
+import { removeInvalidCharacters } from '@sonarrTube/helpers/Puppeteer';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 
@@ -44,10 +45,10 @@ export class Video implements VideoType {
         return description.slice(0, 300);
     };
 
-    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '').replace(new RegExp('@|"'), '')
+    cleanTitle = (): string => removeInvalidCharacters(this.fulltitle.replace(titleCleanerRegex, ''))
         .slice(0, 100);
 
-    backupTitle = (): string => this.title.replace(titleCleanerRegex, '').replace(new RegExp('@|"'), '')
+    backupTitle = (): string => removeInvalidCharacters(this.title.replace(titleCleanerRegex, ''))
         .slice(0, 100);
 
     runTime = (): string => {

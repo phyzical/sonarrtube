@@ -106,10 +106,14 @@ export const submitForm = async (page: Page, selector: string): Promise<void> =>
 
 export const cleanTextContainsXpath = (text: string): string =>
   // Remove following chars from filename and document contexts ?'/|-*: \ And lowercase all chars to increase matching
-  'contains(translate(translate(translate(text(),\'\\`~!@#$%^&*()-_=+[]{}|;:<>",./?, \',\'\'), "\'", \'\'),' +
+  'contains(translate(translate(translate(text(),\'\\`~!@#$%^&*()-_=+[]{}|;:<>",./?, \\\\\',\'\'), "\'", \'\'),' +
   `'${Constants.CHAR_CLEANER_LIST}', '${Constants.CHAR_CLEANER_LIST.toLowerCase()}') , '${cleanText(text)}')`;
 
 
 export const cleanText = (text: string): string =>
   // eslint-disable-next-line no-useless-escape
   text.toLowerCase().replace(/[- '`~!@#$%^&*()_|+=?;:'",\.<>\{\}\[\]\\\/]/gi, '');
+
+export const removeInvalidCharacters = (text: string): string =>
+  // eslint-disable-next-line no-useless-escape
+  text.replace(/[-'`~!@#$%^&*()_\|+=?;:'",\.<>\{\}\[\]\\\/]/gi, '');
