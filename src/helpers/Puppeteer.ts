@@ -5,6 +5,8 @@ import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 
 export const delay = (time: number): Promise<void> => new Promise((resolve) => {
+  log(`Waiting for ${time} ms`, true);
+
   setTimeout(resolve, time);
 });
 
@@ -27,6 +29,12 @@ export const click = async (page: Page, selector: string): Promise<void> => {
 };
 
 export const goto = async (page: Page, url: string): Promise<HTTPResponse | null> => {
+  if (page.url() === url) {
+    log(`Already at ${url}`, true);
+
+    return null;
+  }
+
   log(`Opening ${url}`, true);
 
   const result = await page.goto(url).catch((e) => {

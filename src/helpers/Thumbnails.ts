@@ -79,6 +79,8 @@ export const findThumbnailText = async (
                 .contrast(attempt == 2 ? 0.4 : 0.1)
                 .getBuffer(JimpMime.png)
         )).data.words;
+    } catch (e) {
+        console.dir(e);
     } finally {
         await worker.terminate();
     }
@@ -153,7 +155,7 @@ export const processThumbnail = async (
     const coordinates = await findThumbnailText(image, attempt);
 
     if (!coordinates) {
-        return thumbnailPath;
+        return '';
     }
 
     await cropImage(thumbnailPath, coordinates);

@@ -68,13 +68,13 @@ describe('TvdbSubmitter', () => {
     });
   });
 
-  describe('backfillEpisodeImage', () => {
+  describe('uploadEpisodeImage', () => {
     it('if at max attempts', async () => {
       if (tvdbSubmitter.videoObj) {
         jest.spyOn(tvdbSubmitter.videoObj, 'thumbnailUploadAttemptCount')
           .mockImplementation(() => Constants.THUMBNAIL.MAX_ATTEMPTS);
       }
-      await tvdbSubmitter.backfillEpisodeImage();
+      await tvdbSubmitter.uploadEpisodeImage();
       expect(consoleSpy).toHaveBeenCalledWith(
         'Skipping image backlog exceeding all automatic text removal attempts'
       );
@@ -85,7 +85,7 @@ describe('TvdbSubmitter', () => {
         .mockImplementation(async (_x: number | undefined) => 'asdsda');
       const episodeTitle = 'Hasbro Proton Pack Upgrades';
       mockEpisode(episodeTitle);
-      await tvdbSubmitter.backfillEpisodeImage();
+      await tvdbSubmitter.uploadEpisodeImage();
       expect(tvdbSubmitter.videoObj?.thumbnailUploadAttemptCount()).toBe(1);
       expect(consoleSpy).not.toHaveBeenCalledWith(
         'Skipping image backlog exceeding all automatic text removal attempts'
@@ -97,7 +97,7 @@ describe('TvdbSubmitter', () => {
         .mockImplementation(async (_x: number | undefined) => Constants.THUMBNAIL.FAILED_TEXT);
       const episodeTitle = 'Hasbro Proton Pack Upgrades';
       mockEpisode(episodeTitle);
-      await tvdbSubmitter.backfillEpisodeImage();
+      await tvdbSubmitter.uploadEpisodeImage();
       expect(tvdbSubmitter.videoObj?.thumbnailUploadAttemptCount()).toBe(0);
       expect(consoleSpy).not.toHaveBeenCalledWith(
         'Skipping image backlog exceeding all automatic text removal attempts'

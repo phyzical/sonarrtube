@@ -46,7 +46,7 @@ describe('Puppeteer', () => {
         it('should match expected html', async () => {
             await page.goto(getPageUrl('cleanTextContainsXpath.html'));
             const xpath = cleanTextContainsXpath('  test1  ');
-            const element = await page.waitForSelector(`xpath///div[${xpath}]`);
+            const element = await page.waitForSelector(`::-p-xpath(//div[${xpath}])`);
             expect(element).toBeTruthy();
         });
     });
@@ -99,8 +99,8 @@ describe('Puppeteer', () => {
 
         it('should find element by xpath', async () => {
             await goto(page, getPageUrl('click.html'));
-            expect(await find(page, 'xpath///button')).toBeTruthy();
-            await expect(find(page, 'xpath///button')).resolves.not.toThrow();
+            expect(await find(page, '::-p-xpath(//button)')).toBeTruthy();
+            await expect(find(page, '::-p-xpath(//button)')).resolves.not.toThrow();
         });
 
         it('should throw when no element', async () => {

@@ -118,7 +118,7 @@ export class ShowSubmitter {
     const message = `${this.previewText()} Backfilled Image\n${video.summary()}`;
     try {
       if (!this.config.preview) {
-        this.submitter.backfillEpisodeImage();
+        this.submitter.uploadEpisodeImage();
         video.clearCache();
       }
       this.submitter.updates.push(message);
@@ -181,9 +181,9 @@ export class ShowSubmitter {
         await this.backfillEpisodeProductionCode(episode);
       }
 
-      for (const episode of actionableSeries.backfillableImageVideos(this.config.downloadOnly)) {
-        await this.backfillEpisodeImage(episode);
-      }
+      //   for (const episode of actionableSeries.backfillableImageVideos(this.config.downloadOnly)) {
+      //     await this.backfillEpisodeImage(episode);
+      //   }
 
       if (!this.config.downloadOnly && !actionableSeries.backfillDownloadOnly) {
         await this.addEpisodes(
