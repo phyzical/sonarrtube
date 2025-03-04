@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'fs';
 import { execSync } from 'child_process';
 import path from 'path';
 
@@ -167,10 +167,11 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             if (new RegExp(`.*${regexFilename}.*`).test(file)) {
                 const sourceFile = path.join(outputCachePath, file);
                 const targetFile = path.join(outputPath, file);
-                renameSync(sourceFile, targetFile);
+                copyFileSync(sourceFile, targetFile);
             }
         });
 
+        rmSync(outputCachePath, { recursive: true });
         summaries.push(`${summaryText}\n${video.summary()}`);
     }
 
