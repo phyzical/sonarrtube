@@ -99,8 +99,8 @@ export class TvdbSubmitter extends BaseSubmitter {
 
       try {
         await this._openEpisodePage;
-        // await delay(2000);
-        // await this._uploadEpisodeThumbnail();
+        await delay(500);
+        await this._uploadEpisodeThumbnail();
       } catch (e) {
         log(`sigh looks like they blocked images for ${this._video().tvdbSeries.name} for your user (${e})`);
       }
@@ -140,7 +140,6 @@ export class TvdbSubmitter extends BaseSubmitter {
     await this._goto(showSeasonURL);
     let seasonSelector = `xpath///*[contains(text(), "Season ${season}")]`;
     if (season == 0) { seasonSelector = this.selectors.specials; }
-
     await this._find(seasonSelector);
     log(`opened ${showSeasonURL}`, true);
   };
@@ -169,7 +168,6 @@ export class TvdbSubmitter extends BaseSubmitter {
 
   _openEpisodePage = async (edit: boolean = true): Promise<void> => {
     const youtubeVideo = this._currentYoutubeVideo();
-    const tvdbEpisode = this._currentTvdbEpisode();
     const episodeTitle = youtubeVideo.cleanTitle();
     const series = this._video().tvdbSeries.slug;
     const openEpisodeXpath = `xpath///a[${cleanTextContainsXpath(episodeTitle)}]`;
@@ -182,10 +180,12 @@ export class TvdbSubmitter extends BaseSubmitter {
       await this._click(this.selectors.editEpisodeButton);
       await this._loaded();
     } else {
+      const tvdbEpisode = this._currentTvdbEpisode();
       const showSeriesURL = [
         Constants.TVDB.HOST, 'series', series, 'episodes', tvdbEpisode.id,
       ].concat(edit ? ['0', 'edit'] : []).join('/');
       await this._goto(showSeriesURL);
+      await this._loaded();
 
       if (edit) {
         await this._find(`xpath///*[contains(text(), "Episode ${tvdbEpisode.number}")]`);
@@ -200,6 +200,7 @@ export class TvdbSubmitter extends BaseSubmitter {
 
   _openAddEpisodePage = async (): Promise<void> => {
     await this._openSeriesSeasonPage();
+    await delay(500);
     await this._click(this.selectors.addEpisodeButton);
     log('opened addEpisodePage', true);
   };
@@ -227,25 +228,24 @@ export class TvdbSubmitter extends BaseSubmitter {
     await this._type(this.selectors.updateEpisode.productionCode, youtubeVideo.id);
     await delay(300);
     await this._click(this.selectors.updateEpisode.saveButton);
+    await this._loaded();
     await this._checkForEpisode();
     log('updated episode', true);
   };
 
   _checkForEpisode = async (): Promise<void> => {
     const youtubeVideo = this._currentYoutubeVideo();
-    const tvdbEpisode = this._currentTvdbEpisode();
-    await delay(300);
     try {
-      await this._find(`xpath///*[contains(text(),"${youtubeVideo.cleanTitle()}")]`);
+      await this._find(`xpath///*[${cleanTextContainsXpath(youtubeVideo.cleanTitle())}]`);
     } catch (e) {
       //  fall back to tvdb title if it exists
-      if (tvdbEpisode.name) {
-        await this._find(`xpath///*[contains(text(),"${tvdbEpisode.name}")]`);
+      const tvdbEpisode = this._video().tvdbEpisode;
+      if (tvdbEpisode && tvdbEpisode.name) {
+        await this._find(`xpath///*[${cleanTextContainsXpath(tvdbEpisode.name)}]`);
       } else {
         throw e;
       }
     }
-
   };
 
   _handleCropperTool = async (): Promise<void> => {
@@ -325,6 +325,7 @@ export class TvdbSubmitter extends BaseSubmitter {
         await this._click(this.selectors.uploadThumbnail.finishButton);
         await this._loaded();
         unlinkSync(thumbnailPath);
+        // ::-p-xpath(
         await this._find(`xpath///*[contains(text(),"${youtubeVideo.cleanTitle()}")]`);
         log('Successfully uploaded image');
       }

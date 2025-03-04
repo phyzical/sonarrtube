@@ -78,13 +78,14 @@ export class BaseSubmitter {
     }
     if (isError) {
       await this._takeScreenshot();
-      await this._saveHtml();
+      // await this._saveHtml();
     }
     await this._browser().close();
+    log('Finished');
   };
 
   handleReports = async (actionableSeries: ActionableSeries): Promise<void> => {
-    await notify(`Summary for ${this._video().seriesName};`);
+    await notify(`Summary for ${actionableSeries.videos[0].seriesName()};`);
 
     if (this.downloads.length > 0) {
       log(Constants.SEPARATOR);
@@ -156,7 +157,7 @@ export class BaseSubmitter {
     const tvdbEpisode = this._video().tvdbEpisode;
 
     if (!tvdbEpisode) {
-      throw new Error('Missing youtubeVideo this shouldn\'t happen!');
+      throw new Error('Missing tvdbEpisode this shouldn\'t happen!');
     }
 
     return tvdbEpisode;
