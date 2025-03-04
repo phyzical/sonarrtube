@@ -41,7 +41,7 @@ export class Video implements VideoType {
             description = this.cleanTitle();
         }
 
-        return description.slice(0, 100);
+        return description.slice(0, 300);
     };
 
     cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '').replace(new RegExp('@|"'), '')
