@@ -1,17 +1,17 @@
-import { existsSync, unlinkSync, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 
-import webp from 'webp-converter';
 import { Jimp, JimpMime } from 'jimp';
 import { PSM, Word, createWorker } from 'tesseract.js';
+import sharp from 'sharp';
 
 import { log } from '@sonarrTube/helpers/Log.js';
 import { cachePath } from '@sonarrTube/helpers/Cache.js';
-import { delay } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 export const cropImage = async (
     inputPath: string, rect: { x0: number, y0: number, x1: number, y1: number }
 ): Promise<void> => {
+    log('cropping image', true);
     const originalImage = await Jimp.read(inputPath);
     const { width, height } = originalImage.bitmap;
 
@@ -123,28 +123,23 @@ export const processThumbnail = async (
 
     const buffer = Buffer.from(await res.arrayBuffer());
 
-    writeFileSync(thumbnailPath, buffer);
     if (extension == Constants.EXTENSIONS.WEBP) {
         log('converting webp to png', true);
-        const webpPath = thumbnailPath;
         thumbnailPath = thumbnailPath.replace(Constants.EXTENSIONS.WEBP, Constants.EXTENSIONS.PNG);
-        await webp.dwebp(webpPath, thumbnailPath, '-o');
-        let checksCount = 0;
-        while (!existsSync(thumbnailPath) && checksCount < 5) {
-            /* istanbul ignore next */
-            await delay(500);
-            /* istanbul ignore next */
-            checksCount++;
-        }
-        unlinkSync(webpPath);
+        await sharp(buffer).png()
+            .toFile(thumbnailPath);
+    } else {
+        writeFileSync(thumbnailPath, buffer);
     }
 
     let image = await Jimp.read(thumbnailPath);
 
     if (
-        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH &&
+        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH ||
         image.bitmap.height < Constants.THUMBNAIL.MINIMUM_HEIGHT
     ) {
+        log(`Skipping as image dims are ${image.bitmap.width}x${image.bitmap.height}`, true);
+
         return '';
     }
 
@@ -163,9 +158,11 @@ export const processThumbnail = async (
     image = await Jimp.read(thumbnailPath);
 
     if (
-        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH &&
+        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH ||
         image.bitmap.height < Constants.THUMBNAIL.MINIMUM_HEIGHT
     ) {
+        log(`Skipping as image dims are ${image.bitmap.width}x${image.bitmap.height}`, true);
+
         return '';
     }
 
