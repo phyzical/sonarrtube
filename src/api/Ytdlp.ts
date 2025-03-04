@@ -160,7 +160,7 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             verbose ? { stdio: 'inherit' } : {}
         );
         if (!existsSync(outputPath)) {
-            mkdirSync(outputPath);
+            mkdirSync(outputPath, { recursive: true });
         }
         readdirSync(outputCachePath).forEach(file => {
             const regexFilename = fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
