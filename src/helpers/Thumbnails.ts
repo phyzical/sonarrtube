@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 
-import { Jimp, JimpMime } from 'jimp';
+import { Jimp, JimpInstance, JimpMime } from 'jimp';
 import { PSM, Word, createWorker } from 'tesseract.js';
 import sharp from 'sharp';
 
@@ -8,7 +8,7 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { cachePath } from '@sonarrTube/helpers/Cache.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-export const cropImage = async (
+export const _cropImage = async (
     inputPath: string, rect: { x0: number, y0: number, x1: number, y1: number }
 ): Promise<void> => {
     log('cropping image', true);
@@ -134,10 +134,7 @@ export const processThumbnail = async (
 
     let image = await Jimp.read(thumbnailPath);
 
-    if (
-        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH ||
-        image.bitmap.height < Constants.THUMBNAIL.MINIMUM_HEIGHT
-    ) {
+    if (dimsCheck(image as JimpInstance)) {
         log(`Skipping as image dims are ${image.bitmap.width}x${image.bitmap.height}`, true);
 
         return '';
@@ -153,14 +150,11 @@ export const processThumbnail = async (
         return '';
     }
 
-    await cropImage(thumbnailPath, coordinates);
+    await _cropImage(thumbnailPath, coordinates);
 
     image = await Jimp.read(thumbnailPath);
 
-    if (
-        image.bitmap.width < Constants.THUMBNAIL.MINIMUM_WIDTH ||
-        image.bitmap.height < Constants.THUMBNAIL.MINIMUM_HEIGHT
-    ) {
+    if (dimsCheck(image as JimpInstance)) {
         log(`Skipping as image dims are ${image.bitmap.width}x${image.bitmap.height}`, true);
 
         return '';
@@ -168,3 +162,6 @@ export const processThumbnail = async (
 
     return thumbnailPath;
 };
+
+const dimsCheck = (image: JimpInstance): boolean => image.bitmap.width <= Constants.THUMBNAIL.MINIMUM_WIDTH ||
+    image.bitmap.height <= Constants.THUMBNAIL.MINIMUM_HEIGHT;

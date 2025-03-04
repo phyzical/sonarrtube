@@ -13,7 +13,7 @@ describe('Thumbnails', () => {
 
     // for some reason this shit fails in docker...
     describe('processThumbnail', () => {
-        jest.retryTimes(3);
+        // jest.retryTimes(3);
         let cacheDir;
         let imageDir;
         const timeout = 15000;
@@ -46,7 +46,7 @@ describe('Thumbnails', () => {
             Constants.THUMBNAIL.TEXT.FONT_SIZE = 9999;
 
             // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), 'cropImage');
+            const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), '_cropImage');
 
             const uuid = randomUUID();
             const result = await processThumbnail(

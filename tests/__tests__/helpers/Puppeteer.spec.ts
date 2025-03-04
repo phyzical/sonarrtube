@@ -4,7 +4,7 @@ import puppeteer, { Browser, Page } from 'puppeteer';
 
 import {
     cleanText, cleanTextContainsXpath, click, delay,
-    find, getValue, goto, loaded, submitForm,
+    find, getValue, goto, loaded, removeInvalidCharacters, submitForm,
     type,
 } from '@sonarrTube/helpers/Puppeteer';
 import { consoleSpy } from '@sonarrTube/mocks/Spies';
@@ -33,7 +33,7 @@ describe('Puppeteer', () => {
     });
 
     afterAll(async () => {
-        await browser.close();
+        await browser?.close();
     });
 
     describe('cleanText', () => {
@@ -41,6 +41,13 @@ describe('Puppeteer', () => {
             expect(cleanText('  - `~!@T#$%^&*()_|+=e?;:\'",S.<>{}t[]\\1/  ')).toEqual('test1');
         });
     });
+
+    describe('removeInvalidCharacters', () => {
+        it('should clean expected characters, preserve case', () => {
+            expect(removeInvalidCharacters('  - `~!@T#$%^&*()_|+=e?;:\'",S.<>{}t[]\\1/  ')).toEqual('   TeSt1  ');
+        });
+    });
+
 
     describe('cleanTextContainsXpath', () => {
         it('should match expected html', async () => {

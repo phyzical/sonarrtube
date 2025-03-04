@@ -16,10 +16,10 @@ describe('Video', () => {
             expect(result).toBeString();
         });
 
-        it('limits when longer than 100', () => {
-            const video = videoFactory({ description: 'a'.repeat(101) });
+        it('limits when longer than 300', () => {
+            const video = videoFactory({ description: 'a'.repeat(401) });
             const result = video.cleanDescription();
-            expect(result).toBe('a'.repeat(100));
+            expect(result).toBe('a'.repeat(300));
         });
 
         it('uses title if no description', () => {

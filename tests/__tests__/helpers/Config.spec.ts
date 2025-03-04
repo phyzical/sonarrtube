@@ -81,6 +81,7 @@ describe('#config', () => {
                 outputDir: Constants.ENVIRONMENT.OUTPUT_DIR,
                 verbose: false,
                 downloadOnly: true,
+                isDocker: false,
                 preview: true,
                 tvdb: {
                     username: undefined,
@@ -123,6 +124,7 @@ describe('#config', () => {
                 `OUTPUT_DIR=${configValues.OUTPUT_DIR}`,
                 `VERBOSE_LOGS=${configValues.VERBOSE_LOGS}`,
                 `DOWNLOAD_ONLY=${configValues.DOWNLOAD_ONLY}`,
+                `IS_DOCKER=${configValues.IS_DOCKER}`,
                 `TITLE_CLEANER_REGEX=${configValues.TITLE_CLEANER_REGEX}`,
                 `SKIP_FROM_SYNC_TVDB_SERIES_IDS=${configValues.SKIP_FROM_SYNC_TVDB_SERIES_IDS}`,
                 `SKIP_FROM_SYNC_TVDB_EPISODES_IDS=${configValues.SKIP_FROM_SYNC_TVDB_EPISODES_IDS}`,
@@ -146,6 +148,7 @@ describe('#config', () => {
                 outputDir: configValues.OUTPUT_DIR,
                 verbose: false,
                 downloadOnly: true,
+                isDocker: false,
                 preview: true,
                 tvdb: {
                     username: configValues.TVDB_USERNAME,
