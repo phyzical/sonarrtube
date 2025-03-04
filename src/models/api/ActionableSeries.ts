@@ -66,9 +66,12 @@ export class ActionableSeries implements ActionableSeriesType {
             this.videos.push(
                 new ActionableVideo(
                     {
-                        youtubeVideo: video, sonarrEpisode,
-                        tvdbEpisode, tvdbSeries: this.tvdbSeries,
-                        sonarrSeries: this.sonarrSeries, youtubeContext: this.youtubeContext
+                        youtubeVideo: video,
+                        sonarrEpisode,
+                        tvdbEpisode,
+                        tvdbSeries: this.tvdbSeries,
+                        sonarrSeries: this.sonarrSeries,
+                        youtubeContext: this.youtubeContext
                     }
                 )
             );

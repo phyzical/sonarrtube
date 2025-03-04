@@ -46,7 +46,7 @@ const processVideoInfos = (cacheKey: string): Video[] => {
         .map(file => JSON.parse(
             readFileSync(path.join(cachePath, file)).toString()
         ))
-        .filter(videoInfo => videoInfo._type != 'video')
+        .filter(videoInfo => videoInfo._type == 'video')
         .map(({
             title,
             fulltitle,
@@ -129,12 +129,14 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
         if (alreadyDownloaded) {
             continue;
         }
+
         let summaryText = `Downloading ${youtubeURL} to "${outputPath}/${fileName}.%(ext)s"`;
         if (preview) {
             summaryText = `Preview mode on, would have ${summaryText}`;
             summaries.push(summaryText);
             continue;
         }
+
 
         log(summaryText);
 

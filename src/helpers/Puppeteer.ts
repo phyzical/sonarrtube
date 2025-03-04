@@ -23,16 +23,20 @@ export const click = async (page: Page, selector: string): Promise<void> => {
   await find(page, selector);
   log(`Clicking ${selector}`, true);
 
-  (await page.$$(selector))[0].click();
+  await page.click(selector);
 };
 
 export const goto = async (page: Page, url: string): Promise<HTTPResponse | null> => {
   log(`Opening ${url}`, true);
 
-  return await page.goto(url).catch((e) => {
+  const result = await page.goto(url).catch((e) => {
     log(`Failed to open ${url}`, true);
     throw e;
   });
+
+  await delay(300);
+
+  return result;
 };
 
 export const loaded = async (page: Page): Promise<HTTPResponse | null | undefined> => {
@@ -48,8 +52,8 @@ export const loaded = async (page: Page): Promise<HTTPResponse | null | undefine
 
 export const getValue = async (page: Page, selector: string): Promise<string> => {
   log(`Finding value for ${selector}`, true);
-  
-return await page.$eval(selector, /* istanbul ignore next */(el: Element) =>
+
+  return await page.$eval(selector, /* istanbul ignore next */(el: Element) =>
     (el as HTMLInputElement).value || (el as HTMLInputElement).textContent) || '';
 };
 
