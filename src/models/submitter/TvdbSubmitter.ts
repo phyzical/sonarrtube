@@ -99,13 +99,7 @@ export class TvdbSubmitter extends BaseSubmitter {
       await this._openEpisodePage(true);
       await this._updateEpisode();
 
-      try {
-        await this._openEpisodePage;
-        await delay(500);
-        await this._uploadEpisodeThumbnail();
-      } catch (e) {
-        log(`sigh looks like they blocked images for ${this._video().tvdbSeries.name} for your user (${e})`);
-      }
+      await this.uploadEpisodeImage();
 
       log(`Finished adding of ${youtubeVideo.cleanTitle()}`);
     }
@@ -281,12 +275,6 @@ export class TvdbSubmitter extends BaseSubmitter {
 
 
   _uploadEpisodeThumbnail = async (count: number = 0): Promise<string> => {
-    if (this.imageUploadsDisabled == true) {
-      log('Image uploads disabled, skipping');
-
-      return Constants.THUMBNAIL.FAILED_TEXT;
-    }
-
     const youtubeVideo = this._currentYoutubeVideo();
 
     log(`Starting image upload attempt ${count + 1}`, true);
@@ -305,17 +293,7 @@ export class TvdbSubmitter extends BaseSubmitter {
         return Constants.THUMBNAIL.FAILED_TEXT;
       }
 
-      try {
-        thumbnailPath = await processThumbnail(thumbnailUrl, youtubeVideo.id, count);
-      } catch (_e) {
-        try {
-          log('Trying again...');
-          thumbnailPath = await processThumbnail(thumbnailUrl, youtubeVideo.id, count);
-        } catch (__e) {
-          log('Trying one more time...');
-          thumbnailPath = await processThumbnail(thumbnailUrl, youtubeVideo.id, count);
-        }
-      }
+      thumbnailPath = await processThumbnail(thumbnailUrl, youtubeVideo.id, count);
 
       if (thumbnailPath) {
         const elementHandle = await this._find(
