@@ -133,5 +133,16 @@ describe('Thumbnails', () => {
 
             expect(result).toEqual('');
         }, timeout);
+
+        it('should return empty string if image too small after cropping', async () => {
+            const uuid = randomUUID();
+
+            const result = await processThumbnail(
+                `${imageDir}/processThumbnail-cropped.jpg`,
+                uuid
+            );
+
+            expect(result).toEqual('');
+        }, timeout);
     });
 });
