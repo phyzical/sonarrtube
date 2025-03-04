@@ -6,6 +6,10 @@ ENV XDG_DATA_HOME="/tmp"
 RUN groupadd -g 10001 app \
     && useradd -u 10001 -g 10001 --home ${APP_DIR} -ms /bin/bash app
 
+RUN dnf -y install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm && \
+    dnf  config-manager --set-enabled crb && \
+    dnf -y install ffmpeg
+
 RUN yum -y update \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
