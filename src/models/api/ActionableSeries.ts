@@ -213,8 +213,9 @@ export class ActionableSeries implements ActionableSeriesType {
                     `!= ${this.youtubeContext.videos.length} current youtube list`,
                     `The following are affected (${this.youtubeContext.url});`,
                     '(In the case the video was removed set its production code to ' +
-                    `${Constants.YOUTUBE.VIDEO_REMOVED_FLAG} and it will be skipped)`,
-                    '(You may need to add these to ignore env)',
+                    `${Constants.YOUTUBE.VIDEO_REMOVED_FLAG} an d it will be skipped)`,
+                    '(You may need to add these to ignore env, ' +
+                    'if they were just backfilled they should be gone next run)',
                 ].join('\n')
             );
 
