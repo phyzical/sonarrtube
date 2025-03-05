@@ -147,6 +147,8 @@ export const processThumbnail = async (
     const coordinates = await findThumbnailText(image, attempt);
 
     if (!coordinates) {
+        log('Skipping text Not Found', true);
+
         return '';
     }
 
