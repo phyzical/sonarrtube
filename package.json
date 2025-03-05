@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsc --p tsconfig.build.json && tsc-alias",
     "watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
-    "test": "jest --runInBand",
+    "test": "jest",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "start": "node main.js"
