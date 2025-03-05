@@ -7,6 +7,7 @@ let configMock: jest.SpyInstance;
 export const testConfig = {
     cacheDir: 'tmp/cache',
     verbose: true,
+    isDocker: true,
 };
 
 export const mockConfig = (configData = {} as Partial<Config>): jest.SpyInstance => {
