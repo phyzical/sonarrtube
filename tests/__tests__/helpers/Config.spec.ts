@@ -81,7 +81,7 @@ describe('#config', () => {
                 outputDir: Constants.ENVIRONMENT.OUTPUT_DIR,
                 verbose: false,
                 downloadOnly: true,
-                true,
+                isDocker: true,
                 preview: true,
                 tvdb: {
                     username: undefined,
@@ -148,7 +148,7 @@ describe('#config', () => {
                 outputDir: configValues.OUTPUT_DIR,
                 verbose: false,
                 downloadOnly: true,
-                true,
+                isDocker: true,
                 preview: true,
                 tvdb: {
                     username: configValues.TVDB_USERNAME,
