@@ -6,12 +6,6 @@ import { Constants } from '@sonarrTube/types/config/Constants';
 import { config } from '@sonarrTube/helpers/Config';
 
 describe('Thumbnails', () => {
-    beforeAll(() => {
-        // our test image isn't that large font wise
-        Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
-    });
-
-    // for some reason this shit fails in docker...
     describe('processThumbnail', () => {
         let cacheDir;
         let imageDir;
@@ -59,8 +53,10 @@ describe('Thumbnails', () => {
             cropImageSpy.mockRestore();
         }, timeout);
 
-        xdescribe('webp', () => {
+        describe('webp', () => {
             it('should process a thumbnail', async () => {
+                Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
+
                 const uuid = randomUUID();
                 const result = await processThumbnail(
                     `${imageDir}/processThumbnail.webp`,
@@ -74,8 +70,10 @@ describe('Thumbnails', () => {
             }, timeout);
         });
 
-        xdescribe('png', () => {
+        describe('png', () => {
             it('should process a thumbnail when png', async () => {
+                Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
+
                 const uuid = randomUUID();
 
                 const result = await processThumbnail(
@@ -90,8 +88,10 @@ describe('Thumbnails', () => {
             }, timeout);
         });
 
-        xdescribe('jpeg', () => {
+        describe('jpeg', () => {
             it('should process a thumbnail when jpeg', async () => {
+                Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
+
                 const uuid = randomUUID();
 
                 const result = await processThumbnail(
