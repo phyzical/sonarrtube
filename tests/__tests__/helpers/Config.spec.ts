@@ -31,6 +31,7 @@ describe('#config', () => {
         FORCE_CLEAR_CACHE: 'true',
         NOTIFICATION_WEBHOOK: 'webhook',
         RE_RUN_INTERVAL: '10',
+        IS_DOCKER: 'true',
     } as Environment;
 
     beforeEach(() => {
@@ -72,6 +73,9 @@ describe('#config', () => {
     });
 
     describe('with no env file', () => {
+        beforeEach(() => {
+            process.env.IS_DOCKER = 'true';
+        });
         it('should initialize config', () => {
             expect(config()).toEqual({
                 titleCleanerRegex: new RegExp(Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),

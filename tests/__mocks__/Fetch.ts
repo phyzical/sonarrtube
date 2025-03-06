@@ -2,20 +2,20 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const originalFetch = global.fetch;
-
 global.fetch = jest.fn((url, options) => {
-    url = url.toString().replace('http://', '');
+    url = url.toString().replace(new RegExp('http(s)*://'), '');
     const isImage = /png|jp(e)*g|webp/g.test(url);
     const urlSplits = url.split('/');
     const lastSplit = urlSplits.pop();
     let fileName = join(__dirname, '..', '__mocks__', 'requests', ...urlSplits, `${lastSplit}.json`);
 
     if (isImage) {
-        if (url.includes('jimp')) {
-            return originalFetch(url, options);
+        if (existsSync(url)) {
+            fileName = url;
+        } else {
+            fileName = join(__dirname, '..', '__mocks__', 'images', lastSplit);
         }
-        fileName = join(__dirname, '..', '__mocks__', 'images', lastSplit);
+
     }
 
     if (!existsSync(fileName)) {
