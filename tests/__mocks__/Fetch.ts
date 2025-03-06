@@ -3,13 +3,18 @@ import { existsSync, readFileSync } from 'fs';
 import { btoa } from 'buffer';
 import { join } from 'path';
 
-global.fetch = jest.fn((url, _options) => {
+const originalFetch = global.fetch;
+
+global.fetch = jest.fn((url, options) => {
     url = url.toString();
     const isImage = /png|jp(e)*g|webp/g.test(url);
     const uuid = btoa(url);
     let fileName = join(__dirname, '..', '__mocks__', 'requests', `${uuid}.json`);
 
     if (isImage) {
+        if (url.includes('jimp')) {
+            return originalFetch(url, options);
+        }
         fileName = join(__dirname, '..', '__mocks__', 'images', url.split('/').pop());
     }
 

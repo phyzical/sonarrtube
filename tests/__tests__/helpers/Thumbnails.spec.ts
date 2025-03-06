@@ -5,6 +5,8 @@ import { processThumbnail } from '@sonarrTube/helpers/Thumbnails';
 import { Constants } from '@sonarrTube/types/config/Constants';
 import { config } from '@sonarrTube/helpers/Config';
 
+const genUUID = (): string => randomUUID() + 'jimp';
+
 describe('Thumbnails', () => {
     describe('processThumbnail', () => {
         let cacheDir;
@@ -16,7 +18,7 @@ describe('Thumbnails', () => {
         });
 
         it('should skip cutting if at max attempts', async () => {
-            const uuid = randomUUID();
+            const uuid = genUUID();
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const findThumbnailTextSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), 'findThumbnailText');
             const attempts = 4;
@@ -41,7 +43,7 @@ describe('Thumbnails', () => {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), '_cropImage');
 
-            const uuid = randomUUID();
+            const uuid = genUUID();
             const result = await processThumbnail(
                 `${imageDir}/processThumbnail.webp`,
                 uuid,
@@ -57,7 +59,7 @@ describe('Thumbnails', () => {
             it('should process a thumbnail', async () => {
                 Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
 
-                const uuid = randomUUID();
+                const uuid = genUUID();
                 const result = await processThumbnail(
                     `${imageDir}/processThumbnail.webp`,
                     uuid
@@ -74,7 +76,7 @@ describe('Thumbnails', () => {
             it('should process a thumbnail when png', async () => {
                 Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
 
-                const uuid = randomUUID();
+                const uuid = genUUID();
 
                 const result = await processThumbnail(
                     `${imageDir}/processThumbnail.png`,
@@ -92,7 +94,7 @@ describe('Thumbnails', () => {
             it('should process a thumbnail when jpeg', async () => {
                 Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
 
-                const uuid = randomUUID();
+                const uuid = genUUID();
 
                 const result = await processThumbnail(
                     `${imageDir}/processThumbnail.jpg`,
@@ -107,7 +109,7 @@ describe('Thumbnails', () => {
         });
 
         it('should return empty string if image too small', async () => {
-            const uuid = randomUUID();
+            const uuid = genUUID();
 
             const result = await processThumbnail(
                 `${imageDir}/small.png`,
@@ -118,7 +120,7 @@ describe('Thumbnails', () => {
         }, timeout);
 
         it('should return empty string if image too small after cropping', async () => {
-            const uuid = randomUUID();
+            const uuid = genUUID();
 
             const result = await processThumbnail(
                 `${imageDir}/processThumbnail-cropped.jpg`,
