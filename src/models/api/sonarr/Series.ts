@@ -65,6 +65,5 @@ export class Series implements SeriesType {
     languageProfileId?: number | undefined;
     id: number;
 
-
     tvdbCacheKey = (): string => `/${Constants.CACHE_FOLDERS.TVDB}/${this.tvdbId}.json`;
 }

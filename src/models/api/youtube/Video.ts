@@ -1,5 +1,5 @@
 import { config } from '@sonarrTube/helpers/Config.js';
-import { removeInvalidCharacters } from '@sonarrTube/helpers/Puppeteer';
+import { removeInvalidCharacters } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 
