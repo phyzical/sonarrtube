@@ -2,7 +2,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-global.fetch = jest.fn((url, options) => {
+global.fetch = jest.fn((url, _options) => {
     url = url.toString().replace(new RegExp('http(s)*://'), '');
     const isImage = /png|jp(e)*g|webp/g.test(url);
     const urlSplits = url.split('/');
