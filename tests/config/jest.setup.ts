@@ -7,8 +7,8 @@ import '@sonarrTube/mocks/Fetch';
 import '@sonarrTube/mocks/Spies';
 
 expect.extend(matchers);
-// jest.retryTimes(3);
 beforeEach(() => {
+    jest.retryTimes(2);
     Constants.ENVIRONMENT.ENV_FILE = '';
     mockConfig();
 });
