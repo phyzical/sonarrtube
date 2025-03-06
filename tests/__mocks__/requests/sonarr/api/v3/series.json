@@ -1,0 +1,670 @@
+[
+    {
+        "title": "Adam Savage’s Tested",
+        "alternateTitles": [],
+        "sortTitle": "adam savages tested",
+        "status": "continuing",
+        "ended": false,
+        "overview": "Host of Discovery Channel's long-running series MythBusters, Adam Savage has spent his life making things. From a cardboard suit of Excalibur armor when he was 13 to a REAL suit of Excalibur armor (with Terry English) when he was 50, Adam has built just about everything you can think of, including (but not limited to): Star Wars spaceships, Totoro costumes, NERF mods and movie prop replicas. In fact, over his career as an industrial and special effects designer/fabricator, actor, educator and television personality, there isn’t much Adam Savage has not done. See what Adam and his team will tackle next!\r\n\r\nTested is also: Norman Chan, Simone Giertz, Joey Fameli, Gunther Kirsch, Ryan Kiser, Kishore Hari, Sean Charlesworth, Jeremy Williams, Kayte Sabicer, Bill Doran, Arial Waldman, Darrell Maloney and Kristen Lomasney.",
+        "previousAiring": "2025-02-28T05:00:00Z",
+        "network": "YouTube",
+        "airTime": "00:00",
+        "images": [
+            {
+                "coverType": "poster",
+                "url": "/MediaCover/8/poster.jpg?lastWrite=637406922148098900",
+                "remoteUrl": "https://artworks.thetvdb.com/banners/series/373426/posters/5f5933d55075d.jpg"
+            },
+            {
+                "coverType": "fanart",
+                "url": "/MediaCover/8/fanart.jpg?lastWrite=637406922148038899",
+                "remoteUrl": "https://artworks.thetvdb.com/banners/series/373426/panels/62055601.jpg"
+            }
+        ],
+        "originalLanguage": {
+            "id": 1,
+            "name": "English"
+        },
+        "seasons": [
+            {
+                "seasonNumber": 0,
+                "monitored": false,
+                "statistics": {
+                    "episodeFileCount": 0,
+                    "episodeCount": 0,
+                    "totalEpisodeCount": 3,
+                    "sizeOnDisk": 0,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 0
+                }
+            },
+            {
+                "seasonNumber": 2013,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2013-07-11T04:00:00Z",
+                    "episodeFileCount": 2,
+                    "episodeCount": 4,
+                    "totalEpisodeCount": 4,
+                    "sizeOnDisk": 182831681,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 50
+                }
+            },
+            {
+                "seasonNumber": 2014,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2014-12-11T05:00:00Z",
+                    "episodeFileCount": 3,
+                    "episodeCount": 4,
+                    "totalEpisodeCount": 4,
+                    "sizeOnDisk": 886653942,
+                    "releaseGroups": [
+                        "Tool"
+                    ],
+                    "percentOfEpisodes": 75
+                }
+            },
+            {
+                "seasonNumber": 2015,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2015-05-14T04:00:00Z",
+                    "episodeFileCount": 3,
+                    "episodeCount": 3,
+                    "totalEpisodeCount": 3,
+                    "sizeOnDisk": 1008296057,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2016,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2016-12-22T05:00:00Z",
+                    "episodeFileCount": 13,
+                    "episodeCount": 13,
+                    "totalEpisodeCount": 13,
+                    "sizeOnDisk": 3224170178,
+                    "releaseGroups": [
+                        "Powered"
+                    ],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2017,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2017-09-15T04:00:00Z",
+                    "episodeFileCount": 8,
+                    "episodeCount": 9,
+                    "totalEpisodeCount": 9,
+                    "sizeOnDisk": 2316628017,
+                    "releaseGroups": [
+                        "3PO"
+                    ],
+                    "percentOfEpisodes": 88.88888888888889
+                }
+            },
+            {
+                "seasonNumber": 2018,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2018-12-19T05:00:00Z",
+                    "episodeFileCount": 13,
+                    "episodeCount": 13,
+                    "totalEpisodeCount": 13,
+                    "sizeOnDisk": 5056686639,
+                    "releaseGroups": [
+                        "Bashing",
+                        "Building",
+                        "Nosed"
+                    ],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2019,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2019-12-05T05:00:00Z",
+                    "episodeFileCount": 13,
+                    "episodeCount": 14,
+                    "totalEpisodeCount": 14,
+                    "sizeOnDisk": 4541875386,
+                    "releaseGroups": [
+                        "Built",
+                        "Face",
+                        "Lord"
+                    ],
+                    "percentOfEpisodes": 92.85714285714286
+                }
+            },
+            {
+                "seasonNumber": 2020,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2020-12-30T05:00:00Z",
+                    "episodeFileCount": 81,
+                    "episodeCount": 82,
+                    "totalEpisodeCount": 82,
+                    "sizeOnDisk": 39641432656,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 98.78048780487805
+                }
+            },
+            {
+                "seasonNumber": 2021,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2021-12-29T05:00:00Z",
+                    "episodeFileCount": 59,
+                    "episodeCount": 67,
+                    "totalEpisodeCount": 67,
+                    "sizeOnDisk": 66880705941,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 88.05970149253731
+                }
+            },
+            {
+                "seasonNumber": 2022,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2022-12-21T05:00:00Z",
+                    "episodeFileCount": 55,
+                    "episodeCount": 56,
+                    "totalEpisodeCount": 56,
+                    "sizeOnDisk": 33941195371,
+                    "releaseGroups": [
+                        "AT",
+                        "D2",
+                        "Motion",
+                        "Mounted"
+                    ],
+                    "percentOfEpisodes": 98.21428571428571
+                }
+            },
+            {
+                "seasonNumber": 2023,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2023-12-13T05:00:00Z",
+                    "episodeFileCount": 59,
+                    "episodeCount": 59,
+                    "totalEpisodeCount": 59,
+                    "sizeOnDisk": 57837461192,
+                    "releaseGroups": [
+                        "A-Wheel",
+                        "AT",
+                        "Building",
+                        "D2",
+                        "Handle",
+                        "Powered"
+                    ],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2024,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2024-12-24T05:00:00Z",
+                    "episodeFileCount": 2,
+                    "episodeCount": 49,
+                    "totalEpisodeCount": 49,
+                    "sizeOnDisk": 6700266564,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 4.081632653061225
+                }
+            },
+            {
+                "seasonNumber": 2025,
+                "monitored": false,
+                "statistics": {
+                    "previousAiring": "2025-02-28T05:00:00Z",
+                    "episodeFileCount": 0,
+                    "episodeCount": 8,
+                    "totalEpisodeCount": 8,
+                    "sizeOnDisk": 0,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 0
+                }
+            }
+        ],
+        "year": 2013,
+        "path": "/tv/Youtube/Adam Savages One Day Builds",
+        "qualityProfileId": 1,
+        "seasonFolder": true,
+        "monitored": false,
+        "monitorNewItems": "none",
+        "useSceneNumbering": false,
+        "runtime": 125,
+        "tvdbId": 373426,
+        "tvRageId": 0,
+        "tvMazeId": 0,
+        "tmdbId": 0,
+        "firstAired": "2013-02-14T00:00:00Z",
+        "lastAired": "2025-02-28T00:00:00Z",
+        "seriesType": "standard",
+        "cleanTitle": "adamsavagestested",
+        "titleSlug": "adam-savages-tested",
+        "rootFolderPath": "/tv/Youtube",
+        "certification": "TV-G",
+        "genres": [
+            "Documentary"
+        ],
+        "tags": [],
+        "added": "2020-02-09T02:31:09Z",
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "statistics": {
+            "seasonCount": 13,
+            "episodeFileCount": 311,
+            "episodeCount": 381,
+            "totalEpisodeCount": 384,
+            "sizeOnDisk": 222218203624,
+            "releaseGroups": [
+                "Tool",
+                "Powered",
+                "3PO",
+                "Bashing",
+                "Building",
+                "Nosed",
+                "Built",
+                "Face",
+                "Lord",
+                "AT",
+                "D2",
+                "Motion",
+                "Mounted",
+                "A-Wheel",
+                "Handle"
+            ],
+            "percentOfEpisodes": 81.62729658792651
+        },
+        "languageProfileId": 1,
+        "id": 2
+    },
+    {
+        "title": "Adam Savage’s Tested",
+        "alternateTitles": [],
+        "sortTitle": "adam savages tested",
+        "status": "continuing",
+        "ended": false,
+        "overview": "Host of Discovery Channel's long-running series MythBusters, Adam Savage has spent his life making things. From a cardboard suit of Excalibur armor when he was 13 to a REAL suit of Excalibur armor (with Terry English) when he was 50, Adam has built just about everything you can think of, including (but not limited to): Star Wars spaceships, Totoro costumes, NERF mods and movie prop replicas. In fact, over his career as an industrial and special effects designer/fabricator, actor, educator and television personality, there isn’t much Adam Savage has not done. See what Adam and his team will tackle next!\r\n\r\nTested is also: Norman Chan, Simone Giertz, Joey Fameli, Gunther Kirsch, Ryan Kiser, Kishore Hari, Sean Charlesworth, Jeremy Williams, Kayte Sabicer, Bill Doran, Arial Waldman, Darrell Maloney and Kristen Lomasney.",
+        "previousAiring": "2025-02-28T05:00:00Z",
+        "network": "YouTube",
+        "airTime": "00:00",
+        "images": [
+            {
+                "coverType": "poster",
+                "url": "/MediaCover/8/poster.jpg?lastWrite=637406922148098900",
+                "remoteUrl": "https://artworks.thetvdb.com/banners/series/373426/posters/5f5933d55075d.jpg"
+            },
+            {
+                "coverType": "fanart",
+                "url": "/MediaCover/8/fanart.jpg?lastWrite=637406922148038899",
+                "remoteUrl": "https://artworks.thetvdb.com/banners/series/373426/panels/62055601.jpg"
+            }
+        ],
+        "originalLanguage": {
+            "id": 1,
+            "name": "English"
+        },
+        "seasons": [
+            {
+                "seasonNumber": 0,
+                "monitored": false,
+                "statistics": {
+                    "episodeFileCount": 0,
+                    "episodeCount": 0,
+                    "totalEpisodeCount": 3,
+                    "sizeOnDisk": 0,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 0
+                }
+            },
+            {
+                "seasonNumber": 2013,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2013-07-11T04:00:00Z",
+                    "episodeFileCount": 2,
+                    "episodeCount": 4,
+                    "totalEpisodeCount": 4,
+                    "sizeOnDisk": 182831681,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 50
+                }
+            },
+            {
+                "seasonNumber": 2014,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2014-12-11T05:00:00Z",
+                    "episodeFileCount": 3,
+                    "episodeCount": 4,
+                    "totalEpisodeCount": 4,
+                    "sizeOnDisk": 886653942,
+                    "releaseGroups": [
+                        "Tool"
+                    ],
+                    "percentOfEpisodes": 75
+                }
+            },
+            {
+                "seasonNumber": 2015,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2015-05-14T04:00:00Z",
+                    "episodeFileCount": 3,
+                    "episodeCount": 3,
+                    "totalEpisodeCount": 3,
+                    "sizeOnDisk": 1008296057,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2016,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2016-12-22T05:00:00Z",
+                    "episodeFileCount": 13,
+                    "episodeCount": 13,
+                    "totalEpisodeCount": 13,
+                    "sizeOnDisk": 3224170178,
+                    "releaseGroups": [
+                        "Powered"
+                    ],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2017,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2017-09-15T04:00:00Z",
+                    "episodeFileCount": 8,
+                    "episodeCount": 9,
+                    "totalEpisodeCount": 9,
+                    "sizeOnDisk": 2316628017,
+                    "releaseGroups": [
+                        "3PO"
+                    ],
+                    "percentOfEpisodes": 88.88888888888889
+                }
+            },
+            {
+                "seasonNumber": 2018,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2018-12-19T05:00:00Z",
+                    "episodeFileCount": 13,
+                    "episodeCount": 13,
+                    "totalEpisodeCount": 13,
+                    "sizeOnDisk": 5056686639,
+                    "releaseGroups": [
+                        "Bashing",
+                        "Building",
+                        "Nosed"
+                    ],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2019,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2019-12-05T05:00:00Z",
+                    "episodeFileCount": 13,
+                    "episodeCount": 14,
+                    "totalEpisodeCount": 14,
+                    "sizeOnDisk": 4541875386,
+                    "releaseGroups": [
+                        "Built",
+                        "Face",
+                        "Lord"
+                    ],
+                    "percentOfEpisodes": 92.85714285714286
+                }
+            },
+            {
+                "seasonNumber": 2020,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2020-12-30T05:00:00Z",
+                    "episodeFileCount": 81,
+                    "episodeCount": 82,
+                    "totalEpisodeCount": 82,
+                    "sizeOnDisk": 39641432656,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 98.78048780487805
+                }
+            },
+            {
+                "seasonNumber": 2021,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2021-12-29T05:00:00Z",
+                    "episodeFileCount": 59,
+                    "episodeCount": 67,
+                    "totalEpisodeCount": 67,
+                    "sizeOnDisk": 66880705941,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 88.05970149253731
+                }
+            },
+            {
+                "seasonNumber": 2022,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2022-12-21T05:00:00Z",
+                    "episodeFileCount": 55,
+                    "episodeCount": 56,
+                    "totalEpisodeCount": 56,
+                    "sizeOnDisk": 33941195371,
+                    "releaseGroups": [
+                        "AT",
+                        "D2",
+                        "Motion",
+                        "Mounted"
+                    ],
+                    "percentOfEpisodes": 98.21428571428571
+                }
+            },
+            {
+                "seasonNumber": 2023,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2023-12-13T05:00:00Z",
+                    "episodeFileCount": 59,
+                    "episodeCount": 59,
+                    "totalEpisodeCount": 59,
+                    "sizeOnDisk": 57837461192,
+                    "releaseGroups": [
+                        "A-Wheel",
+                        "AT",
+                        "Building",
+                        "D2",
+                        "Handle",
+                        "Powered"
+                    ],
+                    "percentOfEpisodes": 100
+                }
+            },
+            {
+                "seasonNumber": 2024,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2024-12-24T05:00:00Z",
+                    "episodeFileCount": 2,
+                    "episodeCount": 49,
+                    "totalEpisodeCount": 49,
+                    "sizeOnDisk": 6700266564,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 4.081632653061225
+                }
+            },
+            {
+                "seasonNumber": 2025,
+                "monitored": false,
+                "statistics": {
+                    "previousAiring": "2025-02-28T05:00:00Z",
+                    "episodeFileCount": 0,
+                    "episodeCount": 8,
+                    "totalEpisodeCount": 8,
+                    "sizeOnDisk": 0,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 0
+                }
+            }
+        ],
+        "year": 2013,
+        "path": "/tv/Youtube/Adam Savages One Day Builds",
+        "qualityProfileId": 1,
+        "seasonFolder": true,
+        "monitored": false,
+        "monitorNewItems": "none",
+        "useSceneNumbering": false,
+        "runtime": 125,
+        "tvdbId": 3734226,
+        "tvRageId": 0,
+        "tvMazeId": 0,
+        "tmdbId": 0,
+        "firstAired": "2013-02-14T00:00:00Z",
+        "lastAired": "2025-02-28T00:00:00Z",
+        "seriesType": "standard",
+        "cleanTitle": "adamsavagestested",
+        "titleSlug": "adam-savages-tested",
+        "rootFolderPath": "/tv/Youtube",
+        "certification": "TV-G",
+        "genres": [
+            "Documentary"
+        ],
+        "tags": [],
+        "added": "2020-02-09T02:31:09Z",
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "statistics": {
+            "seasonCount": 13,
+            "episodeFileCount": 311,
+            "episodeCount": 381,
+            "totalEpisodeCount": 384,
+            "sizeOnDisk": 222218203624,
+            "releaseGroups": [
+                "Tool",
+                "Powered",
+                "3PO",
+                "Bashing",
+                "Building",
+                "Nosed",
+                "Built",
+                "Face",
+                "Lord",
+                "AT",
+                "D2",
+                "Motion",
+                "Mounted",
+                "A-Wheel",
+                "Handle"
+            ],
+            "percentOfEpisodes": 81.62729658792651
+        },
+        "languageProfileId": 1,
+        "id": 8
+    },
+    {
+        "title": "Aerial Africa",
+        "alternateTitles": [],
+        "sortTitle": "aerial africa",
+        "status": "ended",
+        "ended": true,
+        "overview": "An enchanting overview of southern Africa, discovering its history and its cultural riches.",
+        "previousAiring": "2018-05-06T04:00:00Z",
+        "network": "Smithsonian Channel (CA)",
+        "images": [
+            {
+                "coverType": "banner",
+                "url": "/MediaCover/9/banner.jpg?lastWrite=637406922177979238",
+                "remoteUrl": "https://artworks.thetvdb.com/banners/graphical/5caadc495bba8.jpg"
+            },
+            {
+                "coverType": "poster",
+                "url": "/MediaCover/9/poster.jpg?lastWrite=638658513578213579",
+                "remoteUrl": "https://artworks.thetvdb.com/banners/v4/series/344507/posters/66f88f84a18dd.jpg"
+            },
+            {
+                "coverType": "fanart",
+                "url": "/MediaCover/9/fanart.jpg?lastWrite=637873468314714428",
+                "remoteUrl": "https://artworks.thetvdb.com/banners/fanart/original/5c7b98ca6c306.jpg"
+            }
+        ],
+        "originalLanguage": {
+            "id": 1,
+            "name": "English"
+        },
+        "seasons": [
+            {
+                "seasonNumber": 1,
+                "monitored": true,
+                "statistics": {
+                    "previousAiring": "2018-05-06T04:00:00Z",
+                    "episodeFileCount": 6,
+                    "episodeCount": 6,
+                    "totalEpisodeCount": 6,
+                    "sizeOnDisk": 6562743718,
+                    "releaseGroups": [],
+                    "percentOfEpisodes": 100
+                }
+            }
+        ],
+        "year": 2018,
+        "path": "/tv/Documentaires/tv shows/Aerial Africa",
+        "qualityProfileId": 1,
+        "seasonFolder": true,
+        "monitored": true,
+        "monitorNewItems": "all",
+        "useSceneNumbering": false,
+        "runtime": 50,
+        "tvdbId": 344507,
+        "tvRageId": 0,
+        "tvMazeId": 35349,
+        "tmdbId": 99984,
+        "firstAired": "2018-04-08T00:00:00Z",
+        "lastAired": "2018-05-06T00:00:00Z",
+        "seriesType": "standard",
+        "cleanTitle": "aerialafrica",
+        "imdbId": "tt6918744",
+        "titleSlug": "aerial-africa",
+        "rootFolderPath": "/tv/Documentaires/tv shows",
+        "genres": [
+            "Documentary",
+            "Mini-Series"
+        ],
+        "tags": [],
+        "added": "2020-02-09T02:31:18Z",
+        "ratings": {
+            "votes": 77,
+            "value": 7.6
+        },
+        "statistics": {
+            "seasonCount": 1,
+            "episodeFileCount": 6,
+            "episodeCount": 6,
+            "totalEpisodeCount": 6,
+            "sizeOnDisk": 6562743718,
+            "releaseGroups": [],
+            "percentOfEpisodes": 100
+        },
+        "languageProfileId": 1,
+        "id": 9
+    }
+]
