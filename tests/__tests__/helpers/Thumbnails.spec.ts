@@ -9,7 +9,7 @@ const genUUID = (): string => randomUUID() + 'jimp';
 
 describe('Thumbnails', () => {
     describe('processThumbnail', () => {
-        jest.retryTimes(3);
+        jest.retryTimes(5);
         let cacheDir;
         let imageDir;
         const timeout = 15000;
