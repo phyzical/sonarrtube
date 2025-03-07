@@ -38,7 +38,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6.13.0
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           push: true
           cache-from: type=registry,ref=ghcr.io/phyzical/sonarrtube:test
@@ -68,7 +68,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}:latest
 
       - name: Push
-        uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6.13.0
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           push: ${{ steps.main_check.outputs.IS_MAIN }}
           tags: ghcr.io/${{ github.repository }}:latest
