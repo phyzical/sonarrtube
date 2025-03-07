@@ -27,7 +27,10 @@ export const setCache = (cacheKey?: string, data?: string): void => {
     if (!cacheKey || !data) {
         return;
     }
-    writeFileSync(cachePath(cacheKey), data);
+    const cache = cachePath(cacheKey);
+
+    log(`Caching to ${cache}`, true);
+    writeFileSync(cache, data);
 
     return;
 };
@@ -52,7 +55,16 @@ export const cachePath = (cacheKey: string): string => {
     if (!cacheKeyFile) {
         throw new Error('Cache key not found this shouldn\'t ever happen!');
     }
-    const dir = path.join(process.cwd(), cacheDir, ...cacheKeySplits);
+
+    const paths = [
+        cacheDir, ...cacheKeySplits
+    ];
+
+    if (!cacheDir.startsWith(path.sep)) {
+        paths.unshift(process.cwd());
+    }
+
+    const dir = path.join(...paths);
 
     mkdirSync(dir, { recursive: true });
 

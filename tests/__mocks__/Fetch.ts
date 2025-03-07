@@ -1,16 +1,21 @@
 
 import { existsSync, readFileSync } from 'fs';
-import { btoa } from 'buffer';
 import { join } from 'path';
 
 global.fetch = jest.fn((url, _options) => {
-    url = url.toString();
+    url = url.toString().replace(new RegExp('http(s)*://'), '');
     const isImage = /png|jp(e)*g|webp/g.test(url);
-    const uuid = btoa(url);
-    let fileName = join(__dirname, '..', '__mocks__', 'requests', `${uuid}.json`);
+    const urlSplits = url.split('/');
+    const lastSplit = urlSplits.pop();
+    let fileName = join(__dirname, '..', '__mocks__', 'requests', ...urlSplits, `${lastSplit}.json`);
 
     if (isImage) {
-        fileName = join(__dirname, '..', '__mocks__', 'images', url.split('/').pop());
+        if (existsSync(url)) {
+            fileName = url;
+        } else {
+            fileName = join(__dirname, '..', '__mocks__', 'images', lastSplit);
+        }
+
     }
 
     if (!existsSync(fileName)) {

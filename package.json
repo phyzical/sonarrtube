@@ -15,7 +15,7 @@
     "puppeteer-extra-plugin-stealth": "2.11.2",
     "source-map-support": "0.5.21",
     "tesseract.js": "5.1.1",
-    "webp-converter": "2.3.3"
+    "sharp": "0.33.5"
   },
   "scripts": {
     "build": "tsc --p tsconfig.build.json && tsc-alias",

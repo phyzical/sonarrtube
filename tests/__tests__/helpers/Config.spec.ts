@@ -31,6 +31,7 @@ describe('#config', () => {
         FORCE_CLEAR_CACHE: 'true',
         NOTIFICATION_WEBHOOK: 'webhook',
         RE_RUN_INTERVAL: '10',
+        IS_DOCKER: 'true',
     } as Environment;
 
     beforeEach(() => {
@@ -72,6 +73,9 @@ describe('#config', () => {
     });
 
     describe('with no env file', () => {
+        beforeEach(() => {
+            process.env.IS_DOCKER = 'true';
+        });
         it('should initialize config', () => {
             expect(config()).toEqual({
                 titleCleanerRegex: new RegExp(Constants.ENVIRONMENT.TITLE_CLEANER_REGEX),
@@ -81,6 +85,7 @@ describe('#config', () => {
                 outputDir: Constants.ENVIRONMENT.OUTPUT_DIR,
                 verbose: false,
                 downloadOnly: true,
+                isDocker: true,
                 preview: true,
                 tvdb: {
                     username: undefined,
@@ -123,6 +128,7 @@ describe('#config', () => {
                 `OUTPUT_DIR=${configValues.OUTPUT_DIR}`,
                 `VERBOSE_LOGS=${configValues.VERBOSE_LOGS}`,
                 `DOWNLOAD_ONLY=${configValues.DOWNLOAD_ONLY}`,
+                `IS_DOCKER=${configValues.IS_DOCKER}`,
                 `TITLE_CLEANER_REGEX=${configValues.TITLE_CLEANER_REGEX}`,
                 `SKIP_FROM_SYNC_TVDB_SERIES_IDS=${configValues.SKIP_FROM_SYNC_TVDB_SERIES_IDS}`,
                 `SKIP_FROM_SYNC_TVDB_EPISODES_IDS=${configValues.SKIP_FROM_SYNC_TVDB_EPISODES_IDS}`,
@@ -146,6 +152,7 @@ describe('#config', () => {
                 outputDir: configValues.OUTPUT_DIR,
                 verbose: false,
                 downloadOnly: true,
+                isDocker: true,
                 preview: true,
                 tvdb: {
                     username: configValues.TVDB_USERNAME,

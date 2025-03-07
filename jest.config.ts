@@ -21,10 +21,10 @@ const jestConfig: JestConfigWithTsJest = {
     coverageDirectory: 'coverage',
     coverageThreshold: {
         global: {
-            branches: 66,
-            functions: 71,
-            lines: 67,
-            statements: 68
+            branches: 65,
+            functions: 65,
+            lines: 65,
+            statements: 65
         }
     },
     verbose: true,

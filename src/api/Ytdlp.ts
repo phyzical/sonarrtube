@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'fs';
 import { execSync } from 'child_process';
 import path from 'path';
 
@@ -11,14 +11,16 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { getYoutubeDelayString } from '@sonarrTube/helpers/Generic.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
+const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose, isDocker } = config();
+
+const ytdlp_path = isDocker ? '/app/.local/bin/yt-dlp' : 'yt-dlp';
 
 const cacheKeyBase = (cacheKey: string): string => cachePath(`youtube/${cacheKey}`);
 const getAllVideoInfoCommand = (cacheKey: string, url: string): string => {
     const cacheBase = cacheKeyBase(cacheKey);
 
     return [
-        'yt-dlp',
+        ytdlp_path,
         '--write-info-json',
         '--skip-download',
         '--force-write-archive',
@@ -44,7 +46,7 @@ const processVideoInfos = (cacheKey: string): Video[] => {
         .map(file => JSON.parse(
             readFileSync(path.join(cachePath, file)).toString()
         ))
-        .filter(videoInfo => videoInfo._type != 'video')
+        .filter(videoInfo => videoInfo._type == 'video')
         .map(({
             title,
             fulltitle,
@@ -92,7 +94,7 @@ export const channelIdByAlias = (alias: string): string | undefined => {
 
     return execSync(
         [
-            'yt-dlp',
+            ytdlp_path,
             '-print "%(channel_id)s"',
             '--playlist-end 1',
             `${Constants.YOUTUBE.HOST}/${alias}/`
@@ -127,6 +129,7 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
         if (alreadyDownloaded) {
             continue;
         }
+
         let summaryText = `Downloading ${youtubeURL} to "${outputPath}/${fileName}.%(ext)s"`;
         if (preview) {
             summaryText = `Preview mode on, would have ${summaryText}`;
@@ -134,11 +137,12 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             continue;
         }
 
+
         log(summaryText);
 
         execSync(
             [
-                'yt-dlp',
+                ytdlp_path,
                 '--add-metadata',
                 '--no-write-playlist-metafiles',
                 '--write-auto-sub',
@@ -156,17 +160,18 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             verbose ? { stdio: 'inherit' } : {}
         );
         if (!existsSync(outputPath)) {
-            mkdirSync(outputPath);
+            mkdirSync(outputPath, { recursive: true });
         }
         readdirSync(outputCachePath).forEach(file => {
             const regexFilename = fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             if (new RegExp(`.*${regexFilename}.*`).test(file)) {
                 const sourceFile = path.join(outputCachePath, file);
                 const targetFile = path.join(outputPath, file);
-                renameSync(sourceFile, targetFile);
+                copyFileSync(sourceFile, targetFile);
             }
         });
 
+        rmSync(outputCachePath, { recursive: true });
         summaries.push(`${summaryText}\n${video.summary()}`);
     }
 

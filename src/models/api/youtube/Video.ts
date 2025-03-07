@@ -1,4 +1,5 @@
 import { config } from '@sonarrTube/helpers/Config.js';
+import { removeInvalidCharacters } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 
@@ -41,12 +42,14 @@ export class Video implements VideoType {
             description = this.cleanTitle();
         }
 
-        return description.slice(0, 100);
+        return description.slice(0, 300);
     };
 
-    cleanTitle = (): string => this.fulltitle.replace(titleCleanerRegex, '').slice(0, 100);
+    cleanTitle = (): string => removeInvalidCharacters(this.fulltitle.replace(titleCleanerRegex, ''))
+        .slice(0, 100);
 
-    backupTitle = (): string => this.title.replace(titleCleanerRegex, '').slice(0, 100);
+    backupTitle = (): string => removeInvalidCharacters(this.title.replace(titleCleanerRegex, ''))
+        .slice(0, 100);
 
     runTime = (): string => {
         const runtime = Math.floor(this.duration / 60);
@@ -56,6 +59,7 @@ export class Video implements VideoType {
 
     airedDate = (): string => {
         const airDate = this.upload_date; //'20241217'
+
 
         return airDate.slice(0, 4) + '-' + airDate.slice(4, 6) + '-' + airDate.slice(6, 8);
     };

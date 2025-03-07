@@ -13,7 +13,6 @@ export const run = async (): Promise<void> => {
   let nextRun = nextRunTime();
   let running = false;
   const start = async (): Promise<void> => {
-    console.log(`Next run at ${nextRun}`);
 
     if (running) {
       return;
@@ -21,6 +20,7 @@ export const run = async (): Promise<void> => {
     running = true;
     nextRun = nextRunTime();
     await new ShowSubmitter().start();
+    console.log(`Next run at ${nextRun}`);
     running = false;
   };
 

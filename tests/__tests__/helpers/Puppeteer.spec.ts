@@ -4,7 +4,7 @@ import puppeteer, { Browser, Page } from 'puppeteer';
 
 import {
     cleanText, cleanTextContainsXpath, click, delay,
-    find, getValue, goto, loaded, submitForm,
+    find, getValue, goto, loaded, removeInvalidCharacters, submitForm,
     type,
 } from '@sonarrTube/helpers/Puppeteer';
 import { consoleSpy } from '@sonarrTube/mocks/Spies';
@@ -33,7 +33,7 @@ describe('Puppeteer', () => {
     });
 
     afterAll(async () => {
-        await browser.close();
+        await browser?.close();
     });
 
     describe('cleanText', () => {
@@ -42,11 +42,18 @@ describe('Puppeteer', () => {
         });
     });
 
+    describe('removeInvalidCharacters', () => {
+        it('should clean expected characters, preserve case', () => {
+            expect(removeInvalidCharacters('  - `~!@T#$%^&*()_|+=e?;:\'",S.<>{}t[]\\1/  ')).toEqual('   TeSt1  ');
+        });
+    });
+
+
     describe('cleanTextContainsXpath', () => {
         it('should match expected html', async () => {
             await page.goto(getPageUrl('cleanTextContainsXpath.html'));
             const xpath = cleanTextContainsXpath('  test1  ');
-            const element = await page.waitForSelector(`xpath///div[${xpath}]`);
+            const element = await page.waitForSelector(`::-p-xpath(//div[${xpath}])`);
             expect(element).toBeTruthy();
         });
     });
@@ -99,8 +106,8 @@ describe('Puppeteer', () => {
 
         it('should find element by xpath', async () => {
             await goto(page, getPageUrl('click.html'));
-            expect(await find(page, 'xpath///button')).toBeTruthy();
-            await expect(find(page, 'xpath///button')).resolves.not.toThrow();
+            expect(await find(page, '::-p-xpath(//button)')).toBeTruthy();
+            await expect(find(page, '::-p-xpath(//button)')).resolves.not.toThrow();
         });
 
         it('should throw when no element', async () => {

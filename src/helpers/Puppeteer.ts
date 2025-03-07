@@ -5,6 +5,8 @@ import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 
 export const delay = (time: number): Promise<void> => new Promise((resolve) => {
+  log(`Waiting for ${time} ms`, true);
+
   setTimeout(resolve, time);
 });
 
@@ -23,16 +25,26 @@ export const click = async (page: Page, selector: string): Promise<void> => {
   await find(page, selector);
   log(`Clicking ${selector}`, true);
 
-  (await page.$$(selector))[0].click();
+  await page.click(selector);
 };
 
 export const goto = async (page: Page, url: string): Promise<HTTPResponse | null> => {
+  if (page.url() === url) {
+    log(`Already at ${url}`, true);
+
+    return null;
+  }
+
   log(`Opening ${url}`, true);
 
-  return await page.goto(url).catch((e) => {
+  const result = await page.goto(url).catch((e) => {
     log(`Failed to open ${url}`, true);
     throw e;
   });
+
+  await delay(300);
+
+  return result;
 };
 
 export const loaded = async (page: Page): Promise<HTTPResponse | null | undefined> => {
@@ -48,8 +60,8 @@ export const loaded = async (page: Page): Promise<HTTPResponse | null | undefine
 
 export const getValue = async (page: Page, selector: string): Promise<string> => {
   log(`Finding value for ${selector}`, true);
-  
-return await page.$eval(selector, /* istanbul ignore next */(el: Element) =>
+
+  return await page.$eval(selector, /* istanbul ignore next */(el: Element) =>
     (el as HTMLInputElement).value || (el as HTMLInputElement).textContent) || '';
 };
 
@@ -94,10 +106,14 @@ export const submitForm = async (page: Page, selector: string): Promise<void> =>
 
 export const cleanTextContainsXpath = (text: string): string =>
   // Remove following chars from filename and document contexts ?'/|-*: \ And lowercase all chars to increase matching
-  'contains(translate(translate(translate(text(),\'\\`~!@#$%^&*()-_=+[]{}|;:<>",./?, \',\'\'), "\'", \'\'),' +
+  'contains(translate(translate(translate(text(),\'\\`~!@#$%^&*()-_=+[]{}|;:<>",./?, \\\\\',\'\'), "\'", \'\'),' +
   `'${Constants.CHAR_CLEANER_LIST}', '${Constants.CHAR_CLEANER_LIST.toLowerCase()}') , '${cleanText(text)}')`;
 
 
 export const cleanText = (text: string): string =>
   // eslint-disable-next-line no-useless-escape
   text.toLowerCase().replace(/[- '`~!@#$%^&*()_|+=?;:'",\.<>\{\}\[\]\\\/]/gi, '');
+
+export const removeInvalidCharacters = (text: string): string =>
+  // eslint-disable-next-line no-useless-escape
+  text.replace(/[-'`~!@#$%^&*()_\|+=?;:'",\.<>\{\}\[\]\\\/]/gi, '');

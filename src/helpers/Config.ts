@@ -68,6 +68,7 @@ export const config = (): Config => {
         FORCE_CLEAR_CACHE,
         NOTIFICATION_WEBHOOK,
         RE_RUN_INTERVAL,
+        IS_DOCKER,
     } = process.env as unknown as Environment;
 
     const cacheDir = CACHE_DIR || Constants.ENVIRONMENT.CACHE_DIR;
@@ -113,6 +114,7 @@ export const config = (): Config => {
         sonarr: {
             apiKey: SONARR_API,
             host: SONARR_HOST
-        }
+        },
+        isDocker: IS_DOCKER == 'true'
     });
 };

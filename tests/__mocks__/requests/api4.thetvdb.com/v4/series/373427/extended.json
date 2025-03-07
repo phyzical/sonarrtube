@@ -1,0 +1,708 @@
+{
+    "status": "success",
+    "data": {
+        "id": 373427,
+        "name": "Adam Savage’s Tested",
+        "slug": "adam-savages-one-day-builds",
+        "image": "https://artworks.thetvdb.com/banners/series/373427/posters/5f5933d55075d.jpg",
+        "nameTranslations": [
+            "eng"
+        ],
+        "overviewTranslations": [
+            "eng"
+        ],
+        "aliases": [
+            {
+                "language": "eng",
+                "name": "Adam Savage's One Day Builds"
+            }
+        ],
+        "firstAired": "2013-02-14",
+        "lastAired": "2024-06-12",
+        "nextAired": "",
+        "score": 37,
+        "status": {
+            "id": 1,
+            "name": "Continuing",
+            "recordType": "series",
+            "keepUpdated": true
+        },
+        "originalCountry": "usa",
+        "originalLanguage": "eng",
+        "defaultSeasonType": 1,
+        "isOrderRandomized": false,
+        "lastUpdated": "2024-06-28 01:23:39",
+        "averageRuntime": 134,
+        "episodes": null,
+        "overview": "Host of Discovery Channel's long-running series MythBusters, Adam Savage has spent his life making things. From a cardboard suit of Excalibur armor when he was 13 to a REAL suit of Excalibur armor (with Terry English) when he was 50, Adam has built just about everything you can think of, including (but not limited to): Star Wars spaceships, Totoro costumes, NERF mods and movie prop replicas. In fact, over his career as an industrial and special effects designer/fabricator, actor, educator and television personality, there isn’t much Adam Savage has not done. See what Adam and his team will tackle next!\r\n\r\nTested is also: Norman Chan, Simone Giertz, Joey Fameli, Gunther Kirsch, Ryan Kiser, Kishore Hari, Sean Charlesworth, Jeremy Williams, Kayte Sabicer, Bill Doran, Arial Waldman, Darrell Maloney and Kristen Lomasney.",
+        "year": "2013",
+        "artworks": [
+            {
+                "id": 62318824,
+                "image": "https://artworks.thetvdb.com/banners/series/373427/posters/5f5933d55075d.jpg",
+                "thumbnail": "https://artworks.thetvdb.com/banners/series/373427/posters/5f5933d55075d_t.jpg",
+                "language": "eng",
+                "type": 2,
+                "score": 100001,
+                "width": 680,
+                "height": 1000,
+                "includesText": true,
+                "thumbnailWidth": 0,
+                "thumbnailHeight": 0,
+                "updatedAt": 0,
+                "status": {
+                    "id": 0,
+                    "name": null
+                },
+                "tagOptions": null
+            },
+            {
+                "id": 62055601,
+                "image": "https://artworks.thetvdb.com/banners/series/373427/panels/62055601.jpg",
+                "thumbnail": "https://artworks.thetvdb.com/banners/series/373427/panels/62055601_t.jpg",
+                "language": "eng",
+                "type": 3,
+                "score": 100000,
+                "width": 1920,
+                "height": 1080,
+                "includesText": true,
+                "thumbnailWidth": 0,
+                "thumbnailHeight": 0,
+                "updatedAt": 0,
+                "status": {
+                    "id": 0,
+                    "name": null
+                },
+                "tagOptions": null
+            },
+            {
+                "id": 62055614,
+                "image": "https://artworks.thetvdb.com/banners/series/373427/panels/62055614.jpg",
+                "thumbnail": "https://artworks.thetvdb.com/banners/series/373427/panels/62055614_t.jpg",
+                "language": "eng",
+                "type": 3,
+                "score": 100000,
+                "width": 1920,
+                "height": 1080,
+                "includesText": true,
+                "thumbnailWidth": 0,
+                "thumbnailHeight": 0,
+                "updatedAt": 0,
+                "status": {
+                    "id": 0,
+                    "name": null
+                },
+                "tagOptions": null
+            },
+            {
+                "id": 62055629,
+                "image": "https://artworks.thetvdb.com/banners/series/373427/panels/62055629.jpg",
+                "thumbnail": "https://artworks.thetvdb.com/banners/series/373427/panels/62055629_t.jpg",
+                "language": "eng",
+                "type": 3,
+                "score": 100000,
+                "width": 1920,
+                "height": 1080,
+                "includesText": true,
+                "thumbnailWidth": 0,
+                "thumbnailHeight": 0,
+                "updatedAt": 0,
+                "status": {
+                    "id": 0,
+                    "name": null
+                },
+                "tagOptions": null
+            },
+            {
+                "id": 62055611,
+                "image": "https://artworks.thetvdb.com/banners/series/373427/icons/62055611.jpg",
+                "thumbnail": "https://artworks.thetvdb.com/banners/series/373427/icons/62055611_t.jpg",
+                "language": "eng",
+                "type": 5,
+                "score": 100000,
+                "width": 1024,
+                "height": 1024,
+                "includesText": true,
+                "thumbnailWidth": 0,
+                "thumbnailHeight": 0,
+                "updatedAt": 0,
+                "status": {
+                    "id": 0,
+                    "name": null
+                },
+                "tagOptions": null
+            },
+            {
+                "id": 62055625,
+                "image": "https://artworks.thetvdb.com/banners/series/373427/icons/62055625.jpg",
+                "thumbnail": "https://artworks.thetvdb.com/banners/series/373427/icons/62055625_t.jpg",
+                "language": "eng",
+                "type": 5,
+                "score": 100000,
+                "width": 1024,
+                "height": 1024,
+                "includesText": true,
+                "thumbnailWidth": 0,
+                "thumbnailHeight": 0,
+                "updatedAt": 0,
+                "status": {
+                    "id": 0,
+                    "name": null
+                },
+                "tagOptions": null
+            },
+            {
+                "id": 62055635,
+                "image": "https://artworks.thetvdb.com/banners/series/373427/seasons/1805152/banners/62055635.jpg",
+                "thumbnail": "https://artworks.thetvdb.com/banners/series/373427/seasons/1805152/banners/62055635_t.jpg",
+                "language": "eng",
+                "type": 6,
+                "score": 100000,
+                "width": 758,
+                "height": 140,
+                "includesText": true,
+                "thumbnailWidth": 0,
+                "thumbnailHeight": 0,
+                "updatedAt": 0,
+                "seasonId": 1805152,
+                "status": {
+                    "id": 0,
+                    "name": null
+                },
+                "tagOptions": null
+            }
+        ],
+        "companies": [
+            {
+                "id": 582,
+                "name": "YouTube",
+                "slug": "youtube",
+                "nameTranslations": [
+                    "ara",
+                    "deu",
+                    "eng",
+                    "fra",
+                    "kor",
+                    "pt",
+                    "spa"
+                ],
+                "overviewTranslations": [
+                    "deu",
+                    "fra",
+                    "pt",
+                    "spa"
+                ],
+                "aliases": [
+                    {
+                        "language": "ara",
+                        "name": "يوتيوب"
+                    }
+                ],
+                "country": "usa",
+                "primaryCompanyType": 1,
+                "activeDate": null,
+                "inactiveDate": null,
+                "companyType": {
+                    "companyTypeId": 1,
+                    "companyTypeName": "Network"
+                },
+                "parentCompany": {
+                    "id": null,
+                    "name": null,
+                    "relation": {
+                        "id": null,
+                        "typeName": null
+                    }
+                },
+                "tagOptions": null
+            }
+        ],
+        "originalNetwork": {
+            "id": 582,
+            "name": "YouTube",
+            "slug": "youtube",
+            "nameTranslations": [
+                "ara",
+                "deu",
+                "eng",
+                "fra",
+                "kor",
+                "pt",
+                "spa"
+            ],
+            "overviewTranslations": [
+                "deu",
+                "fra",
+                "pt",
+                "spa"
+            ],
+            "aliases": [
+                {
+                    "language": "ara",
+                    "name": "يوتيوب"
+                }
+            ],
+            "country": "usa",
+            "primaryCompanyType": 1,
+            "activeDate": null,
+            "inactiveDate": null,
+            "companyType": {
+                "companyTypeId": 1,
+                "companyTypeName": "Network"
+            },
+            "parentCompany": {
+                "id": null,
+                "name": null,
+                "relation": {
+                    "id": null,
+                    "typeName": null
+                }
+            },
+            "tagOptions": [
+                {
+                    "id": 491,
+                    "tag": 24,
+                    "tagName": "Company Type",
+                    "name": "AVOD",
+                    "helpText": "Advertising-based video on demand. Examples: DailyMotion, YouTube"
+                }
+            ]
+        },
+        "latestNetwork": {
+            "id": 582,
+            "name": "YouTube",
+            "slug": "youtube",
+            "nameTranslations": [
+                "ara",
+                "deu",
+                "eng",
+                "fra",
+                "kor",
+                "pt",
+                "spa"
+            ],
+            "overviewTranslations": [
+                "deu",
+                "fra",
+                "pt",
+                "spa"
+            ],
+            "aliases": [
+                {
+                    "language": "ara",
+                    "name": "يوتيوب"
+                }
+            ],
+            "country": "usa",
+            "primaryCompanyType": 1,
+            "activeDate": null,
+            "inactiveDate": null,
+            "companyType": {
+                "companyTypeId": 1,
+                "companyTypeName": "Network"
+            },
+            "parentCompany": {
+                "id": null,
+                "name": null,
+                "relation": {
+                    "id": null,
+                    "typeName": null
+                }
+            },
+            "tagOptions": [
+                {
+                    "id": 491,
+                    "tag": 24,
+                    "tagName": "Company Type",
+                    "name": "AVOD",
+                    "helpText": "Advertising-based video on demand. Examples: DailyMotion, YouTube"
+                }
+            ]
+        },
+        "genres": [
+            {
+                "id": 13,
+                "name": "Documentary",
+                "slug": "documentary"
+            }
+        ],
+        "trailers": [],
+        "lists": [],
+        "remoteIds": [
+            {
+                "id": "https://www.youtube.com/playlist?list=PLJtitKU0CAej22ZWBqrimPkn0Bbo6ci-r",
+                "type": 4,
+                "sourceName": "Official Website"
+            },
+            {
+                "id": "UCiDJtJKMICpb9B1qf7qjEOA",
+                "type": 11,
+                "sourceName": "Youtube"
+            }
+        ],
+        "characters": [
+            {
+                "id": 65435516,
+                "name": "Host",
+                "peopleId": 321343,
+                "seriesId": 373427,
+                "series": null,
+                "movie": null,
+                "movieId": null,
+                "episodeId": null,
+                "type": 3,
+                "image": "https://artworks.thetvdb.com/banners/person/321343/65435516.jpg",
+                "sort": 0,
+                "isFeatured": true,
+                "url": "https://thetvdb.com/people/321343-adam-savage",
+                "nameTranslations": null,
+                "overviewTranslations": null,
+                "aliases": null,
+                "peopleType": "Actor",
+                "personName": "Adam Savage",
+                "tagOptions": null,
+                "personImgURL": null
+            }
+        ],
+        "airsDays": {
+            "sunday": false,
+            "monday": false,
+            "tuesday": false,
+            "wednesday": false,
+            "thursday": false,
+            "friday": false,
+            "saturday": false
+        },
+        "airsTime": "00:00",
+        "seasons": [
+            {
+                "id": 1805151,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 0,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2019-12-08 00:51:07"
+            },
+            {
+                "id": 1805152,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2020,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "image": "https://artworks.thetvdb.com/banners/series/373427/seasons/1805152/backgrounds/62055634.jpg",
+                "imageType": 8,
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-25 12:17:47"
+            },
+            {
+                "id": 1872607,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2013,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-14 11:17:53"
+            },
+            {
+                "id": 1872608,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2014,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-11 11:52:38"
+            },
+            {
+                "id": 1872609,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2015,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-11 11:53:50"
+            },
+            {
+                "id": 1872610,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2016,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-11 11:59:11"
+            },
+            {
+                "id": 1872611,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2017,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-23 10:35:57"
+            },
+            {
+                "id": 1872612,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2018,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-11 12:07:02"
+            },
+            {
+                "id": 1872613,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2019,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-23 10:36:15"
+            },
+            {
+                "id": 1890945,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2021,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-25 12:30:44"
+            },
+            {
+                "id": 1982945,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2022,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-25 12:34:46"
+            },
+            {
+                "id": 2039683,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2023,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-28 01:23:38"
+            },
+            {
+                "id": 2114946,
+                "seriesId": 373427,
+                "type": {
+                    "id": 1,
+                    "name": "Aired Order",
+                    "type": "official",
+                    "alternateName": null
+                },
+                "number": 2024,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-26 00:15:05"
+            },
+            {
+                "id": 1809753,
+                "seriesId": 373427,
+                "type": {
+                    "id": 3,
+                    "name": "Absolute Order",
+                    "type": "absolute",
+                    "alternateName": null
+                },
+                "number": 1,
+                "nameTranslations": [],
+                "overviewTranslations": [],
+                "companies": {
+                    "studio": null,
+                    "network": null,
+                    "production": null,
+                    "distributor": null,
+                    "special_effects": null
+                },
+                "lastUpdated": "2024-06-25 12:22:56"
+            }
+        ],
+        "tags": null,
+        "contentRatings": [
+            {
+                "id": 244,
+                "name": "TV-G",
+                "country": "usa",
+                "description": "Suitable for all ages",
+                "contentType": "",
+                "order": 0,
+                "fullname": null
+            }
+        ],
+        "seasonTypes": [
+            {
+                "id": 1,
+                "name": "Aired Order",
+                "type": "official",
+                "alternateName": null
+            },
+            {
+                "id": 2,
+                "name": "DVD Order",
+                "type": "dvd",
+                "alternateName": null
+            },
+            {
+                "id": 3,
+                "name": "Absolute Order",
+                "type": "absolute",
+                "alternateName": null
+            }
+        ]
+    }
+}

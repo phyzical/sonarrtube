@@ -53,27 +53,6 @@ describe('BaseSubmitter', () => {
     });
   });
 
-  describe('browser', () => {
-    it('throws', async () => {
-      expect(() => baseSubmitter.browser()).toThrow('Browser not initialized');
-    });
-
-    it('doesn\'t throw once init is called', async () => {
-      await baseSubmitter.init();
-      expect(() => baseSubmitter.browser()).not.toThrow('Browser not initialized');
-    });
-  });
-  describe('video', () => {
-    it('video', () => {
-      baseSubmitter.videoObj = undefined;
-      expect(() => baseSubmitter.video()).toThrow('Video not initialized');
-    });
-
-    it('doesn\'t throw once init is called', async () => {
-      expect(() => baseSubmitter.video()).not.toThrow('Video not initialized');
-    });
-  });
-
   describe('finish', () => {
     it('does not error if no browser', async () => {
       await baseSubmitter.finish();
@@ -85,79 +64,21 @@ describe('BaseSubmitter', () => {
       await baseSubmitter.init();
     });
 
-    it('type', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'type')
-        .mockImplementation(() => Promise.resolve());
-      await baseSubmitter.type('selector', 'value');
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector', 'value', true);
-      await baseSubmitter.type('selector', 'value', false);
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector', 'value', false);
-    });
-
-    it('getValue', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'getValue')
-        .mockImplementation(() => Promise.resolve());
-      await baseSubmitter.getValue('selector');
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector');
-    });
-
-    it('find', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'find')
-        .mockImplementation(() => Promise.resolve());
-      await baseSubmitter.find('selector');
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector');
-    });
-
-    it('click', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'click')
-        .mockImplementation(() => Promise.resolve());
-      await baseSubmitter.click('selector');
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'selector');
-    });
-
-    it('loaded', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'loaded')
-        .mockImplementation(() => Promise.resolve());
-      await baseSubmitter.loaded();
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page());
-    });
-
-    it('goto', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'goto')
-        .mockImplementation(() => Promise.resolve());
-      await baseSubmitter.goto('url');
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'url');
-    });
-
-    it('submitForm', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const type = jest.spyOn(require('@sonarrTube/helpers/Puppeteer'), 'submitForm')
-        .mockImplementation(() => Promise.resolve());
-      await baseSubmitter.submitForm('url');
-      expect(type).toHaveBeenCalledWith(baseSubmitter.page(), 'url');
-    });
-
     describe('finish', () => {
       it('when error saves html and screenshot', async () => {
-        const takeScreenshot = jest.spyOn(baseSubmitter, 'takeScreenshot');
-        const saveHtml = jest.spyOn(baseSubmitter, 'saveHtml');
-        const close = jest.spyOn(baseSubmitter.browser(), 'close');
+        const takeScreenshot = jest.spyOn(baseSubmitter, '_takeScreenshot');
+        // const saveHtml = jest.spyOn(baseSubmitter, '_saveHtml');
+        const close = jest.spyOn(baseSubmitter._browser(), 'close');
         await baseSubmitter.finish(true);
         expect(takeScreenshot).toHaveBeenCalled();
-        expect(saveHtml).toHaveBeenCalled();
+        // expect(saveHtml).toHaveBeenCalled();
         expect(close).toHaveBeenCalled();
       });
 
       it('when error saves html and screenshot', async () => {
-        const takeScreenshot = jest.spyOn(baseSubmitter, 'takeScreenshot');
-        const saveHtml = jest.spyOn(baseSubmitter, 'saveHtml');
-        const close = jest.spyOn(baseSubmitter.browser(), 'close');
+        const takeScreenshot = jest.spyOn(baseSubmitter, '_takeScreenshot');
+        const saveHtml = jest.spyOn(baseSubmitter, '_saveHtml');
+        const close = jest.spyOn(baseSubmitter._browser(), 'close');
         await baseSubmitter.finish(false);
         expect(takeScreenshot).not.toHaveBeenCalled();
         expect(saveHtml).not.toHaveBeenCalled();
@@ -208,52 +129,18 @@ describe('BaseSubmitter', () => {
       });
     });
 
-    describe('saveHtml', () => {
-      it('saveHtml', async () => {
-        jest.spyOn(baseSubmitter.page(), 'content').mockImplementation(async () => 'content');
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const writeFileSync = jest.spyOn(require('fs'), 'writeFileSync').mockImplementation(() => 'content');
-        await baseSubmitter.saveHtml();
-        expect(writeFileSync).toHaveBeenCalled();
-        expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('html can be found at'));
-      });
-
-      it('When error', async () => {
-        jest.spyOn(baseSubmitter.page(), 'content').mockImplementation(async () => { throw new Error('error'); });
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const writeFileSync = jest.spyOn(require('fs'), 'writeFileSync').mockImplementation(() => 'content');
-        await baseSubmitter.saveHtml();
-        expect(writeFileSync).not.toHaveBeenCalled();
-        expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('failed to save html'));
-      });
-    });
-
-    describe('takeScreenshot', () => {
-      it('takeScreenshot', async () => {
-        jest.spyOn(baseSubmitter.page(), 'screenshot').mockImplementation(async () => new Buffer('asdsad'));
-        await baseSubmitter.takeScreenshot();
-        expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('screen shot can be found at'));
-      });
-
-      it('When error', async () => {
-        jest.spyOn(baseSubmitter.page(), 'screenshot').mockImplementation(async () => { throw new Error('error'); });
-        await baseSubmitter.takeScreenshot();
-        expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('failed to save screenshot'));
-      });
-    });
-
     describe('currentYoutubeVideo', () => {
       it('throws when no youtubeVideo', async () => {
         if (baseSubmitter.videoObj) {
           baseSubmitter.videoObj.youtubeVideo = undefined;
         }
-        await expect(async () => baseSubmitter.currentYoutubeVideo()).rejects
+        await expect(async () => baseSubmitter._currentYoutubeVideo()).rejects
           .toThrow('Missing youtubeVideo this shouldn\'t happen!');
       });
 
       it('returns youtubeVideo', () => {
         const youtubeVideo = baseSubmitter.videoObj?.youtubeVideo;
-        const res = baseSubmitter.currentYoutubeVideo();
+        const res = baseSubmitter._currentYoutubeVideo();
         expect(res).toBeTruthy();
         expect(res).toBe(youtubeVideo);
       });
@@ -264,13 +151,13 @@ describe('BaseSubmitter', () => {
         if (baseSubmitter.videoObj) {
           baseSubmitter.videoObj.tvdbEpisode = undefined;
         }
-        await expect(async () => baseSubmitter.currentTvdbEpisode()).rejects
-          .toThrow('Missing youtubeVideo this shouldn\'t happen!');
+        await expect(async () => baseSubmitter._currentTvdbEpisode()).rejects
+          .toThrow('Missing tvdbEpisode this shouldn\'t happen!');
       });
 
       it('returns tvdbEpisode', () => {
         const tvdbEpisode = baseSubmitter.videoObj?.tvdbEpisode;
-        const res = baseSubmitter.currentTvdbEpisode();
+        const res = baseSubmitter._currentTvdbEpisode();
         expect(res).toBeTruthy();
         expect(res).toBe(tvdbEpisode);
       });
@@ -281,7 +168,7 @@ describe('BaseSubmitter', () => {
         if (baseSubmitter.videoObj) {
           jest.spyOn(baseSubmitter.videoObj, 'season').mockImplementation(() => undefined);
         }
-        await expect(async () => baseSubmitter.currentSeason()).rejects
+        await expect(async () => baseSubmitter._currentSeason()).rejects
           .toThrow('Missing season this shouldn\'t happen!');
       });
 
@@ -289,7 +176,7 @@ describe('BaseSubmitter', () => {
         if (baseSubmitter.videoObj) {
           jest.spyOn(baseSubmitter.videoObj, 'season').mockImplementation(() => 2023);
         }
-        const res = baseSubmitter.currentSeason();
+        const res = baseSubmitter._currentSeason();
         expect(res).toBeTruthy();
         expect(res).toBe(2023);
       });

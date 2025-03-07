@@ -50,7 +50,7 @@ export class ShowSubmitter {
     log(`Processing ${videos.length} episodes`);
     const preview = this.config.preview || backfillOnly;
     for (const video of videos) {
-      const updateText = `${this.previewText(backfillOnly)} adding:\n${video.summary()}`;
+      const updateText = `${this.previewText(backfillOnly)} Adding:\n  ${video.summary()}`;
       this.submitter.videoObj = video;
       try {
         if (!preview) {
@@ -78,7 +78,7 @@ export class ShowSubmitter {
   private previewText = (backFillMode: boolean = false): string => {
     const { preview } = this.config;
 
-    return preview || backFillMode ? 'Preview Mode on Would have:' : '';
+    return preview || backFillMode ? 'Preview Mode on Would have:\n' : '';
   };
 
 
@@ -97,7 +97,7 @@ export class ShowSubmitter {
     const message = `${this.previewText()} Backfilled Production Code\n${video.summary()}`;
     try {
       if (!this.config.preview) {
-        this.submitter.backfillEpisodeProductionCode();
+        await this.submitter.backfillEpisodeProductionCode();
         video.clearCache();
       }
       this.submitter.updates.push(message);
@@ -118,7 +118,7 @@ export class ShowSubmitter {
     const message = `${this.previewText()} Backfilled Image\n${video.summary()}`;
     try {
       if (!this.config.preview) {
-        this.submitter.backfillEpisodeImage();
+        await this.submitter.uploadEpisodeImage();
         video.clearCache();
       }
       this.submitter.updates.push(message);
@@ -199,9 +199,7 @@ export class ShowSubmitter {
         );
       }
 
-      this.submitter.downloads.concat(
-        downloadVideos(actionableSeries.unDownloadedVideos())
-      );
+      this.submitter.downloads = downloadVideos(actionableSeries.unDownloadedVideos());
       await this.submitter.handleReports(actionableSeries);
     }
 
