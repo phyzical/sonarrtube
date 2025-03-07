@@ -1,5 +1,6 @@
 import { channelIdByAlias, downloadVideos, getVideoInfos } from '@sonarrTube/api/Ytdlp';
-describe.skip('Ytdlp', () => {
+
+xdescribe('Ytdlp', () => {
     describe('channelIdByAlias', () => {
         it('should return a channelId', async () => {
             const result = channelIdByAlias('alias');

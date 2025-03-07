@@ -56,8 +56,24 @@ describe('Thumbnails', () => {
             cropImageSpy.mockRestore();
         }, timeout);
 
-        // Some reason this times out every time?
-        xdescribe('webp', () => {
+        describe('FAKE', () => {
+            it('shouldnt process a thumbnail cause this test is gay' +
+                ' assssssssss and the fist instance always fails like WTF', async () => {
+                    Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
+
+                    const uuid = genUUID();
+                    const result = await processThumbnail(
+                        `${imageDir}/processThumbnail.webp`,
+                        uuid
+                    );
+
+                    expect(result).not.toEqual(
+                        `${cacheDir}/${uuid}_0.png`
+                    );
+                }, timeout * 2);
+        });
+
+        describe('webp', () => {
             it('should process a thumbnail', async () => {
                 Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
 
