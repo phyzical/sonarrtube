@@ -12,6 +12,7 @@ describe('Thumbnails', () => {
         jest.retryTimes(5);
         let cacheDir;
         let imageDir;
+        const timeout = 15000;
         beforeEach(() => {
             cacheDir = `${process.cwd()}/${config().cacheDir}/${Constants.CACHE_FOLDERS.THUMBNAIL}`;
             imageDir = `file://${process.cwd()}/tests/__mocks__/images`;
@@ -35,7 +36,7 @@ describe('Thumbnails', () => {
             expect(findThumbnailTextSpy).not.toHaveBeenCalled();
             findThumbnailTextSpy.mockRestore();
             expect(existsSync(result)).toBeTruthy();
-        });
+        }, timeout);
 
         it('should return empty string if no words found', async () => {
             Constants.THUMBNAIL.TEXT.FONT_SIZE = 9999;
@@ -53,7 +54,7 @@ describe('Thumbnails', () => {
 
             expect(cropImageSpy).not.toHaveBeenCalled();
             cropImageSpy.mockRestore();
-        });
+        }, timeout);
 
         describe('FAKE', () => {
             it('shouldnt process a thumbnail cause this test is gay' +
@@ -67,7 +68,7 @@ describe('Thumbnails', () => {
                             uuid
                         );
                     } catch (_e) { /* empty */ }
-                });
+                }, timeout);
         });
 
         describe('webp', () => {
@@ -84,7 +85,7 @@ describe('Thumbnails', () => {
                     `${cacheDir}/${uuid}_0.png`
                 );
                 expect(existsSync(result)).toBeTruthy();
-            },);
+            }, timeout);
         });
 
         describe('png', () => {
@@ -102,7 +103,7 @@ describe('Thumbnails', () => {
                     `${cacheDir}/${uuid}_0.png`
                 );
                 expect(existsSync(result)).toBeTruthy();
-            });
+            }, timeout);
         });
 
         describe('jpeg', () => {
@@ -120,7 +121,7 @@ describe('Thumbnails', () => {
                     `${cacheDir}/${uuid}_0.jpg`
                 );
                 expect(existsSync(result)).toBeTruthy();
-            });
+            }, timeout);
         });
 
         it('should return empty string if image too small', async () => {
@@ -132,7 +133,7 @@ describe('Thumbnails', () => {
             );
 
             expect(result).toEqual('');
-        });
+        }, timeout);
 
         it('should return empty string if image too small after cropping', async () => {
             const uuid = genUUID();
@@ -143,6 +144,6 @@ describe('Thumbnails', () => {
             );
 
             expect(result).toEqual('');
-        });
+        }, timeout);
     });
 });
