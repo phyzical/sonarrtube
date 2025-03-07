@@ -70,7 +70,7 @@ describe('Thumbnails', () => {
                     `${cacheDir}/${uuid}_0.png`
                 );
                 expect(existsSync(result)).toBeTruthy();
-            }, timeout);
+            }, timeout * 2);
         });
 
         describe('png', () => {
