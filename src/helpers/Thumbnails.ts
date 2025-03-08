@@ -16,14 +16,18 @@ export const _removeText = async (
 
     const coordinates = _calculateCoordinates(blocks);
 
+    // By X
     let newImage = await _cropImage(originalImage, coordinates, true, false);
     if (imageToSmall(newImage as JimpInstance)) {
+        // By Y
         newImage = await _cropImage(originalImage, coordinates, false, true);
     }
     if (imageToSmall(newImage as JimpInstance)) {
+        // By X and Y
         newImage = await _cropImage(originalImage, coordinates, true, true);
     }
     if (imageToSmall(newImage as JimpInstance)) {
+        // blacken
         newImage = await _blackenText(originalImage, coordinates) as JimpInstance;
     }
 
