@@ -26,7 +26,7 @@
     "start": "node main.js"
   },
   "devDependencies": {
-    "@faker-js/faker": "9.4.0",
+    "@faker-js/faker": "9.6.0",
     "@types/jest": "29.5.14",
     "@types/node": "22.13.9",
     "@typescript-eslint/eslint-plugin": "8.26.0",
