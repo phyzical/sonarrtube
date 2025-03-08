@@ -53,6 +53,7 @@ describe('Thumbnails', () => {
             cropImageSpy.mockRestore();
         }, timeout);
 
+        //  For whatever reason, the first time we call processThumbnail it ALWAYS FAILS?!!??! so this is fake
         describe('fake', () => {
             it('should fail', async () => {
                 const uuid = genUUID();
