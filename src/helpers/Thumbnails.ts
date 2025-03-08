@@ -16,9 +16,12 @@ export const _removeText = async (
 
     const coordinates = _calculateCoordinates(blocks);
 
-    let newImage = await _cropImageByX(originalImage, coordinates);
+    let newImage = await _cropImage(originalImage, coordinates, true, false);
     if (imageToSmall(newImage as JimpInstance)) {
-        newImage = await _cropImageByY(originalImage, coordinates);
+        newImage = await _cropImage(originalImage, coordinates, false, true);
+    }
+    if (imageToSmall(newImage as JimpInstance)) {
+        newImage = await _cropImage(originalImage, coordinates, true, true);
     }
     if (imageToSmall(newImage as JimpInstance)) {
         newImage = await _blackenText(originalImage, coordinates) as JimpInstance;
@@ -44,43 +47,11 @@ const _blackenText = async (
     return newImage;
 };
 
-
-const _cropImageByX = async (
+const _cropImage = async (
     originalImage: Awaited<ReturnType<typeof Jimp.read>>,
-    coordinates: Coordinates
-): Promise<JimpInstance> => {
-    const { width, height } = originalImage.bitmap;
-
-    const { x0, x1, } = coordinates;
-
-    // Calculate dimensions and positions for the leftover segments
-    const leftSegmentWidth = x0;
-    const rightSegmentWidth = width - x1;
-
-    // Create a new image with the same width and adjusted height
-    // For simplicity, this example assumes vertical alignment of top and bottom segments only
-    const newWidth = leftSegmentWidth + rightSegmentWidth;
-
-    const newImage = new Jimp({ width: newWidth, height, color: 0xff0000ff });
-
-    // Copy the left segment
-    if (leftSegmentWidth > 0) {
-        const leftSegment = await originalImage.clone().crop({ x: 0, y: 0, w: leftSegmentWidth, h: height });
-        await newImage.composite(leftSegment, 0, 0); // Position at the start
-    }
-
-    // Copy the right segment
-    if (rightSegmentWidth > 0) {
-        const rightSegment = await originalImage.clone().crop({ x: x1, y: 0, w: rightSegmentWidth, h: height });
-        await newImage.composite(rightSegment, leftSegmentWidth, 0); // Position directly after the left segment
-    }
-
-    return newImage;
-};
-
-const _cropImageByY = async (
-    originalImage: Awaited<ReturnType<typeof Jimp.read>>,
-    coordinates: Coordinates
+    coordinates: Coordinates,
+    byX: boolean,
+    byY: boolean
 ): Promise<JimpInstance> => {
     const { width, height } = originalImage.bitmap;
 
@@ -98,17 +69,34 @@ const _cropImageByY = async (
 
     const newImage = new Jimp({ width: newWidth, height, color: 0xff0000ff });
 
-    // Copy the top segment
-    if (topSegmentHeight > 0) {
-        const topSegment = await originalImage.clone().crop({ x: 0, y: 0, w: width, h: topSegmentHeight });
-        await newImage.composite(topSegment, 0, 0);
+    if (byY) {
+
+        // Copy the top segment
+        if (topSegmentHeight > 0) {
+            const topSegment = await originalImage.clone().crop({ x: 0, y: 0, w: width, h: topSegmentHeight });
+            await newImage.composite(topSegment, 0, 0);
+        }
+
+        // Copy the bottom segment
+        if (bottomSegmentHeight > 0) {
+            const bottomSegment = await originalImage.clone().crop(
+                { x: 0, y: y1, w: width, h: bottomSegmentHeight });
+            await newImage.composite(bottomSegment, 0, topSegmentHeight); // Position directly below the top segment
+        }
     }
 
-    // Copy the bottom segment
-    if (bottomSegmentHeight > 0) {
-        const bottomSegment = await originalImage.clone().crop(
-            { x: 0, y: y1, w: width, h: bottomSegmentHeight });
-        await newImage.composite(bottomSegment, 0, topSegmentHeight); // Position directly below the top segment
+    if (byX) {
+        // Copy the left segment
+        if (leftSegmentWidth > 0) {
+            const leftSegment = await originalImage.clone().crop({ x: 0, y: 0, w: leftSegmentWidth, h: height });
+            await newImage.composite(leftSegment, 0, 0); // Position at the start
+        }
+
+        // Copy the right segment
+        if (rightSegmentWidth > 0) {
+            const rightSegment = await originalImage.clone().crop({ x: x1, y: 0, w: rightSegmentWidth, h: height });
+            await newImage.composite(rightSegment, leftSegmentWidth, 0); // Position directly after the left segment
+        }
     }
 
     return newImage;
