@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 
 import { Jimp, JimpInstance, JimpMime } from 'jimp';
-import { Block, PSM, Word, createWorker } from 'tesseract.js';
+import { Block, PSM, createWorker } from 'tesseract.js';
 import sharp from 'sharp';
 
 import { log } from '@sonarrTube/helpers/Log.js';
