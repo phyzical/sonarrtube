@@ -9,7 +9,6 @@ const genUUID = (): string => randomUUID() + 'jimp';
 
 describe('Thumbnails', () => {
     describe('processThumbnail', () => {
-        jest.retryTimes(5);
         let cacheDir;
         let imageDir;
         const timeout = 15000;
@@ -39,8 +38,6 @@ describe('Thumbnails', () => {
         }, timeout);
 
         it('should return empty string if no words found', async () => {
-            Constants.THUMBNAIL.TEXT.FONT_SIZE = 9999;
-
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), '_cropImage');
 
@@ -56,11 +53,24 @@ describe('Thumbnails', () => {
             cropImageSpy.mockRestore();
         }, timeout);
 
-        // TODO: these test work but one always fails IDK WHYYY
-        xdescribe('webp', () => {
-            it('should process a thumbnail', async () => {
-                Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
+        describe('webp', () => {
+            it('should process a real thumbnail', async () => {
+                const uuid = genUUID();
+                const result = await processThumbnail(
+                    `${imageDir}/realThumbnail.webp`,
+                    uuid
+                );
 
+                expect(result).toEqual(
+                    `${cacheDir}/${uuid}_0.png`
+                );
+                expect(existsSync(result)).toBeTruthy();
+            }, timeout);
+        });
+
+
+        describe('webp', () => {
+            it('should process a thumbnail', async () => {
                 const uuid = genUUID();
                 const result = await processThumbnail(
                     `${imageDir}/processThumbnail.webp`,
@@ -74,9 +84,8 @@ describe('Thumbnails', () => {
             }, timeout);
         });
 
-        xdescribe('png', () => {
+        describe('png', () => {
             it('should process a thumbnail when png', async () => {
-                Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
 
                 const uuid = genUUID();
 
@@ -92,10 +101,8 @@ describe('Thumbnails', () => {
             }, timeout);
         });
 
-        xdescribe('jpeg', () => {
+        describe('jpeg', () => {
             it('should process a thumbnail when jpeg', async () => {
-                Constants.THUMBNAIL.TEXT.FONT_SIZE = 20;
-
                 const uuid = genUUID();
 
                 const result = await processThumbnail(
