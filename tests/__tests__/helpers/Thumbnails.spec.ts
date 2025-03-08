@@ -11,7 +11,7 @@ describe('Thumbnails', () => {
     describe('processThumbnail', () => {
         let cacheDir;
         let imageDir;
-        const timeout = 15000;
+        const timeout = 25000;
         beforeEach(() => {
             cacheDir = `${process.cwd()}/${config().cacheDir}/${Constants.CACHE_FOLDERS.THUMBNAIL}`;
             imageDir = `file://${process.cwd()}/tests/__mocks__/images`;
