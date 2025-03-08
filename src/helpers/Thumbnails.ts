@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 
 import { Jimp, JimpInstance, JimpMime } from 'jimp';
-import { PSM, Word, createWorker } from 'tesseract.js';
+import { Block, PSM, Word, createWorker } from 'tesseract.js';
 import sharp from 'sharp';
 
 import { log } from '@sonarrTube/helpers/Log.js';
@@ -54,6 +54,8 @@ export const _cropImage = async (
 
     // Save the new image
     await newImage.write(inputPath as '`${string}.${string}`');
+    // Uncomment to see the new image i.e running tests/debugging
+    // await newImage.write('test.png' as '`${string}.${string}`');
 };
 
 type Coordinates = { x0: number; y0: number; x1: number; y1: number; }
@@ -65,20 +67,19 @@ export const findThumbnailText = async (
         cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
         // logger: m => console.log(m), // Log progress
     });
-    let words = [] as Word[];
+    let blocks = [] as Block[];
     try {
         await worker.setParameters({
             tessedit_char_whitelist: Constants.THUMBNAIL.TEXT.FINDER_CHAR_LIST,
             tessedit_pageseg_mode: PSM.SPARSE_TEXT,
         });
 
-        words = (await worker.recognize(
-            await image.invert()
-                .greyscale()
+        blocks = (await worker.recognize(
+            await image.greyscale()
                 // if even means its the first attempt of each bounding box 
                 .contrast(attempt == 2 ? 0.4 : 0.1)
                 .getBuffer(JimpMime.png)
-        )).data.words;
+            , {}, { text: false, blocks: true })).data.blocks || [];
     } catch (e) {
         console.dir(e);
     } finally {
@@ -87,26 +88,23 @@ export const findThumbnailText = async (
 
     let coordinates: Coordinates | undefined;
 
-    words.filter((element: Word) =>
-        element.direction == Constants.THUMBNAIL.TEXT.DIRECTION &&
-        element.text.length >= (attempt == 3 ? 1 : Constants.THUMBNAIL.TEXT.LENGTH) &&
-        element.font_size > Constants.THUMBNAIL.TEXT.FONT_SIZE
-    ).forEach((element: Word) => {
-        if (!coordinates) {
-            coordinates = {
-                x0: element.bbox.x0, y0: element.bbox.y0, x1: element.bbox.x1, y1: element.bbox.y1
-            };
-        } else {
-            if (element.bbox.x0 < coordinates.x0) {
-                coordinates.x0 = element.bbox.x0;
-                coordinates.y0 = element.bbox.y0;
+    blocks.filter((element: Block) => element.confidence > Constants.THUMBNAIL.TEXT.CONFIDENCE)
+        .forEach((element: Block) => {
+            if (!coordinates) {
+                coordinates = {
+                    x0: element.bbox.x0, y0: element.bbox.y0, x1: element.bbox.x1, y1: element.bbox.y1
+                };
+            } else {
+                if (element.bbox.x0 < coordinates.x0) {
+                    coordinates.x0 = element.bbox.x0;
+                    coordinates.y0 = element.bbox.y0;
+                }
+                if (element.bbox.x1 > coordinates.x1) {
+                    coordinates.x1 = element.bbox.x1;
+                    coordinates.y1 = element.bbox.y1;
+                }
             }
-            if (element.bbox.x1 > coordinates.x1) {
-                coordinates.x1 = element.bbox.x1;
-                coordinates.y1 = element.bbox.y1;
-            }
-        }
-    });
+        });
 
     return coordinates;
 };
@@ -140,7 +138,7 @@ export const processThumbnail = async (
         return '';
     }
 
-    if (attempt >= 4) {
+    if (attempt >= Constants.THUMBNAIL.MAX_ATTEMPTS) {
         return thumbnailPath;
     }
 
