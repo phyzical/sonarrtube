@@ -21,9 +21,9 @@ describe('Thumbnails', () => {
             const uuid = genUUID();
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const findThumbnailTextSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), 'findThumbnailText');
-            const attempts = 4;
+            const attempts = Constants.THUMBNAIL.MAX_ATTEMPTS;
             const result = await processThumbnail(
-                `${imageDir}/processThumbnail.webp`,
+                `${imageDir}/processThumbnail.png`,
                 uuid,
                 attempts
             );
@@ -39,11 +39,11 @@ describe('Thumbnails', () => {
 
         it('should return empty string if no words found', async () => {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), '_cropImage');
+            const cropImageSpy = jest.spyOn(require('@sonarrTube/helpers/Thumbnails'), '_removeText');
 
             const uuid = genUUID();
             const result = await processThumbnail(
-                `${imageDir}/processThumbnail.webp`,
+                `${imageDir}/processThumbnail-blank.png`,
                 uuid,
             );
 
@@ -122,17 +122,6 @@ describe('Thumbnails', () => {
 
             const result = await processThumbnail(
                 `${imageDir}/small.png`,
-                uuid
-            );
-
-            expect(result).toEqual('');
-        }, timeout);
-
-        it('should return empty string if image too small after cropping', async () => {
-            const uuid = genUUID();
-
-            const result = await processThumbnail(
-                `${imageDir}/processThumbnail-cropped.jpg`,
                 uuid
             );
 

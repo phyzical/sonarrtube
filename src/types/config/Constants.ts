@@ -46,7 +46,7 @@ export const Constants = {
         TEXT: {
             LANGUAGE: 'eng',
             FINDER_CHAR_LIST: ' 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?!\'"`',
-            CONFIDENCE: 50
+            CONFIDENCE: 80
         }
     },
     CACHE_FOLDERS: {
