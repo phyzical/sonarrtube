@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 
 import { Jimp, JimpInstance, JimpMime } from 'jimp';
-import { Block, PSM, Worker, createWorker } from 'tesseract.js';
+import { Block, PSM, createWorker } from 'tesseract.js';
 import sharp from 'sharp';
 
 import { log } from '@sonarrTube/helpers/Log.js';
@@ -106,31 +106,20 @@ const _cropImage = async (
     return newImage;
 };
 
-let mainWorker: Worker | null = null;
-
-const _initWorker = async (): Promise<Worker> => {
-    if (mainWorker) {
-        return mainWorker;
-    }
-    mainWorker = await createWorker(Constants.THUMBNAIL.TEXT.LANGUAGE, 1, {
-        cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
-        // logger: m => console.log(m), // Log progress
-    });
-
-    await mainWorker.setParameters({
-        tessedit_char_whitelist: Constants.THUMBNAIL.TEXT.FINDER_CHAR_LIST,
-        tessedit_pageseg_mode: PSM.SPARSE_TEXT,
-    });
-
-    return mainWorker;
-};
-
 export const findThumbnailText = async (
     image: Awaited<ReturnType<typeof Jimp.read>>, attempt: number
 ): Promise<Block[]> => {
-    const worker = await _initWorker();
+    const worker = await createWorker(Constants.THUMBNAIL.TEXT.LANGUAGE, 1, {
+        cachePath: cachePath(Constants.CACHE_FOLDERS.TESS)
+        // logger: m => console.log(m), // Log progress
+    });
     let blocks = [] as Block[];
     try {
+        await worker.setParameters({
+            tessedit_char_whitelist: Constants.THUMBNAIL.TEXT.FINDER_CHAR_LIST,
+            tessedit_pageseg_mode: PSM.SPARSE_TEXT,
+        });
+
         blocks = (await worker.recognize(
             await image.greyscale()
                 // if even means its the first attempt of each bounding box 
@@ -140,7 +129,7 @@ export const findThumbnailText = async (
     } catch (e) {
         console.dir(e);
     } finally {
-        // await worker.terminate();
+        await worker.terminate();
     }
 
     return blocks.filter((element: Block) => element.confidence > Constants.THUMBNAIL.TEXT.CONFIDENCE);
