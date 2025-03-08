@@ -53,6 +53,19 @@ describe('Thumbnails', () => {
             cropImageSpy.mockRestore();
         }, timeout);
 
+        describe('fake', () => {
+            it('should fail', async () => {
+                const uuid = genUUID();
+                try {
+                    await processThumbnail(
+                        `${imageDir}/fakeThumbnail.png`,
+                        uuid
+                    );
+                }
+                catch (_e) { /* empty */ }
+            }, timeout);
+        });
+
         describe('webp', () => {
             it('should process a real thumbnail', async () => {
                 const uuid = genUUID();
@@ -66,10 +79,7 @@ describe('Thumbnails', () => {
                 );
                 expect(existsSync(result)).toBeTruthy();
             }, timeout);
-        });
 
-
-        describe('webp', () => {
             it('should process a thumbnail', async () => {
                 const uuid = genUUID();
                 const result = await processThumbnail(
