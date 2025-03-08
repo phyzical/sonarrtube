@@ -18,6 +18,8 @@ run-image:
 		--rm \
 		--name ${NAME} \
 		--platform=linux/amd64 \
+		-v ${PWD}/tmp:/app/tmp \
+		-v ${PWD}/tmp:/tmp \
 		-v ${PWD}/cache:/app/cache \
 		-v ${PWD}/downloads:/app/downloads \
 		-v ${PWD}/cookies.txt:/app/cookies.txt \
@@ -25,12 +27,14 @@ run-image:
 		${TAG}
 TARGET=
 run-image-tests:
+	yarn build
 	docker run -it \
 		--rm \
 		--platform=linux/amd64 \
 		--name ${NAME} \
 		-v ${PWD}/tests:/app/tests \
 		-v ${PWD}/src:/app/src \
+		-v ${PWD}/build:/app/build \
 		-v ${PWD}/jest.config.ts:/app/jest.config.ts \
 		-v ${PWD}/tsconfig.build.json:/app/tsconfig.build.json \
 		-v ${PWD}/tsconfig.json:/app/tsconfig.json \

@@ -40,15 +40,13 @@ export const Constants = {
     },
     THUMBNAIL: {
         FAILED_TEXT: 'FAILED',
-        MAX_ATTEMPTS: 4,
+        MAX_ATTEMPTS: 3,
         MINIMUM_WIDTH: 640,
         MINIMUM_HEIGHT: 360,
         TEXT: {
             LANGUAGE: 'eng',
             FINDER_CHAR_LIST: ' 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?!\'"`',
-            FONT_SIZE: 45,
-            LENGTH: 4,
-            DIRECTION: 'LEFT_TO_RIGHT'
+            CONFIDENCE: 80
         }
     },
     CACHE_FOLDERS: {

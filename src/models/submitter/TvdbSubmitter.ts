@@ -111,19 +111,18 @@ export class TvdbSubmitter extends BaseSubmitter {
   };
 
   uploadEpisodeImage = async (): Promise<void> => {
-    const backfillAttempts = this._video().thumbnailUploadAttemptCount();
-    // then two contrasts attempting to remove text
-    // then once more setting no max length of text to 1
-    // finally if all else fails just use raw
-    if (backfillAttempts < Constants.THUMBNAIL.MAX_ATTEMPTS) {
+    const attempts = this._video().thumbnailUploadAttemptCount();
+    // we try two contrasts attempting to remove text
+    // then finally if all else fails just use raw
+    if (attempts <= Constants.THUMBNAIL.MAX_ATTEMPTS) {
       await this._openEpisodePage(false);
-      const res = await this._uploadEpisodeThumbnail(backfillAttempts);
+      const res = await this._uploadEpisodeThumbnail(attempts);
       if (res != Constants.THUMBNAIL.FAILED_TEXT) {
         this._video().addThumbnailUploadAttempt();
         this._video().clearCache();
       }
     } else {
-      log('Skipping image backlog exceeding all automatic text removal attempts');
+      log(`Skipping image exceeding ${Constants.THUMBNAIL.MAX_ATTEMPTS} attempts`);
     }
   };
 
