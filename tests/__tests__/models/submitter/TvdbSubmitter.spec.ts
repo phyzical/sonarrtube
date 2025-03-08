@@ -72,11 +72,11 @@ describe('TvdbSubmitter', () => {
     it('if at max attempts', async () => {
       if (tvdbSubmitter.videoObj) {
         jest.spyOn(tvdbSubmitter.videoObj, 'thumbnailUploadAttemptCount')
-          .mockImplementation(() => Constants.THUMBNAIL.MAX_ATTEMPTS);
+          .mockImplementation(() => Constants.THUMBNAIL.MAX_ATTEMPTS + 1);
       }
       await tvdbSubmitter.uploadEpisodeImage();
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Skipping image backlog exceeding all automatic text removal attempts'
+        `Skipping image exceeding ${Constants.THUMBNAIL.MAX_ATTEMPTS} attempts`
       );
     });
 
@@ -88,7 +88,7 @@ describe('TvdbSubmitter', () => {
       await tvdbSubmitter.uploadEpisodeImage();
       expect(tvdbSubmitter.videoObj?.thumbnailUploadAttemptCount()).toBe(1);
       expect(consoleSpy).not.toHaveBeenCalledWith(
-        'Skipping image backlog exceeding all automatic text removal attempts'
+        `Skipping image exceeding ${Constants.THUMBNAIL.MAX_ATTEMPTS} attempts`
       );
     });
 
