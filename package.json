@@ -9,7 +9,7 @@
     "dotenv": "16.4.7",
     "jimp": "1.6.0",
     "node-fetch": "3.3.2",
-    "puppeteer": "24.1.1",
+    "puppeteer": "24.4.0",
     "puppeteer-extra": "3.3.6",
     "puppeteer-extra-plugin-adblocker": "2.13.6",
     "puppeteer-extra-plugin-stealth": "2.11.2",
