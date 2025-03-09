@@ -3,7 +3,6 @@ export let doRequestSpy: jest.SpyInstance;
 export let processSpy: jest.SpyInstance;
 export let setCacheSpy: jest.SpyInstance;
 export let getCacheSpy: jest.SpyInstance;
-export let execSyncSpy: jest.SpyInstance;
 
 beforeEach(() => {
     consoleSpy = jest.spyOn(console, 'log');
@@ -17,8 +16,4 @@ beforeEach(() => {
 
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     getCacheSpy = jest.spyOn(require('@sonarrTube/helpers/Cache'), 'getCache');
-
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    execSyncSpy = jest.spyOn(require('child_process'), 'execSync');
-    execSyncSpy.mockImplementation(() => ({}));
 });
