@@ -5,7 +5,7 @@ import { resetCache } from '@sonarrTube/helpers/Cache';
 import { mockConfig, resetConfig, testConfig } from '@sonarrTube/mocks/Config';
 import '@sonarrTube/mocks/Fetch';
 import '@sonarrTube/mocks/Spies';
-import '@sonarrTube/mocks/execSync';
+import '@sonarrTube/mocks/ExecSync';
 
 expect.extend(matchers);
 beforeEach(() => {
