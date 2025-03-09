@@ -433,4 +433,53 @@ describe('ActionableVideo', () => {
                 .toThrow('season not found this shouldn\'t happen!');
         });
     });
+
+    describe('outputFilename', () => {
+        it('should generate an episode', () => {
+            const actionableVideo = actionableVideoFactory();
+            if (actionableVideo.sonarrEpisode) {
+                actionableVideo.sonarrEpisode.seasonNumber = 2;
+                actionableVideo.sonarrEpisode.episodeNumber = 1;
+                actionableVideo.sonarrSeries.title = 'blah';
+            }
+            expect(actionableVideo.outputFilename()).toBe('blah.s02e01');
+        });
+
+        it('should throw when episode missing is missing', () => {
+            const actionableVideo = actionableVideoFactory();
+            actionableVideo.sonarrEpisode = undefined;
+            expect(() => actionableVideo.outputFilename())
+                .toThrow('Episode not found this shouldn\'t happen!');
+        });
+    });
+
+    describe('outputSeasonDirectory', () => {
+        it('should generate an episode', () => {
+            const actionableVideo = actionableVideoFactory();
+            if (actionableVideo.sonarrEpisode) {
+                actionableVideo.sonarrEpisode.seasonNumber = 2;
+                actionableVideo.sonarrSeries.path = 'blah';
+            }
+            expect(actionableVideo.outputSeasonDirectory()).toBe('blah/Season 02');
+        });
+
+        it('should throw when episode missing is missing', () => {
+            const actionableVideo = actionableVideoFactory();
+            actionableVideo.sonarrEpisode = undefined;
+            expect(() => actionableVideo.outputSeasonDirectory())
+                .toThrow('Episode not found this shouldn\'t happen!');
+        });
+    });
+
+    describe('cleanNumber', () => {
+        it('if > 10', () => {
+            const actionableVideo = actionableVideoFactory();
+            expect(actionableVideo.cleanNumber(2)).toBe('02');
+        });
+
+        it('if < 10', () => {
+            const actionableVideo = actionableVideoFactory();
+            expect(actionableVideo.cleanNumber(11)).toBe('11');
+        });
+    });
 });

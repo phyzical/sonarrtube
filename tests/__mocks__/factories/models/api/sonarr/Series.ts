@@ -21,7 +21,7 @@ export const seriesFactory = (params: any = {}, videoCount: undefined | number =
             overview: faker.lorem.words(),
             network: faker.company.name(),
             year: faker.number.int(),
-            path: faker.system.filePath(),
+            path: faker.system.directoryPath().replace('/', ''),
             seasonFolder: faker.datatype.boolean(),
             monitored: faker.datatype.boolean(),
             tvdbId: faker.number.int(),

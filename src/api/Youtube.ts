@@ -21,17 +21,22 @@ export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
                 series.name,
                 channel.url
             );
+            if (channel.videos.length > 0) {
+                channel.id = channel.videos[0].channel_id;
+            }
         }
 
-        // Then look for channel url
-        const remoteId = series.remoteIds.find(remote => remote.id.match(/youtube.com\/c(hannel)*\//));
+        if (!channel.id) {
+            // Then look for channel url
+            const remoteId = series.remoteIds.find(remote => remote.id.match(/youtube.com\/c(hannel)*\//));
 
-        if (remoteId) {
-            const splits = remoteId.id.split('/');
-            channel.id = splits[splits.length - 1];
-        } else {
-            // then fallback to looking for a source name with youtube for a channel id lookup
-            channel.id = series.remoteIds.find(remote => remote.sourceName.toLowerCase() == 'youtube')?.id;
+            if (remoteId) {
+                const splits = remoteId.id.split('/');
+                channel.id = splits[splits.length - 1];
+            } else {
+                // then fallback to looking for a source name with youtube for a channel id lookup
+                channel.id = series.remoteIds.find(remote => remote.sourceName.toLowerCase() == 'youtube')?.id;
+            }
         }
 
         if (channel.id && channel.videos.length == 0) {

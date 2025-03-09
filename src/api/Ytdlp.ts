@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'fs';
 import { execSync } from 'child_process';
-import path from 'path';
+import path, { join } from 'path';
 
 import { Video as VideoType } from '@sonarrTube/types/youtube/Video.js';
 import { Video } from '@sonarrTube/models/api/youtube/Video.js';
@@ -11,7 +11,7 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { getYoutubeDelayString } from '@sonarrTube/helpers/Generic.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose, isDocker } = config();
+const { isDocker } = config();
 
 const ytdlp_path = isDocker ? '/app/.local/bin/yt-dlp' : 'yt-dlp';
 
@@ -87,23 +87,9 @@ export const getVideoInfos = (seriesName: string, url: string): Video[] => {
     return processVideoInfos(seriesName);
 };
 
-export const channelIdByAlias = (alias: string): string | undefined => {
-    if (!alias) {
-        return;
-    }
-
-    return execSync(
-        [
-            ytdlp_path,
-            '-print "%(channel_id)s"',
-            '--playlist-end 1',
-            `${Constants.YOUTUBE.HOST}/${alias}/`
-        ].join(' '),
-        { encoding: Constants.FILES.ENCODING }
-    );
-};
-
 export const downloadVideos = (videos: ActionableVideo[]): string[] => {
+    const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
+
     const summaries: string[] = [];
     for (const video of videos) {
         if (!video.sonarrEpisode) {
@@ -113,18 +99,16 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             throw new Error('youtubeVideo episode not found This shouldn\'t happen!');
         }
         const {
-            episodeNumber,
-            seasonNumber,
-            series: { title: seriesTitle, path: seriesPath }
+            series: { title: seriesTitle }
         } = video.sonarrEpisode;
         const youtubeURL = `${Constants.YOUTUBE.HOST}/watch?v=${video.youtubeVideo.id}/`;
         const format = 'mkv';
-        // eslint-disable-next-line max-len
-        const fileName = `${seriesTitle.replace(/ /g, '.')}.s${seasonNumber}e${episodeNumber < 10 ? '0' : ''}${episodeNumber}`;
-        const subPath = `Season ${seasonNumber}`;
-        const outputCachePath = `${cacheKeyBase(`${seriesTitle}/tmp`)}/${subPath}`;
-        const outputCacheFilePath = `${outputCachePath}/${fileName}`;
-        const outputPath = `${outputDir}/${seriesPath}/${subPath}`;
+
+        const fileName = video.outputFilename();
+        const seasonDirectory = video.outputSeasonDirectory();
+        const outputCachePath = join(cacheKeyBase(join(seriesTitle, 'tmp')), seasonDirectory);
+        const outputCacheFilePath = join(outputCachePath, fileName);
+        const outputPath = join(outputDir, seasonDirectory);
         const alreadyDownloaded = existsSync(`${outputPath}/${fileName}.${format}`);
         if (alreadyDownloaded) {
             continue;
@@ -137,9 +121,9 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             continue;
         }
 
-
         log(summaryText);
 
+        mkdirSync(outputCachePath, { recursive: true });
         execSync(
             [
                 ytdlp_path,
@@ -159,9 +143,7 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             ].join(' '),
             verbose ? { stdio: 'inherit' } : {}
         );
-        if (!existsSync(outputPath)) {
-            mkdirSync(outputPath, { recursive: true });
-        }
+        mkdirSync(outputPath, { recursive: true });
         readdirSync(outputCachePath).forEach(file => {
             const regexFilename = fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             if (new RegExp(`.*${regexFilename}.*`).test(file)) {
