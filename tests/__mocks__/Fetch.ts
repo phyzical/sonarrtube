@@ -2,18 +2,22 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
+export const mockDir = join(__dirname, '..', '__mocks__',);
+export const mockRequestsDir = join(mockDir, 'requests');
+export const mockImagesDir = join(mockDir, 'images');
+
 global.fetch = jest.fn((url, _options) => {
     url = url.toString().replace(new RegExp('http(s)*://'), '');
     const isImage = /png|jp(e)*g|webp/g.test(url);
     const urlSplits = url.split('/');
     const lastSplit = urlSplits.pop();
-    let fileName = join(__dirname, '..', '__mocks__', 'requests', ...urlSplits, `${lastSplit}.json`);
+    let fileName = join(mockRequestsDir, ...urlSplits, `${lastSplit}.json`);
 
     if (isImage) {
         if (existsSync(url)) {
             fileName = url;
         } else {
-            fileName = join(__dirname, '..', '__mocks__', 'images', lastSplit);
+            fileName = join(mockImagesDir, lastSplit);
         }
 
     }
