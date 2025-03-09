@@ -106,7 +106,7 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
 
         const fileName = video.outputFilename();
         const seasonDirectory = video.outputSeasonDirectory();
-        const outputCachePath = join(__dirname, cacheKeyBase(join(seriesTitle, 'tmp')), seasonDirectory);
+        const outputCachePath = join(cacheKeyBase(join(seriesTitle, 'tmp')), seasonDirectory);
         const outputCacheFilePath = join(outputCachePath, fileName);
         const outputPath = join(outputDir, seasonDirectory);
         const alreadyDownloaded = existsSync(`${outputPath}/${fileName}.${format}`);
