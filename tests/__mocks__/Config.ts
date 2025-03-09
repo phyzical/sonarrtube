@@ -5,10 +5,10 @@ const initialProcessEnv = process.env;
 
 let configMock: jest.SpyInstance;
 export const testConfig = {
-    cacheDir: './tmp/cache',
+    cacheDir: 'tmp/cache',
     verbose: true,
     isDocker: true,
-    outputDir: './tmp/output',
+    outputDir: 'tmp/output',
     sonarr: { host: 'http://sonarr', apiKey: '12345' },
 };
 
