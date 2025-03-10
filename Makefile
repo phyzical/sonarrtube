@@ -17,6 +17,7 @@ run-image:
 	docker run -it --env-file=.env \
 		--rm \
 		--name ${NAME} \
+		-e ENV_FILE=.env \
 		--platform=linux/amd64 \
 		-v ${PWD}/tmp:/app/tmp \
 		-v ${PWD}/tmp:/tmp \
