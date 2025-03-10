@@ -1,3 +1,6 @@
+import { seriesFactory as sonarrSeriesFactory } from '@sonarrTube/factories/models/api/sonarr/Series';
+import { seriesFactory as tvdbSeriesFactory } from '@sonarrTube/factories/models/api/tvdb/Series';
+import { channelFactory } from '@sonarrTube/factories/models/api/youtube/Channel';
 import { actionableSeriesFactory } from '@sonarrTube/factories/models/api/ActionableSeries';
 import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries';
 
@@ -5,6 +8,23 @@ describe('ActionableSeries', () => {
     describe('constructor', () => {
         it('should create an instance of ActionableSeries', () => {
             expect(actionableSeriesFactory()).toBeInstanceOf(ActionableSeries);
+        });
+
+        it('should throw if video counts dont match', async () => {
+            await expect(async () => {
+                const sonarrSeries = sonarrSeriesFactory();
+                sonarrSeries.episodes = Array.from({ length: 7 }, () => sonarrSeries.episodes[0]);
+                const tvdbSeries = tvdbSeriesFactory();
+                tvdbSeries.episodes = Array.from({ length: 10 }, () => tvdbSeries.episodes[0]);
+
+                return new ActionableSeries(
+                    {
+                        sonarrSeries,
+                        tvdbSeries,
+                        youtubeContext: channelFactory()
+                    }
+                );
+            }).rejects.toThrow('Mismatch between tvdb and sonarr episodes! 7 vs 10');
         });
     });
     describe('unDownloadedVideos', () => {

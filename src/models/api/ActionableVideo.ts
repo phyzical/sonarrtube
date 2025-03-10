@@ -131,7 +131,7 @@ export class ActionableVideo implements ActionableVideoType {
 
     clearCache = (): void => {
         this.assertMissingTvdbEpisode();
-        clearCache(this.tvdbEpisode?.cacheKey() ?? '');
+        clearCache(this.tvdbEpisode?.cacheKey() as string);
     };
 
     generateSonarrEpisode = (episodeNumber: string): SonarrEpisode => {

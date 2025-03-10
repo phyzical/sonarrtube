@@ -25,7 +25,7 @@ export class ActionableSeries implements ActionableSeriesType {
 
         if (this.sonarrSeries.episodes.length != this.tvdbSeries.episodes.length) {
             throw new Error(
-                'Mismatch between tvdb and sonarr episodes!' +
+                'Mismatch between tvdb and sonarr episodes! ' +
                 `${this.sonarrSeries.episodes.length} vs ${this.tvdbSeries.episodes.length}`
             );
         }
