@@ -83,12 +83,20 @@ describe('Puppeteer', () => {
         });
     });
     describe('goto', () => {
-        it('should open url', async () => {
+        it('should open url, only once', async () => {
             const processGoto = jest.spyOn(page, 'goto');
             await goto(page, getPageUrl('submitForm.html'));
-            await expect(processGoto).toHaveBeenCalled();
+            expect(processGoto).toHaveBeenCalled();
             expect(await page.title()).toEqual('test');
         });
+
+        it('should not open url if already there', async () => {
+            page.url = (): string => getPageUrl('submitForm.html');
+            const processGoto = jest.spyOn(page, 'goto');
+            await goto(page, getPageUrl('submitForm.html'));
+            expect(processGoto).not.toHaveBeenCalled();
+        });
+
 
         it('should throw on invalid url', async () => {
             const fileURL = getPageUrl('subadssadsdasdmitForm.html');
