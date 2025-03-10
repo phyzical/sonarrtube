@@ -17,6 +17,7 @@ describe('Ytdlp', () => {
                 `${video.outputFilename()}.mkv`
             );
             downloadVideos([video]);
+            expect(execSyncSpy).toHaveBeenCalled();
             expect(existsSync(expectedPath)).toBeTrue();
         });
 
@@ -25,6 +26,7 @@ describe('Ytdlp', () => {
             video.sonarrEpisode = undefined;
             await expect(async () => downloadVideos([video])).rejects
                 .toThrow('sonarrEpisode episode not found This shouldn\'t happen!');
+            expect(execSyncSpy).not.toHaveBeenCalled();
         });
 
         it('should throw when missing youtube', async () => {
@@ -32,6 +34,8 @@ describe('Ytdlp', () => {
             video.youtubeVideo = undefined;
             await expect(async () => downloadVideos([video])).rejects
                 .toThrow('youtubeVideo episode not found This shouldn\'t happen!');
+            expect(execSyncSpy).not.toHaveBeenCalled();
+
         });
 
         it('shouldn\'t download if already downloaded', async () => {
