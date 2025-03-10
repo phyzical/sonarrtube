@@ -16,7 +16,6 @@ describe('Ytdlp', () => {
                 video.outputSeasonDirectory(),
                 `${video.outputFilename()}.mkv`
             );
-            console.log(expectedPath);
             downloadVideos([video]);
             expect(existsSync(expectedPath)).toBeTrue();
         });
