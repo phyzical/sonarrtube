@@ -21,6 +21,19 @@ describe('Ytdlp', () => {
             expect(existsSync(expectedPath)).toBeTrue();
         });
 
+        it('when verbose and sponsorBlockEnabled should call execSync with expected input', () => {
+            const video = actionableVideoFactory();
+            video.sonarrSeries.path = join(config().cacheDir, video.sonarrSeries.title);
+            const expectedPath = join(
+                video.outputSeasonDirectory(),
+                `${video.outputFilename()}.mkv`
+            );
+            downloadVideos([video]);
+            expect(execSyncSpy).toHaveBeenCalledWith(expect.stringContaining('--sponsorblock-remove "default"'), { stdio: 'inherit' });
+
+            expect(existsSync(expectedPath)).toBeTrue();
+        });
+
         it('should throw when missing sonarr', async () => {
             const video = actionableVideoFactory();
             video.sonarrEpisode = undefined;
