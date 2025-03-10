@@ -49,7 +49,7 @@ export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
             continue;
         }
 
-        if (!channel.videos) {
+        if (channel.videos.length == 0) {
             log(`Warning videos could not be found from youtube for ${series.name}, Skipping`);
             continue;
         }

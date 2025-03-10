@@ -5,7 +5,7 @@ import { downloadVideos } from '@sonarrTube/api/Ytdlp';
 import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
 import { config } from '@sonarrTube/helpers/Config';
 import { mockConfig } from '@sonarrTube/mocks/Config';
-import { execSyncSpy } from '@sonarrTube/mocks/execSync';
+import { execSyncSpy } from '@sonarrTube/mocks/ExecSync';
 
 describe('Ytdlp', () => {
     describe('downloadVideos', () => {

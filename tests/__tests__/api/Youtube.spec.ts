@@ -80,14 +80,14 @@ describe('Youtube', () => {
                     name: 'Adam Savage’s Tested',
                     id: '373426', remoteIds: [
                         {
-                            id: 'https://www.youtube.com/playlist?list=PLJtitKU0CAej22ZWBqrimPkn0Bbo6ci-rs',
+                            id: 'https://www.youtube.com/channel/UCiDJtJKMICpb9B1qf7qjEOAs',
                             type: 4,
                             sourceName: 'Official Website'
                         }
                     ],
                 })]);
                 expect(consoleSpy).toHaveBeenCalledWith(
-                    'Warning Could not get youtube channel id for Adam Savage’s Tested, Skipping'
+                    'Warning videos could not be found from youtube for Adam Savage’s Tested, Skipping'
                 );
                 expect(result).toBeArrayOfSize(0);
             });
