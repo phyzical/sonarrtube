@@ -75,9 +75,8 @@ describe('Youtube', () => {
         describe('When fails to find a videos given a id', () => {
 
             it('should return an empty array', async () => {
-
                 const result = await channels([seriesFactory({
-                    name: 'Adam Savage’s Tested',
+                    name: 'Adam Savage’s Testeds',
                     id: '373426', remoteIds: [
                         {
                             id: 'https://www.youtube.com/channel/UCiDJtJKMICpb9B1qf7qjEOAs',
@@ -87,7 +86,7 @@ describe('Youtube', () => {
                     ],
                 })]);
                 expect(consoleSpy).toHaveBeenCalledWith(
-                    'Warning videos could not be found from youtube for Adam Savage’s Tested, Skipping'
+                    'Warning videos could not be found from youtube for Adam Savage’s Testeds, Skipping'
                 );
                 expect(result).toBeArrayOfSize(0);
             });

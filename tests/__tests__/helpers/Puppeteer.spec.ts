@@ -153,9 +153,6 @@ describe('Puppeteer', () => {
             const page = await launchPuppeteerPage();
 
             await goto(page, getPageUrl('submitForm.html'));
-            console.log(await page.content());
-            console.log(await page.url());
-
             expect(await getValue(page, '#input2')).toBe('input2');
         });
 
