@@ -11,8 +11,8 @@ describe('Ytdlp', () => {
     describe('downloadVideos', () => {
         it('should return a list of video urls', () => {
             const video = actionableVideoFactory();
+            video.sonarrSeries.path = join(config().cacheDir, video.sonarrSeries.title);
             const expectedPath = join(
-                config().outputDir,
                 video.outputSeasonDirectory(),
                 `${video.outputFilename()}.mkv`
             );

@@ -88,7 +88,7 @@ export const getVideoInfos = (seriesName: string, url: string): Video[] => {
 };
 
 export const downloadVideos = (videos: ActionableVideo[]): string[] => {
-    const { youtube: { cookieFile, sponsorBlockEnabled }, outputDir, preview, verbose } = config();
+    const { youtube: { cookieFile, sponsorBlockEnabled }, preview, verbose } = config();
 
     const summaries: string[] = [];
     for (const video of videos) {
@@ -108,13 +108,12 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
         const seasonDirectory = video.outputSeasonDirectory();
         const outputCachePath = join(cacheKeyBase(join(seriesTitle, 'tmp')), seasonDirectory);
         const outputCacheFilePath = join(outputCachePath, fileName);
-        const outputPath = join(outputDir, seasonDirectory);
-        const alreadyDownloaded = existsSync(`${outputPath}/${fileName}.${format}`);
+        const alreadyDownloaded = existsSync(`${seasonDirectory}/${fileName}.${format}`);
         if (alreadyDownloaded) {
             continue;
         }
 
-        let summaryText = `Downloading ${youtubeURL} to "${outputPath}/${fileName}.%(ext)s"`;
+        let summaryText = `Downloading ${youtubeURL} to "${seasonDirectory}/${fileName}.%(ext)s"`;
         if (preview) {
             summaryText = `Preview mode on, would have ${summaryText}`;
             summaries.push(summaryText);
@@ -143,12 +142,12 @@ export const downloadVideos = (videos: ActionableVideo[]): string[] => {
             ].join(' '),
             verbose ? { stdio: 'inherit' } : {}
         );
-        mkdirSync(outputPath, { recursive: true });
+        mkdirSync(seasonDirectory, { recursive: true });
         readdirSync(outputCachePath).forEach(file => {
             const regexFilename = fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             if (new RegExp(`.*${regexFilename}.*`).test(file)) {
                 const sourceFile = path.join(outputCachePath, file);
-                const targetFile = path.join(outputPath, file);
+                const targetFile = path.join(seasonDirectory, file);
                 copyFileSync(sourceFile, targetFile);
             }
         });

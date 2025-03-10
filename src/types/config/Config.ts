@@ -8,7 +8,6 @@ export type Config = {
     sonarr: SonarrConfig
     cacheDir: string
     preview: boolean
-    outputDir: string
     verbose: boolean
     downloadOnly: boolean
     titleCleanerRegex: RegExp
