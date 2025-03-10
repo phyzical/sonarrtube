@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
 import { Channel as ChannelType } from '@sonarrTube/types/youtube/Channel.js';
 import { Series as SonarrSeriesType } from '@sonarrTube/types/sonarr/Series.js';
@@ -130,7 +131,7 @@ export class ActionableVideo implements ActionableVideoType {
 
     clearCache = (): void => {
         this.assertMissingTvdbEpisode();
-        clearCache(this.tvdbEpisode?.cacheKey() ?? '');
+        clearCache(this.tvdbEpisode?.cacheKey() as string);
     };
 
     generateSonarrEpisode = (episodeNumber: string): SonarrEpisode => {
@@ -145,4 +146,23 @@ export class ActionableVideo implements ActionableVideoType {
             hasFile: false,
         } as SonarrEpisodeType, this.sonarrSeries);
     };
+
+    outputFilename = (): string => {
+        if (!this.sonarrEpisode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+
+        return `${this.sonarrSeries.title.replace(/ /g, '.')}.s${this.cleanNumber(this.sonarrEpisode.seasonNumber)}` +
+            `e${this.cleanNumber(this.sonarrEpisode.episodeNumber)}`;
+    };
+
+    outputSeasonDirectory = (): string => {
+        if (!this.sonarrEpisode) {
+            throw new Error('Episode not found this shouldn\'t happen!');
+        }
+
+        return join(this.sonarrSeries.path, `Season ${this.cleanNumber(this.sonarrEpisode.seasonNumber)}`);
+    };
+
+    cleanNumber = (number: number): string => number < 10 ? `0${number}` : `${number}`;
 }

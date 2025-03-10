@@ -61,6 +61,8 @@ export const loaded = async (page: Page): Promise<HTTPResponse | null | undefine
 export const getValue = async (page: Page, selector: string): Promise<string> => {
   log(`Finding value for ${selector}`, true);
 
+  await find(page, selector);
+
   return await page.$eval(selector, /* istanbul ignore next */(el: Element) =>
     (el as HTMLInputElement).value || (el as HTMLInputElement).textContent) || '';
 };

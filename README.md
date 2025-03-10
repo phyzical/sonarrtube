@@ -28,11 +28,12 @@ if you set `DOWNLOAD_ONLY=true` then it will just download and none of the tvdb 
 
 NOTE!!!!!!
 
+* for downloads to work, you must match the directory structure with your sonarr instance via docker mounts, i.e if its /tv/showXyz/ this application must also see showXYZ in a directory called /tv/
 * if you update tvdb after scraping a show's links, make sure to clear the cache for it
-* Please be careful around what show you start "managing" as tvdb is brittle at times, and you dont want to just drown a show with bad/duplicated episodes
+* Please be careful around what show you start "managing" as tvdb is brittle at times, and you don't want to just drown a show with bad/duplicated episodes
 * It can just fail sometimes.
 * I suggest just running once a day at most.
-* If you find that a show is being kept up to date, i.e there is someone else already automating/manually managing it then simply exclude it from the sync.
+* If you find that a show is being kept up to date, i.e there is someone else already automating/manually managing it then simply exclude it from the sync, and it will still be downloaded (TODO: check this is correct)
 
 ## Envs
 
@@ -70,8 +71,6 @@ NOTE: if you using the env file you need to quote your variables, if your provid
 | PREVIEW_ONLY                     | no                     | 'true'          | will not download or perform any write changes to tvdb                    |
 |                                  |                        |                 |                                                                           |
 | DOWNLOAD_ONLY                    | no                     | 'true'          | Use tvdb as readonly                                                      |
-|                                  |                        |                 |                                                                           |
-| OUTPUT_DIR                       | no                     | './downloads'   | Where to save youtube downloads                                           |
 |                                  |                        |                 |                                                                           |
 | VERBOSE_LOGS                     | no                     | 'false'         |                                                                           |
 |                                  |                        |                 |                                                                           |

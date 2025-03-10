@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, writeFileSync } from 'fs';
 
 import { mockRequestsDir } from '@sonarrTube/mocks/Fetch';
 
@@ -9,10 +9,8 @@ beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     execSyncSpy = jest.spyOn(require('child_process'), 'execSync');
     execSyncSpy.mockImplementation((commands, _options) => {
-        if (commands.includes('-print "%(channel_id)s"')) {
-            // channelIdByAlias
-            throw new Error('implement');
-        } else if (commands.includes('--write-info-json')) {
+        //getAllVideoInfo
+        if (commands.includes('--write-info-json')) {
             const url = commands.split(' ').pop()
                 .replace(new RegExp('http(s)*://'), '');
             const cacheDir = commands.split('-o ')[1].split(' --')[0].replace(/"/g, '').replace('/%(id)s.%(ext)s', '');
@@ -27,10 +25,10 @@ beforeEach(() => {
                 const destinationPath = join(cacheDir, entry.name);
                 copyFileSync(sourcePath, destinationPath);
             }
-            //getAllVideoInfo
-        } else if (commands.includes('--no-write-playlist-metafiles')) {
-            throw new Error('implement');
             //downloadVideos
+        } else if (commands.includes('--no-write-playlist-metafiles')) {
+            const outputFilePath = commands.split('-o ')[1].split('.%(ext)s')[0].replace(/"/g, '') + '.mkv';
+            writeFileSync(outputFilePath, 'mocked');
         }
     });
 });

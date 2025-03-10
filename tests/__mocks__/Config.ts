@@ -8,6 +8,8 @@ export const testConfig = {
     cacheDir: 'tmp/cache',
     verbose: true,
     isDocker: true,
+    preview: false,
+    downloadOnly: false,
     sonarr: { host: 'http://sonarr', apiKey: '12345' },
 };
 
