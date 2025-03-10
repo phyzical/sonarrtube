@@ -29,7 +29,10 @@ describe('Ytdlp', () => {
                 `${video.outputFilename()}.mkv`
             );
             downloadVideos([video]);
-            expect(execSyncSpy).toHaveBeenCalledWith(expect.stringContaining('--sponsorblock-remove "default"'), { stdio: 'inherit' });
+            expect(execSyncSpy).toHaveBeenCalledWith(
+                expect.stringContaining('--sponsorblock-remove "default"'),
+                { stdio: 'inherit' }
+            );
 
             expect(existsSync(expectedPath)).toBeTrue();
         });
