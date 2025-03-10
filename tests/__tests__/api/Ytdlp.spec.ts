@@ -36,6 +36,7 @@ describe('Ytdlp', () => {
 
         it('shouldn\'t download if already downloaded', async () => {
             const video = actionableVideoFactory();
+            video.sonarrSeries.path = join(config().cacheDir, video.sonarrSeries.title);
             downloadVideos([video]);
             execSyncSpy.mockReset();
             downloadVideos([video]);
