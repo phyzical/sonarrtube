@@ -16,15 +16,15 @@ export const _removeText = async (
 
     const coordinates = _calculateCoordinates(blocks);
 
-    // By X
-    let newImage = await _cropImage(originalImage, coordinates, true, false);
+    // By X and Y
+    let newImage = await _cropImage(originalImage, coordinates, true, true);
     if (imageToSmall(newImage as JimpInstance)) {
         // By Y
         newImage = await _cropImage(originalImage, coordinates, false, true);
     }
     if (imageToSmall(newImage as JimpInstance)) {
-        // By X and Y
-        newImage = await _cropImage(originalImage, coordinates, true, true);
+        // By X
+        newImage = await _cropImage(originalImage, coordinates, true, false);
     }
     if (imageToSmall(newImage as JimpInstance)) {
         // blacken
@@ -33,7 +33,7 @@ export const _removeText = async (
 
     // Save the new image
     await newImage.write(inputPath as '`${string}.${string}`');
-    // await newImage.write('debug.png' as '`${string}.${string}`');
+    await newImage.write('debug.png' as '`${string}.${string}`');
 };
 
 const _blackenText = async (
@@ -60,18 +60,20 @@ const _cropImage = async (
     const { width, height } = originalImage.bitmap;
 
     const { x0, y0, x1, y1 } = coordinates;
-
+    // y1 is bottom, y0 is top
+    // x0 is left, x1 is right
     // Calculate dimensions and positions for the leftover segments
-    const bottomSegmentHeight = y0;
-    const topSegmentHeight = height - y1;
+    const topSegmentHeight = y0;
+    const bottomSegmentHeight = height - y1;
     const leftSegmentWidth = x0;
     const rightSegmentWidth = width - x1;
 
     // Create a new image with the same width and adjusted height
     // For simplicity, this example assumes vertical alignment of top and bottom segments only
     const newWidth = leftSegmentWidth + rightSegmentWidth;
+    const newHeight = topSegmentHeight + bottomSegmentHeight;
 
-    const newImage = new Jimp({ width: newWidth, height, color: 0xff0000ff });
+    const newImage = new Jimp({ width: byX ? newWidth : width, height: byY ? newHeight : height, color: 0xff0000ff });
 
     if (byY) {
 
@@ -138,23 +140,18 @@ export const findThumbnailText = async (
 type Coordinates = { x0: number; y0: number; x1: number; y1: number; }
 
 const _calculateCoordinates = (blocks: Block[]): Coordinates => {
-    let coordinates: Coordinates = {} as Coordinates;
+    const coordinates: Coordinates = {
+        x0: Number.MAX_SAFE_INTEGER,
+        y0: Number.MAX_SAFE_INTEGER,
+        x1: Number.MIN_SAFE_INTEGER,
+        y1: Number.MIN_SAFE_INTEGER
+    };
 
-    blocks.forEach((element: Block, i: number) => {
-        if (!i) {
-            coordinates = {
-                x0: element.bbox.x0, y0: element.bbox.y0, x1: element.bbox.x1, y1: element.bbox.y1
-            };
-        } else {
-            if (element.bbox.x0 < coordinates.x0) {
-                coordinates.x0 = element.bbox.x0;
-                coordinates.y0 = element.bbox.y0;
-            }
-            if (element.bbox.x1 > coordinates.x1) {
-                coordinates.x1 = element.bbox.x1;
-                coordinates.y1 = element.bbox.y1;
-            }
-        }
+    blocks.forEach((element: Block) => {
+        coordinates.x0 = Math.min(coordinates.x0, element.bbox.x0);
+        coordinates.y0 = Math.min(coordinates.y0, element.bbox.y0);
+        coordinates.x1 = Math.max(coordinates.x1, element.bbox.x1);
+        coordinates.y1 = Math.max(coordinates.y1, element.bbox.y1);
     });
 
     return coordinates;

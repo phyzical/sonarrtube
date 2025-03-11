@@ -95,6 +95,57 @@ describe('Thumbnails', () => {
             }, timeout);
         });
 
+        describe('byY', () => {
+            it('should process a thumbnail', async () => {
+
+                const uuid = genUUID();
+
+                const result = await processThumbnail(
+                    `${imageDir}/processThumbnail-byY.png`,
+                    uuid
+                );
+
+                expect(result).toEqual(
+                    `${cacheDir}/${uuid}_0.png`
+                );
+                expect(existsSync(result)).toBeTruthy();
+            }, timeout);
+        });
+
+        describe('byYAndByX', () => {
+            it('should process a thumbnail', async () => {
+
+                const uuid = genUUID();
+
+                const result = await processThumbnail(
+                    `${imageDir}/processThumbnail-byXbyY.png`,
+                    uuid
+                );
+
+                expect(result).toEqual(
+                    `${cacheDir}/${uuid}_0.png`
+                );
+                expect(existsSync(result)).toBeTruthy();
+            }, timeout);
+        });
+
+        describe('blackenText', () => {
+            it('should process a thumbnail', async () => {
+
+                const uuid = genUUID();
+
+                const result = await processThumbnail(
+                    `${imageDir}/processThumbnail-blackenText.jpg`,
+                    uuid
+                );
+
+                expect(result).toEqual(
+                    `${cacheDir}/${uuid}_0.jpg`
+                );
+                expect(existsSync(result)).toBeTruthy();
+            }, timeout);
+        });
+
         describe('png', () => {
             it('should process a thumbnail when png', async () => {
 
