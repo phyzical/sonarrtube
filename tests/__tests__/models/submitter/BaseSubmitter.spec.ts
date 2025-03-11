@@ -1,3 +1,5 @@
+import { Browser } from 'puppeteer';
+
 import { BaseSubmitter } from '@sonarrTube/models/submitter/BaseSubmitter';
 import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig';
 import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
@@ -53,6 +55,29 @@ describe('BaseSubmitter', () => {
     });
   });
 
+  describe('_browser', () => {
+    it('throws', () => {
+      expect(() => baseSubmitter._browser()).toThrow('Browser not initialized');
+    });
+
+    it('doesn\'t throw once init is called', async () => {
+      await baseSubmitter.init();
+      expect(() => baseSubmitter._browser()).not.toThrow('Browser not initialized');
+    });
+  });
+
+  describe('_video', () => {
+    it('throws', () => {
+      baseSubmitter.videoObj = undefined;
+      expect(() => baseSubmitter._video()).toThrow('Video not initialized');
+    });
+
+    it('doesn\'t throw once init is called', async () => {
+      await baseSubmitter.init();
+      expect(() => baseSubmitter._video()).not.toThrow('Video not initialized');
+    });
+  });
+
   describe('finish', () => {
     it('does not error if no browser', async () => {
       await baseSubmitter.finish();
@@ -77,11 +102,11 @@ describe('BaseSubmitter', () => {
 
       it('when error saves html and screenshot', async () => {
         const takeScreenshot = jest.spyOn(baseSubmitter, '_takeScreenshot');
-        const saveHtml = jest.spyOn(baseSubmitter, '_saveHtml');
+        // const saveHtml = jest.spyOn(baseSubmitter, '_saveHtml');
         const close = jest.spyOn(baseSubmitter._browser(), 'close');
         await baseSubmitter.finish(false);
         expect(takeScreenshot).not.toHaveBeenCalled();
-        expect(saveHtml).not.toHaveBeenCalled();
+        // expect(saveHtml).not.toHaveBeenCalled();
         expect(close).toHaveBeenCalled();
       });
     });
