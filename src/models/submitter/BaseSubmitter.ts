@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'fs';
+import { mkdirSync } from 'fs';
 import path from 'path';
 
 import puppeteer from 'puppeteer-extra';

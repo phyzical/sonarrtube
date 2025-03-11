@@ -1,5 +1,3 @@
-import { Browser } from 'puppeteer';
-
 import { BaseSubmitter } from '@sonarrTube/models/submitter/BaseSubmitter';
 import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig';
 import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
