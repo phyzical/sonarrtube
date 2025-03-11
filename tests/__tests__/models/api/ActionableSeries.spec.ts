@@ -400,7 +400,7 @@ describe('ActionableSeries', () => {
     describe('backfillableImageVideos', () => {
         it('should return empty if download only', () => {
             const actionableSeries = actionableSeriesFactory();
-            const result = actionableSeries.backfillableImageVideos();
+            const result = actionableSeries.backfillableImageVideos(true);
             expect(result).toBeArrayOfSize(0);
             expect(result).toEqual([]);
         });
@@ -411,7 +411,7 @@ describe('ActionableSeries', () => {
             if (video && video.tvdbEpisode) {
                 video.tvdbEpisode.image = '';
             }
-            const result = actionableSeries.backfillableImageVideos(false);
+            const result = actionableSeries.backfillableImageVideos();
             expect(result).toBeArrayOfSize(1);
             expect(result).toEqual([video]);
         });
