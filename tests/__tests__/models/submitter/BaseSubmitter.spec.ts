@@ -37,6 +37,11 @@ describe('BaseSubmitter', () => {
 
 
   it('init', async () => {
+    baseSubmitter = new BaseSubmitter({
+      username: 'username',
+      password: 'password',
+      email: 'email',
+    } as TVDBConfig);
     expect(baseSubmitter.pageObj).toBeUndefined();
     expect(baseSubmitter.browserObj).toBeUndefined();
     await baseSubmitter.init();
@@ -46,22 +51,30 @@ describe('BaseSubmitter', () => {
 
   describe('page', () => {
     it('throws', () => {
+      baseSubmitter = new BaseSubmitter({
+        username: 'username',
+        password: 'password',
+        email: 'email',
+      } as TVDBConfig);
       expect(() => baseSubmitter.page()).toThrow('Page not initialized');
     });
 
     it('doesn\'t throw once init is called', async () => {
-      await baseSubmitter.init();
       expect(() => baseSubmitter.page()).not.toThrow('Page not initialized');
     });
   });
 
   describe('_browser', () => {
     it('throws', () => {
+      baseSubmitter = new BaseSubmitter({
+        username: 'username',
+        password: 'password',
+        email: 'email',
+      } as TVDBConfig);
       expect(() => baseSubmitter._browser()).toThrow('Browser not initialized');
     });
 
     it('doesn\'t throw once init is called', async () => {
-      await baseSubmitter.init();
       expect(() => baseSubmitter._browser()).not.toThrow('Browser not initialized');
     });
   });
@@ -73,7 +86,6 @@ describe('BaseSubmitter', () => {
     });
 
     it('doesn\'t throw once init is called', async () => {
-      await baseSubmitter.init();
       expect(() => baseSubmitter._video()).not.toThrow('Video not initialized');
     });
   });
