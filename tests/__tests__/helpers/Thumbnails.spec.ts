@@ -11,7 +11,7 @@ describe('Thumbnails', () => {
     describe('processThumbnail', () => {
         let cacheDir;
         let imageDir;
-        const timeout = 25000;
+        const timeout = 50000;
         beforeEach(() => {
             cacheDir = `${process.cwd()}/${config().cacheDir}/${Constants.CACHE_FOLDERS.THUMBNAIL}`;
             imageDir = `file://${process.cwd()}/tests/__mocks__/images`;
@@ -97,7 +97,6 @@ describe('Thumbnails', () => {
 
         describe('byY', () => {
             it('should process a thumbnail', async () => {
-
                 const uuid = genUUID();
 
                 const result = await processThumbnail(

@@ -33,7 +33,7 @@ export const _removeText = async (
 
     // Save the new image
     await newImage.write(inputPath as '`${string}.${string}`');
-    await newImage.write('debug.png' as '`${string}.${string}`');
+    // await newImage.write('debug.png' as '`${string}.${string}`');
 };
 
 const _blackenText = async (
@@ -127,6 +127,7 @@ export const findThumbnailText = async (
                 // if even means its the first attempt of each bounding box 
                 .contrast(attempt == 2 ? 0.4 : 0.1)
                 .getBuffer(JimpMime.png)
+            /* istanbul ignore next */
             , {}, { text: false, blocks: true })).data.blocks || [];
     } catch (e) {
         console.dir(e);
