@@ -6,8 +6,30 @@ import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries';
 
 describe('ActionableSeries', () => {
     describe('constructor', () => {
-        it('should create an instance of ActionableSeries', () => {
-            expect(actionableSeriesFactory()).toBeInstanceOf(ActionableSeries);
+        it('Should log warning about multiple matches', async () => {
+            const sonarrSeries = sonarrSeriesFactory();
+            sonarrSeries.episodes = Array.from({ length: 3 }, () => sonarrSeries.episodes[0]);
+            const youtubeContext = channelFactory();
+            const tvdbSeries = tvdbSeriesFactory();
+            tvdbSeries.episodes = Array.from({ length: 3 }, () => tvdbSeries.episodes[0]);
+            tvdbSeries.episodes = tvdbSeries.episodes.map((episode) => {
+                episode.productionCode = youtubeContext.videos[0].id;
+
+                return episode;
+            });
+
+            const series = new ActionableSeries(
+                {
+                    sonarrSeries,
+                    tvdbSeries,
+                    youtubeContext
+                }
+            );
+            expect(series.warnings).toEqual(
+                expect.arrayContaining([
+                    expect.stringContaining('Warning found multiple matches this shouldn\'t happen!')
+                ])
+            );
         });
 
         it('should throw if video counts dont match', async () => {
