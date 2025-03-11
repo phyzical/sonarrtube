@@ -3,6 +3,7 @@ import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig';
 import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
 import { actionableSeriesFactory } from '@sonarrTube/factories/models/api/ActionableSeries';
 import { consoleSpy } from '@sonarrTube/mocks/Spies';
+import { mockPage } from '@sonarrTube/mocks/Puppeteer';
 
 describe('BaseSubmitter', () => {
   let baseSubmitter = {} as BaseSubmitter;
@@ -12,7 +13,7 @@ describe('BaseSubmitter', () => {
       password: 'password',
       email: 'email',
     } as TVDBConfig);
-
+    await mockPage(baseSubmitter);
     baseSubmitter.videoObj = actionableVideoFactory();
   });
 
