@@ -1,11 +1,7 @@
 import { ShowSubmitter } from '@sonarrTube/entry/ShowSubmitter';
-describe.skip('ShowSubmitter', () => {
-  it('constructor', () => {
-    const showSubmitter = new ShowSubmitter();
-    expect(showSubmitter).toBeDefined();
-  });
+describe('ShowSubmitter', () => {
   it('start', () => {
     const showSubmitter = new ShowSubmitter();
-    expect(() => showSubmitter.start()).not.toThrow('Cache key not found this shouldn\'t ever happen!');
+    expect(async () => await showSubmitter.start()).rejects.toThrow('Cache key not found this shouldn\'t ever happen!');
   });
 });
