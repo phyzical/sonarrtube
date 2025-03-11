@@ -13,6 +13,7 @@ describe('BaseSubmitter', () => {
       password: 'password',
       email: 'email',
     } as TVDBConfig);
+    await baseSubmitter.init();
     await mockPage(baseSubmitter);
     baseSubmitter.videoObj = actionableVideoFactory();
   });
