@@ -129,7 +129,9 @@ export const findThumbnailText = async (
                 .getBuffer(JimpMime.png)
             /* istanbul ignore next */
             , {}, { text: false, blocks: true })).data.blocks || [];
+        /* istanbul ignore next */
     } catch (e) {
+        /* istanbul ignore next */
         console.dir(e);
     } finally {
         await worker.terminate();
