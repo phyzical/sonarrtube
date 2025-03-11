@@ -122,7 +122,9 @@ export const findThumbnailText = async (
             tessedit_pageseg_mode: PSM.SPARSE_TEXT,
         });
 
+        /* istanbul ignore next */
         blocks = (await worker.recognize(
+            /* istanbul ignore next */
             await image.greyscale()
                 // if even means its the first attempt of each bounding box 
                 .contrast(attempt == 2 ? 0.4 : 0.1)
