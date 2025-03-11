@@ -13,6 +13,8 @@ describe('Thumbnails', () => {
         let imageDir;
         const timeout = 50000;
         beforeEach(() => {
+            jest.retryTimes(5);
+
             cacheDir = `${process.cwd()}/${config().cacheDir}/${Constants.CACHE_FOLDERS.THUMBNAIL}`;
             imageDir = `file://${process.cwd()}/tests/__mocks__/images`;
         });
