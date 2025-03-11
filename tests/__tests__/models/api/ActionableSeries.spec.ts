@@ -32,6 +32,34 @@ describe('ActionableSeries', () => {
             );
         });
 
+        it('when no airdates', async () => {
+            const sonarrSeries = sonarrSeriesFactory();
+            sonarrSeries.episodes = sonarrSeries.episodes.map((episode) => {
+                episode.airDate = '';
+
+                return episode;
+            });
+            sonarrSeries.episodes = Array.from({ length: 3 }, () => sonarrSeries.episodes[0]);
+
+            const tvdbSeries = tvdbSeriesFactory();
+            tvdbSeries.episodes = tvdbSeries.episodes.map((episode) => {
+                episode.aired = '';
+
+                return episode;
+            });
+            tvdbSeries.episodes = Array.from({ length: 3 }, () => tvdbSeries.episodes[0]);
+
+
+            const series = new ActionableSeries(
+                {
+                    sonarrSeries,
+                    tvdbSeries,
+                    youtubeContext: channelFactory()
+                }
+            );
+            expect(series).toBeInstanceOf(ActionableSeries);
+        });
+
         it('should throw if video counts dont match', async () => {
             await expect(async () => {
                 const sonarrSeries = sonarrSeriesFactory();
@@ -372,7 +400,7 @@ describe('ActionableSeries', () => {
     describe('backfillableImageVideos', () => {
         it('should return empty if download only', () => {
             const actionableSeries = actionableSeriesFactory();
-            const result = actionableSeries.backfillableImageVideos(true);
+            const result = actionableSeries.backfillableImageVideos();
             expect(result).toBeArrayOfSize(0);
             expect(result).toEqual([]);
         });
