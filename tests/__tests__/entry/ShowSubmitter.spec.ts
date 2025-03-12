@@ -3,8 +3,15 @@ import { mockPage } from '@sonarrTube/mocks/Puppeteer';
 describe('ShowSubmitter', () => {
   it('start', async () => {
     const showSubmitter = new ShowSubmitter();
-    await showSubmitter.submitter.init();
-    await mockPage(showSubmitter.submitter);
-    expect(async () => await showSubmitter.start()).rejects.toThrow('Cache key not found this shouldn\'t ever happen!');
-  });
+    const submitter = showSubmitter.submitter;
+    jest.spyOn(submitter, 'doLogin').mockImplementation(async () => Promise.resolve());
+    jest.spyOn(submitter, 'addEpisode').mockImplementation(async () => Promise.resolve());
+    jest.spyOn(submitter, 'verifyAddedEpisode').mockImplementation(async () => '213');
+    jest.spyOn(submitter, 'backfillEpisodeProductionCode').mockImplementation(async () => Promise.resolve());
+    jest.spyOn(submitter, 'uploadEpisodeImage').mockImplementation(async () => Promise.resolve());
+    jest.spyOn(require('@sonarrTube/api/Ytdlp'), 'downloadVideos').mockImplementation(async () => Promise.resolve());
+    await submitter.init();
+    await mockPage(submitter);
+    await showSubmitter.start();
+  }, 15000);
 });

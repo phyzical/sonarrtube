@@ -1,3 +1,4 @@
+import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig';
 import { config } from '@sonarrTube/helpers/Config';
 import { Config } from '@sonarrTube/types/config/Config';
 
@@ -6,6 +7,11 @@ const initialProcessEnv = process.env;
 let configMock: jest.SpyInstance;
 export const testConfig = {
     cacheDir: 'tmp/cache',
+    tvdb: {
+        username: 'username', password: 'password', email: 'email', skipSeriesIds: [],
+        skippedEpisodeIds: [],
+        matchSeriesIds: []
+    },
     verbose: true,
     isDocker: true,
     preview: false,

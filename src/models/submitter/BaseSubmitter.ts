@@ -54,8 +54,8 @@ export class BaseSubmitter {
 
 
   init = async (): Promise<void> => {
-    this.browserObj = await puppeteer.launch({
-      headless: true,
+    this.browserObj ||= await puppeteer.launch({
+      headless: false,
       args: [
         // Required for Docker version of Puppeteer
         '--no-sandbox',
@@ -68,7 +68,7 @@ export class BaseSubmitter {
 
     const browserVersion = await this._browser().version();
     log(`Started ${browserVersion}`);
-    this.pageObj = await this._browser().newPage();
+    this.pageObj ||= await this._browser().newPage();
   };
 
 
