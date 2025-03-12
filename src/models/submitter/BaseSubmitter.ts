@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'fs';
+import { mkdirSync } from 'fs';
 import path from 'path';
 
 import puppeteer from 'puppeteer-extra';
@@ -54,7 +54,7 @@ export class BaseSubmitter {
 
 
   init = async (): Promise<void> => {
-    this.browserObj = await puppeteer.launch({
+    this.browserObj ||= await puppeteer.launch({
       headless: true,
       args: [
         // Required for Docker version of Puppeteer
@@ -68,7 +68,7 @@ export class BaseSubmitter {
 
     const browserVersion = await this._browser().version();
     log(`Started ${browserVersion}`);
-    this.pageObj = await this._browser().newPage();
+    this.pageObj ||= await this._browser().newPage();
   };
 
 
@@ -163,17 +163,17 @@ export class BaseSubmitter {
     return tvdbEpisode;
   };
 
-  _saveHtml = async (): Promise<void> => {
-    try {
-      const html = await this.page().content();
-      const filename = `${this.errorFolder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
-      const htmlPath = `${filename}.html`;
-      writeFileSync(htmlPath, html);
-      log(`html can be found at ${htmlPath}`);
-    } catch (e) {
-      log(`failed to save html: ${e}`);
-    }
-  };
+  // _saveHtml = async (): Promise<void> => {
+  //   try {
+  //     const html = await this.page().content();
+  //     const filename = `${this.errorFolder}/html-${currentFileTimestamp()}-${this.constructor.name}`;
+  //     const htmlPath = `${filename}.html`;
+  //     writeFileSync(htmlPath, html);
+  //     log(`html can be found at ${htmlPath}`);
+  //   } catch (e) {
+  //     log(`failed to save html: ${e}`);
+  //   }
+  // };
 
   _takeScreenshot = async (): Promise<void> => {
     const filename = `${this.errorFolder}/screen-${currentFileTimestamp()}-${this.constructor.name}`;
@@ -185,6 +185,7 @@ export class BaseSubmitter {
       });
       log(`screen shot can be found at ${screenshotPath}`);
     } catch (e) {
+      /* istanbul ignore next */
       log(`failed to save screenshot: ${e}`);
     }
   };

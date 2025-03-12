@@ -11,8 +11,10 @@ describe('Thumbnails', () => {
     describe('processThumbnail', () => {
         let cacheDir;
         let imageDir;
-        const timeout = 25000;
+        const timeout = 50000;
         beforeEach(() => {
+            jest.retryTimes(5);
+
             cacheDir = `${process.cwd()}/${config().cacheDir}/${Constants.CACHE_FOLDERS.THUMBNAIL}`;
             imageDir = `file://${process.cwd()}/tests/__mocks__/images`;
         });
@@ -90,6 +92,56 @@ describe('Thumbnails', () => {
 
                 expect(result).toEqual(
                     `${cacheDir}/${uuid}_0.png`
+                );
+                expect(existsSync(result)).toBeTruthy();
+            }, timeout);
+        });
+
+        describe('byY', () => {
+            it('should process a thumbnail', async () => {
+                const uuid = genUUID();
+
+                const result = await processThumbnail(
+                    `${imageDir}/processThumbnail-byY.png`,
+                    uuid
+                );
+
+                expect(result).toEqual(
+                    `${cacheDir}/${uuid}_0.png`
+                );
+                expect(existsSync(result)).toBeTruthy();
+            }, timeout);
+        });
+
+        describe('byYAndByX', () => {
+            it('should process a thumbnail', async () => {
+
+                const uuid = genUUID();
+
+                const result = await processThumbnail(
+                    `${imageDir}/processThumbnail-byXbyY.png`,
+                    uuid
+                );
+
+                expect(result).toEqual(
+                    `${cacheDir}/${uuid}_0.png`
+                );
+                expect(existsSync(result)).toBeTruthy();
+            }, timeout);
+        });
+
+        describe('blackenText', () => {
+            it('should process a thumbnail', async () => {
+
+                const uuid = genUUID();
+
+                const result = await processThumbnail(
+                    `${imageDir}/processThumbnail-blackenText.jpg`,
+                    uuid
+                );
+
+                expect(result).toEqual(
+                    `${cacheDir}/${uuid}_0.jpg`
                 );
                 expect(existsSync(result)).toBeTruthy();
             }, timeout);

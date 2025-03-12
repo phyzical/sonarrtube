@@ -7,6 +7,7 @@ import { cleanText } from '@sonarrTube/helpers/Puppeteer.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 import { ActionableSeries as ActionableSeriesType } from '@sonarrTube/types/ActionableSeries.js';
 import { Channel as ChannelType } from '@sonarrTube/types/youtube/Channel';
+import { Video } from '@sonarrTube/types/youtube/Video';
 
 export class ActionableSeries implements ActionableSeriesType {
     videos: ActionableVideo[];
@@ -133,11 +134,8 @@ export class ActionableSeries implements ActionableSeriesType {
             return this._backfillableProductionCodeVideos;
         }
 
-        for (const episode of this.missingProductionCodeTvdbVideos()) {
-            const tvdbEpisode = episode.tvdbEpisode;
-            if (!tvdbEpisode) {
-                continue;
-            }
+        for (const episode of this.missingProductionCodeTvdbVideos().filter(video => video.tvdbEpisode !== undefined)) {
+            const tvdbEpisode = episode.tvdbEpisode as TvdbEpisodeType;
 
             const match = this.youtubeContext
                 .videos
@@ -153,11 +151,8 @@ export class ActionableSeries implements ActionableSeriesType {
             }
         }
 
-        for (const episode of this.missingFromTvdbVideos()) {
-            const youtubeVideo = episode.youtubeVideo;
-            if (!youtubeVideo) {
-                continue;
-            }
+        for (const episode of this.missingFromTvdbVideos().filter(video => video.youtubeVideo !== undefined)) {
+            const youtubeVideo = episode.youtubeVideo as Video;
 
             const match = this.tvdbSeries
                 .episodes

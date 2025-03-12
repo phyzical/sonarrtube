@@ -2,8 +2,9 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 import { TvdbSubmitter } from '@sonarrTube/models/submitter/TvdbSubmitter';
+import { BaseSubmitter } from '@sonarrTube/models/submitter/BaseSubmitter';
 
-export const mockPage = async (tvdbSubmitter: TvdbSubmitter): Promise<void> => {
+export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Promise<void> => {
     const page = tvdbSubmitter.page();
 
     await page.setRequestInterception(true);

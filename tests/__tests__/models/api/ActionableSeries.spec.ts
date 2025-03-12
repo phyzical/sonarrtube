@@ -6,8 +6,58 @@ import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries';
 
 describe('ActionableSeries', () => {
     describe('constructor', () => {
-        it('should create an instance of ActionableSeries', () => {
-            expect(actionableSeriesFactory()).toBeInstanceOf(ActionableSeries);
+        it('Should log warning about multiple matches', async () => {
+            const sonarrSeries = sonarrSeriesFactory();
+            sonarrSeries.episodes = Array.from({ length: 3 }, () => sonarrSeries.episodes[0]);
+            const youtubeContext = channelFactory();
+            const tvdbSeries = tvdbSeriesFactory();
+            tvdbSeries.episodes = Array.from({ length: 3 }, () => tvdbSeries.episodes[0]);
+            tvdbSeries.episodes = tvdbSeries.episodes.map((episode) => {
+                episode.productionCode = youtubeContext.videos[0].id;
+
+                return episode;
+            });
+
+            const series = new ActionableSeries(
+                {
+                    sonarrSeries,
+                    tvdbSeries,
+                    youtubeContext
+                }
+            );
+            expect(series.warnings).toEqual(
+                expect.arrayContaining([
+                    expect.stringContaining('Warning found multiple matches this shouldn\'t happen!')
+                ])
+            );
+        });
+
+        it('when no airdates', async () => {
+            const sonarrSeries = sonarrSeriesFactory();
+            sonarrSeries.episodes = sonarrSeries.episodes.map((episode) => {
+                episode.airDate = '';
+
+                return episode;
+            });
+            sonarrSeries.episodes = Array.from({ length: 3 }, () => sonarrSeries.episodes[0]);
+
+            const tvdbSeries = tvdbSeriesFactory();
+            tvdbSeries.episodes = tvdbSeries.episodes.map((episode) => {
+                episode.aired = '';
+
+                return episode;
+            });
+            tvdbSeries.episodes = Array.from({ length: 3 }, () => tvdbSeries.episodes[0]);
+
+
+            const series = new ActionableSeries(
+                {
+                    sonarrSeries,
+                    tvdbSeries,
+                    youtubeContext: channelFactory()
+                }
+            );
+            expect(series).toBeInstanceOf(ActionableSeries);
         });
 
         it('should throw if video counts dont match', async () => {
@@ -361,7 +411,7 @@ describe('ActionableSeries', () => {
             if (video && video.tvdbEpisode) {
                 video.tvdbEpisode.image = '';
             }
-            const result = actionableSeries.backfillableImageVideos(false);
+            const result = actionableSeries.backfillableImageVideos();
             expect(result).toBeArrayOfSize(1);
             expect(result).toEqual([video]);
         });

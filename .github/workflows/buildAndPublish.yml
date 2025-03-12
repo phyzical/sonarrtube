@@ -41,8 +41,8 @@ jobs:
         uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           push: true
-          cache-from: type=registry,ref=ghcr.io/phyzical/sonarrtube:test
-          tags: ghcr.io/phyzical/sonarrtube:test
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:test
+          tags: ghcr.io/${{ github.repository }}:test
           target: build
           platforms: linux/amd64
 
@@ -51,7 +51,7 @@ jobs:
             -v ${PWD}/tests:/app/tests \
             -v ${PWD}/src:/app/src \
             -v ${PWD}/eslint.config.js:/app/eslint.config.js \
-            ghcr.io/phyzical/sonarrtube:test yarn run lint
+            ghcr.io/${{ github.repository }}:test yarn run lint
       - run: |
           docker run \
             -v ${PWD}/tests:/app/tests \
@@ -59,11 +59,11 @@ jobs:
             -v ${PWD}/jest.config.ts:/app/jest.config.ts \
             -v ${PWD}/tsconfig.build.json:/app/tsconfig.build.json \
             -v ${PWD}/tsconfig.json:/app/tsconfig.json \
-            ghcr.io/phyzical/sonarrtube:test yarn test
+            ghcr.io/${{ github.repository }}:test yarn test
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
         with:
           images: ghcr.io/${{ github.repository }}:latest
 

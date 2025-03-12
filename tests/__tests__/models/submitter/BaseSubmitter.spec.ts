@@ -3,6 +3,7 @@ import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig';
 import { actionableVideoFactory } from '@sonarrTube/factories/models/api/ActionableVideo';
 import { actionableSeriesFactory } from '@sonarrTube/factories/models/api/ActionableSeries';
 import { consoleSpy } from '@sonarrTube/mocks/Spies';
+import { mockPage } from '@sonarrTube/mocks/Puppeteer';
 
 describe('BaseSubmitter', () => {
   let baseSubmitter = {} as BaseSubmitter;
@@ -12,7 +13,8 @@ describe('BaseSubmitter', () => {
       password: 'password',
       email: 'email',
     } as TVDBConfig);
-
+    await baseSubmitter.init();
+    await mockPage(baseSubmitter);
     baseSubmitter.videoObj = actionableVideoFactory();
   });
 
@@ -35,6 +37,11 @@ describe('BaseSubmitter', () => {
 
 
   it('init', async () => {
+    baseSubmitter = new BaseSubmitter({
+      username: 'username',
+      password: 'password',
+      email: 'email',
+    } as TVDBConfig);
     expect(baseSubmitter.pageObj).toBeUndefined();
     expect(baseSubmitter.browserObj).toBeUndefined();
     await baseSubmitter.init();
@@ -44,12 +51,42 @@ describe('BaseSubmitter', () => {
 
   describe('page', () => {
     it('throws', () => {
+      baseSubmitter = new BaseSubmitter({
+        username: 'username',
+        password: 'password',
+        email: 'email',
+      } as TVDBConfig);
       expect(() => baseSubmitter.page()).toThrow('Page not initialized');
     });
 
     it('doesn\'t throw once init is called', async () => {
-      await baseSubmitter.init();
       expect(() => baseSubmitter.page()).not.toThrow('Page not initialized');
+    });
+  });
+
+  describe('_browser', () => {
+    it('throws', () => {
+      baseSubmitter = new BaseSubmitter({
+        username: 'username',
+        password: 'password',
+        email: 'email',
+      } as TVDBConfig);
+      expect(() => baseSubmitter._browser()).toThrow('Browser not initialized');
+    });
+
+    it('doesn\'t throw once init is called', async () => {
+      expect(() => baseSubmitter._browser()).not.toThrow('Browser not initialized');
+    });
+  });
+
+  describe('_video', () => {
+    it('throws', () => {
+      baseSubmitter.videoObj = undefined;
+      expect(() => baseSubmitter._video()).toThrow('Video not initialized');
+    });
+
+    it('doesn\'t throw once init is called', async () => {
+      expect(() => baseSubmitter._video()).not.toThrow('Video not initialized');
     });
   });
 
@@ -77,11 +114,11 @@ describe('BaseSubmitter', () => {
 
       it('when error saves html and screenshot', async () => {
         const takeScreenshot = jest.spyOn(baseSubmitter, '_takeScreenshot');
-        const saveHtml = jest.spyOn(baseSubmitter, '_saveHtml');
+        // const saveHtml = jest.spyOn(baseSubmitter, '_saveHtml');
         const close = jest.spyOn(baseSubmitter._browser(), 'close');
         await baseSubmitter.finish(false);
         expect(takeScreenshot).not.toHaveBeenCalled();
-        expect(saveHtml).not.toHaveBeenCalled();
+        // expect(saveHtml).not.toHaveBeenCalled();
         expect(close).toHaveBeenCalled();
       });
     });

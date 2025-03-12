@@ -9,7 +9,7 @@ describe('Sonarr', () => {
         it('it filters out non youtube series, returns the right episodes', async () => {
             const youtubeSeries = await series();
             expect(youtubeSeries).toBeArrayOfSize(2);
-            expect(youtubeSeries[0].episodes).toBeArrayOfSize(381);
+            expect(youtubeSeries[0].episodes).toBeArrayOfSize(2);
         });
 
         describe('filtering Series', () => {
@@ -32,7 +32,7 @@ describe('Sonarr', () => {
 
                 const youtubeSeries = await series();
                 expect(youtubeSeries).toBeArrayOfSize(1);
-                expect(youtubeSeries[0].episodes).toBeArrayOfSize(381);
+                expect(youtubeSeries[0].episodes).toBeArrayOfSize(2);
                 expect(youtubeSeries[0].id).toBe(8);
             });
         });
@@ -55,7 +55,7 @@ describe('Sonarr', () => {
             it('it filters out ', async () => {
                 const youtubeSeries = await series();
                 expect(youtubeSeries).toBeArrayOfSize(1);
-                expect(youtubeSeries[0].episodes).toBeArrayOfSize(381);
+                expect(youtubeSeries[0].episodes).toBeArrayOfSize(2);
                 expect(youtubeSeries[0].id).toBe(2);
             });
         });

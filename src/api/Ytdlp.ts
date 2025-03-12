@@ -13,6 +13,7 @@ import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 const { isDocker } = config();
 
+/* istanbul ignore next */
 const ytdlp_path = isDocker ? '/app/.local/bin/yt-dlp' : 'yt-dlp';
 
 const cacheKeyBase = (cacheKey: string): string => cachePath(`youtube/${cacheKey}`);

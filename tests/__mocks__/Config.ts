@@ -6,6 +6,11 @@ const initialProcessEnv = process.env;
 let configMock: jest.SpyInstance;
 export const testConfig = {
     cacheDir: 'tmp/cache',
+    tvdb: {
+        username: 'username', password: 'password', email: 'email', skipSeriesIds: [],
+        skippedEpisodeIds: [],
+        matchSeriesIds: []
+    },
     verbose: true,
     isDocker: true,
     preview: false,

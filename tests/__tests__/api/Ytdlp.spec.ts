@@ -21,7 +21,12 @@ describe('Ytdlp', () => {
             expect(existsSync(expectedPath)).toBeTrue();
         });
 
-        it('when verbose and sponsorBlockEnabled should call execSync with expected input', () => {
+        it('when verbose disabled and sponsorBlockEnabled disabled should call execSync with expected input', () => {
+            mockConfig({
+                verbose: false, youtube: {
+                    sponsorBlockEnabled: false, cookieFile: '', downloadDelayMonths: 1
+                }
+            });
             const video = actionableVideoFactory();
             video.sonarrSeries.path = join(config().cacheDir, video.sonarrSeries.title);
             const expectedPath = join(
@@ -29,7 +34,7 @@ describe('Ytdlp', () => {
                 `${video.outputFilename()}.mkv`
             );
             downloadVideos([video]);
-            expect(execSyncSpy).toHaveBeenCalledWith(
+            expect(execSyncSpy).not.toHaveBeenCalledWith(
                 expect.stringContaining('--sponsorblock-remove "default"'),
                 { stdio: 'inherit' }
             );
