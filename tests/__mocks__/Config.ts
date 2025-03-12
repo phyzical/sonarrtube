@@ -1,4 +1,3 @@
-import { TVDBConfig } from '@sonarrTube/types/config/TVDBConfig';
 import { config } from '@sonarrTube/helpers/Config';
 import { Config } from '@sonarrTube/types/config/Config';
 
