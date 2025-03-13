@@ -22,7 +22,7 @@ export default [
         sourceType: 'ESNext',
         parser: tseslint.parser,
         projectService: {
-          allowDefaultProject: ['*.js', '*.ts'],
+          allowDefaultProject: ['*.js', '*.ts', '.github/renovate-config.js'],
         },
         tsconfigRootDir: import.meta.dirname,
       },
