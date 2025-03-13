@@ -4,6 +4,16 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 
+export const xpathSelector = (selector: string): string => `::-p-xpath(//${selector})`;
+
+export const textContainsSelector = (text: string, elementSelector = '*'): string => {
+  const selectorCleaned = 'contains(translate(normalize-space(), ' +
+    `'${Constants.CHAR_CLEANER_LIST}', '${Constants.CHAR_CLEANER_LIST.toLowerCase()}'),` +
+    `"${text.toLowerCase()}")`;
+
+  return xpathSelector(`${elementSelector}[${selectorCleaned}]`);
+};
+
 export const delay = (time: number): Promise<void> => new Promise((resolve) => {
   log(`Waiting for ${time} ms`, true);
 
@@ -108,7 +118,8 @@ export const submitForm = async (page: Page, selector: string): Promise<void> =>
 
 export const cleanTextContainsXpath = (text: string): string =>
   // Remove following chars from filename and document contexts ?'/|-*: \ And lowercase all chars to increase matching
-  'contains(translate(translate(translate(text(),\'\\`~!@#$%^&*()-_=+[]{}|;:<>",./?, \\\\\',\'\'), "\'", \'\'),' +
+  // eslint-disable-next-line max-len
+  'contains(translate(translate(translate(normalize-space(),\'\\`~!@#$%^&*()-_=+[]{}|;:<>",./?, \\\\\',\'\'), "\'", \'\'),' +
   `'${Constants.CHAR_CLEANER_LIST}', '${Constants.CHAR_CLEANER_LIST.toLowerCase()}') , '${cleanText(text)}')`;
 
 

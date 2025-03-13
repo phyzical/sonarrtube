@@ -14,13 +14,13 @@ describe('ActionableVideo', () => {
     });
     describe('unDownloaded', () => {
         it('should return false if sonarrEpisode is missing', () => {
-            const sonarrSeries = SonarrSeriesFactory({ episodes: [undefined] });
+            const sonarrSeries = SonarrSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { sonarrSeries });
             expect(actionableVideo.unDownloaded()).toBe(false);
         });
 
         it('should return false if youtube is missing', () => {
-            const youtubeContext = channelFactory({ videos: [undefined] });
+            const youtubeContext = channelFactory({ videos: [] });
             const actionableVideo = actionableVideoFactory(0, { youtubeContext });
             expect(actionableVideo.unDownloaded()).toBe(false);
         });
@@ -41,7 +41,7 @@ describe('ActionableVideo', () => {
             expect(actionableVideo.missingFromTvdb()).toBe(false);
         });
         it('should return true if tvdbEpisode is missing', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
 
             expect(actionableVideo.missingFromTvdb()).toBe(true);
@@ -53,14 +53,14 @@ describe('ActionableVideo', () => {
             expect(actionableVideo.missingYoutube()).toBe(false);
         });
         it('should return true if youtubeVideo is missing', () => {
-            const youtubeContext = channelFactory({ videos: [undefined] });
+            const youtubeContext = channelFactory({ videos: [] });
             const actionableVideo = actionableVideoFactory(0, { youtubeContext });
             expect(actionableVideo.missingYoutube()).toBe(true);
         });
     });
     describe('missingProductionCode', () => {
         it('should return false if tvdbEpisode is missing', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(actionableVideo.missingProductionCode()).toBe(false);
         });
@@ -75,7 +75,7 @@ describe('ActionableVideo', () => {
     });
     describe('tvdbEditUrl', () => {
         it('should return null', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(actionableVideo.tvdbEditUrl()).toBe(undefined);
         });
@@ -88,7 +88,7 @@ describe('ActionableVideo', () => {
     });
     describe('tvdbInfoCache', () => {
         it('should return null', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(actionableVideo.tvdbInfoCache()).toBe(undefined);
         });
@@ -104,7 +104,7 @@ describe('ActionableVideo', () => {
     });
     describe('thumbnailCacheFile', () => {
         it('should throw', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(() => actionableVideo.thumbnailCacheFile()).toThrow('Episode not found this shouldn\'t happen!');
         });
@@ -122,7 +122,7 @@ describe('ActionableVideo', () => {
             expect(actionableVideo.thumbnailUploadAttemptCount()).toBe(0);
         });
         it('should throw', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(() => actionableVideo.thumbnailUploadAttemptCount())
                 .toThrow('Episode not found this shouldn\'t happen!');
@@ -141,7 +141,7 @@ describe('ActionableVideo', () => {
     });
     describe('addThumbnailUploadAttempt', () => {
         it('should throw', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(() => actionableVideo.addThumbnailUploadAttempt())
                 .toThrow('Episode not found this shouldn\'t happen!');
@@ -161,7 +161,7 @@ describe('ActionableVideo', () => {
         });
 
         it('should return a season given youtube', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const youtubeContext = channelFactory();
             youtubeContext.videos[0].upload_date = '20200101';
             const actionableVideo = actionableVideoFactory(0, {
@@ -172,7 +172,7 @@ describe('ActionableVideo', () => {
     });
     describe('aired', () => {
         it('should return an aired date tvdbEpisode', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
 
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             if (actionableVideo.youtubeVideo) {
@@ -211,7 +211,7 @@ describe('ActionableVideo', () => {
         });
 
         it('should return a URL when tvdbcontext', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const youtubeContext = channelFactory();
             if (youtubeContext.videos[0]) {
                 youtubeContext.videos[0].id = '958';
@@ -249,8 +249,8 @@ describe('ActionableVideo', () => {
         });
 
         it('should return a summary without all optional urls', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
-            const youtubeContext = channelFactory({ videos: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
+            const youtubeContext = channelFactory({ videos: [] });
             const actionableVideo = actionableVideoFactory(0, {
                 tvdbSeries, youtubeContext
             });
@@ -315,7 +315,7 @@ describe('ActionableVideo', () => {
         });
 
         it('should return a name when tvdb', () => {
-            const youtubeContext = channelFactory({ videos: [undefined] });
+            const youtubeContext = channelFactory({ videos: [] });
             const actionableVideo = actionableVideoFactory(0, {
                 youtubeContext
             });
@@ -335,7 +335,7 @@ describe('ActionableVideo', () => {
         });
 
         it('should return a name when youtube', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, {
                 tvdbSeries
             });
@@ -346,7 +346,7 @@ describe('ActionableVideo', () => {
         });
 
         it('should return a name when context', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const youtubeContext = channelFactory();
             if (youtubeContext.videos[0]) {
                 youtubeContext.videos[0].fulltitle = 'title';
@@ -358,8 +358,8 @@ describe('ActionableVideo', () => {
         });
 
         it('should return nothing when nothing', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
-            const youtubeContext = channelFactory({ videos: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
+            const youtubeContext = channelFactory({ videos: [] });
             const actionableVideo = actionableVideoFactory(0, {
                 tvdbSeries, youtubeContext
             });
@@ -391,7 +391,7 @@ describe('ActionableVideo', () => {
         });
 
         it('should return null when no youtube', () => {
-            const youtubeContext = channelFactory({ videos: [undefined] });
+            const youtubeContext = channelFactory({ videos: [] });
             const actionableVideo = actionableVideoFactory(0, {
                 youtubeContext
             });
@@ -406,7 +406,7 @@ describe('ActionableVideo', () => {
         });
 
         it('should throw', () => {
-            const tvdbSeries = TvdbSeriesFactory({ episodes: [undefined] });
+            const tvdbSeries = TvdbSeriesFactory({ episodes: [] });
             const actionableVideo = actionableVideoFactory(0, { tvdbSeries });
             expect(() => actionableVideo.clearCache())
                 .toThrow('Episode not found this shouldn\'t happen!');

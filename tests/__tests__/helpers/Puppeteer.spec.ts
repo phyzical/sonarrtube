@@ -83,7 +83,7 @@ describe('Puppeteer', () => {
 
             await page.goto(getPageUrl('submitForm.html'));
             await loaded(page);
-            await expect(processWaitForNavigation).toHaveBeenCalled();
+            expect(processWaitForNavigation).toHaveBeenCalled();
         });
 
         it('should log when no loaded', async () => {

@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "outDir": "./build",
     "skipLibCheck": true,
-    "target": "esnext",
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -12,6 +12,7 @@
     "removeComments": false,
     "noImplicitAny": false,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "types": ["jest", "node", "puppeteer"],
     "paths": {
       "@sonarrTube/factories/*": ["./tests/__mocks__/factories/*"],

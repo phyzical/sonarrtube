@@ -142,7 +142,7 @@ describe('#config', () => {
             Constants.ENVIRONMENT.ENV_FILE = envFile;
         });
 
-        it('should initialize config', async () => {
+        it('should initialize config', () => {
             expect(config()).toEqual({
                 titleCleanerRegex: new RegExp(configValues.TITLE_CLEANER_REGEX),
                 notificationWebhook: configValues.NOTIFICATION_WEBHOOK,
@@ -189,7 +189,7 @@ describe('#config', () => {
             Constants.ENVIRONMENT.ENV_FILE = envFile;
         });
 
-        it('should initialize config', async () => {
+        it('should initialize config', () => {
             expect(config().titleCleanerRegex).toEqual(
                 // eslint-disable-next-line no-control-regex, max-len
                 new RegExp(/ *(-|_)* *(TRO|\(*Documentary\)*|Smarter Every Day ([0-9])+|#(s|S)+horts|(Adam Savage('|’)*s*)* *((One Day|Live|Weekend)* *(Build|Repair)*)+s* *(-|_|:)* *|Computerphile|Guga Foods|Real Stories|Ars Techinca|War Stories|Battlezone|Doomsday|PBS Digital Studios|Space Time|\[4k\]|[^\x00-\x7F]|Nuclear Throne *([0-9])*)/)

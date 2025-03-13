@@ -24,7 +24,7 @@ export const series = async (): Promise<Series[]> => {
     const youtubeSeries = (await doRequest(`${host}/${Constants.SONARR.SERIES_ENDPOINT}`,
         Constants.REQUESTS.GET,
         { ...Constants.SONARR.HEADERS, 'x-api-key': apiKey }
-    ))
+    ) as SeriesType[])
         .map((series: SeriesType) => new Series(series))
         .filter((series: Series) => series.network == 'YouTube' &&
             (skipSeriesIds.length == 0 || !skipSeriesIds.includes(series.tvdbId)) &&
@@ -38,7 +38,7 @@ export const series = async (): Promise<Series[]> => {
         series.episodes = (await doRequest(`${host}/${Constants.SONARR.EPISODE_BY_SERIES_ENDPOINT}${series.id}`,
             Constants.REQUESTS.GET,
             { ...Constants.SONARR.HEADERS, 'x-api-key': apiKey }
-        ))
+        ) as EpisodeType[])
             .map((episode: EpisodeType) => new Episode(episode, series))
             .filter((episode: Episode) => episode.seasonNumber != 0);
     }

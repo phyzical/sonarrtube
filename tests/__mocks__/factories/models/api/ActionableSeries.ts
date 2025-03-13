@@ -22,7 +22,7 @@ export const actionableSeriesFactory = (params: object = {}): ActionableSeries =
         } as ActionableSeriesType
     );
 
-    series.videos = generateRandomArray((i) => actionableVideoFactory(i, {
+    series.videos = generateRandomArray((i: number) => actionableVideoFactory(i, {
         sonarrSeries, tvdbSeries, youtubeContext
     } as ActionableVideoType)) as ActionableVideo[];
 

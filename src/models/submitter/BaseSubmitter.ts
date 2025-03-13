@@ -186,6 +186,7 @@ export class BaseSubmitter {
       log(`screen shot can be found at ${screenshotPath}`);
     } catch (e) {
       /* istanbul ignore next */
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       log(`failed to save screenshot: ${e}`);
     }
   };

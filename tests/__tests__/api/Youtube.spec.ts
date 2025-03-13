@@ -8,12 +8,10 @@ describe('Youtube', () => {
     describe('channels', () => {
         describe('When matching by id youtube url', () => {
             describe('When playlist', () => {
-
-                it('should return a list of channels', async () => {
-
-                    const result = await channels([seriesFactory({
+                it('should return a list of channels', () => {
+                    const result = channels([seriesFactory({
                         name: 'Adam Savage’s Tested',
-                        id: '373426', remoteIds: [
+                        id: 373426, remoteIds: [
                             {
                                 id: 'https://www.youtube.com/playlist?list=PLJtitKU0CAej22ZWBqrimPkn0Bbo6ci-r',
                                 type: 4,
@@ -32,11 +30,10 @@ describe('Youtube', () => {
                 });
             });
             describe('When channel', () => {
-                it('should return a list of channels', async () => {
-
-                    const result = await channels([seriesFactory({
+                it('should return a list of channels', () => {
+                    const result = channels([seriesFactory({
                         name: 'Adam Savage’s Tested',
-                        id: '373426', remoteIds: [
+                        id: 373426, remoteIds: [
                             {
                                 id: 'https://www.youtube.com/channel/UCiDJtJKMICpb9B1qf7qjEOA',
                                 type: 4,
@@ -53,11 +50,10 @@ describe('Youtube', () => {
 
 
         describe('When fails to find a youtube id', () => {
-            it('should return an empty array', async () => {
-
-                const result = await channels([seriesFactory({
+            it('should return an empty array', () => {
+                const result = channels([seriesFactory({
                     name: 'Adam Savage’s Tested',
-                    id: '373426', remoteIds: [
+                    id: 373426, remoteIds: [
                         {
                             id: faker.internet.url(),
                             type: 4,
@@ -73,11 +69,10 @@ describe('Youtube', () => {
         });
 
         describe('When fails to find a videos given a id', () => {
-
-            it('should return an empty array', async () => {
-                const result = await channels([seriesFactory({
+            it('should return an empty array', () => {
+                const result = channels([seriesFactory({
                     name: 'Adam Savage’s Testeds',
-                    id: '373426', remoteIds: [
+                    id: 373426, remoteIds: [
                         {
                             id: 'https://www.youtube.com/channel/UCiDJtJKMICpb9B1qf7qjEOAs',
                             type: 4,

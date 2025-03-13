@@ -8,6 +8,7 @@ const { titleCleanerRegex } = config();
 export class Video implements VideoType {
     constructor(payload: VideoType) {
         this.title = payload.title;
+        this._type = payload._type;
         this.fulltitle = payload.fulltitle;
         this.thumbnail = payload.thumbnail;
         this.description = payload.description;
@@ -21,6 +22,7 @@ export class Video implements VideoType {
         this.upload_date = payload.upload_date;
         this.id = payload.id;
     }
+    _type: string;
     title: string;
     fulltitle: string;
     thumbnail: string;

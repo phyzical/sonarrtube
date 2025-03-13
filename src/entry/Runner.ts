@@ -20,11 +20,11 @@ export const run = async (): Promise<void> => {
     running = true;
     nextRun = nextRunTime();
     await new ShowSubmitter().start();
-    console.log(`Next run at ${nextRun}`);
+    console.log(`Next run at ${nextRun.toDateString()}`);
     running = false;
   };
 
-  start();
+  await start();
 
-  setInterval(start, rerunInterval);
+  setInterval(() => { start().catch(e => { throw e; }); }, rerunInterval);
 };

@@ -1,4 +1,5 @@
 export type Video = {
+    _type: string
     title: string
     fulltitle: string
     thumbnail: string

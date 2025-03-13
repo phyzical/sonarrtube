@@ -13,10 +13,9 @@ declare global {
   interface Window {
     cropper: {
       cropper: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getImageData: () => any; // Adjust the return type according to the actual structure
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getCanvasData: () => any; // Adjust the return type according to the actual structure
+        // Adjust the return type according to the actual structure
+        getImageData: () => { naturalWidth: number, naturalHeight: number };
+        getCanvasData: () => { left: number, top: number }; // Adjust the return type according to the actual structure
         // eslint-disable-next-line no-unused-vars
         setCropBoxData: (data: { left: number; top: number; width: number; height: number }) => void;
       };
@@ -55,7 +54,7 @@ export class ShowSubmitter {
       try {
         if (!preview) {
           await this.submitter.addEpisode();
-          await video.generateSonarrEpisode(await this.submitter.verifyAddedEpisode());
+          video.generateSonarrEpisode(await this.submitter.verifyAddedEpisode());
         }
 
         this.submitter.updates.push(updateText);
@@ -68,8 +67,10 @@ export class ShowSubmitter {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private error = async (e: any, summary: string): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     this.submitter.errors.push(`Error:\n${e.message}\n${summary}`);
     await this.submitter.finish(true).catch((e2) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       log(e2);
     });
     throw e;
@@ -102,7 +103,7 @@ export class ShowSubmitter {
       }
       this.submitter.updates.push(message);
     } catch (e) {
-      this.error(e, message);
+      await this.error(e, message);
       video.clearCache();
     }
   };
@@ -123,7 +124,7 @@ export class ShowSubmitter {
       }
       this.submitter.updates.push(message);
     } catch (e) {
-      this.error(e, message);
+      await this.error(e, message);
       video.clearCache();
     }
   };
@@ -131,7 +132,7 @@ export class ShowSubmitter {
   private generateActionableSeries = async (): Promise<ActionableSeries[]> => {
     const sonarrSerieses = await getSonarrSeries();
     const tvdbSerieses = await getTvdbSeries(sonarrSerieses);
-    const youtubeChannels = await getYoutubeChannels(tvdbSerieses);
+    const youtubeChannels = getYoutubeChannels(tvdbSerieses);
 
     const actionableSerieses = [] as ActionableSeries[];
 
