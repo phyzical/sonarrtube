@@ -59,7 +59,7 @@ describe('BaseSubmitter', () => {
       expect(() => baseSubmitter.page()).toThrow('Page not initialized');
     });
 
-    it('doesn\'t throw once init is called', async () => {
+    it('doesn\'t throw once init is called', () => {
       expect(() => baseSubmitter.page()).not.toThrow('Page not initialized');
     });
   });
@@ -74,7 +74,7 @@ describe('BaseSubmitter', () => {
       expect(() => baseSubmitter._browser()).toThrow('Browser not initialized');
     });
 
-    it('doesn\'t throw once init is called', async () => {
+    it('doesn\'t throw once init is called', () => {
       expect(() => baseSubmitter._browser()).not.toThrow('Browser not initialized');
     });
   });
@@ -85,7 +85,7 @@ describe('BaseSubmitter', () => {
       expect(() => baseSubmitter._video()).toThrow('Video not initialized');
     });
 
-    it('doesn\'t throw once init is called', async () => {
+    it('doesn\'t throw once init is called', () => {
       expect(() => baseSubmitter._video()).not.toThrow('Video not initialized');
     });
   });
@@ -171,7 +171,7 @@ describe('BaseSubmitter', () => {
         if (baseSubmitter.videoObj) {
           baseSubmitter.videoObj.youtubeVideo = undefined;
         }
-        await expect(async () => baseSubmitter._currentYoutubeVideo()).rejects
+        await expect(() => baseSubmitter._currentYoutubeVideo()).rejects
           .toThrow('Missing youtubeVideo this shouldn\'t happen!');
       });
 
@@ -188,7 +188,7 @@ describe('BaseSubmitter', () => {
         if (baseSubmitter.videoObj) {
           baseSubmitter.videoObj.tvdbEpisode = undefined;
         }
-        await expect(async () => baseSubmitter._currentTvdbEpisode()).rejects
+        await expect(() => baseSubmitter._currentTvdbEpisode()).rejects
           .toThrow('Missing tvdbEpisode this shouldn\'t happen!');
       });
 
@@ -205,7 +205,7 @@ describe('BaseSubmitter', () => {
         if (baseSubmitter.videoObj) {
           jest.spyOn(baseSubmitter.videoObj, 'season').mockImplementation(() => undefined);
         }
-        await expect(async () => baseSubmitter._currentSeason()).rejects
+        await expect(() => baseSubmitter._currentSeason()).rejects
           .toThrow('Missing season this shouldn\'t happen!');
       });
 

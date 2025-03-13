@@ -6,7 +6,7 @@ import { ActionableSeries } from '@sonarrTube/models/api/ActionableSeries';
 
 describe('ActionableSeries', () => {
     describe('constructor', () => {
-        it('Should log warning about multiple matches', async () => {
+        it('Should log warning about multiple matches', () => {
             const sonarrSeries = sonarrSeriesFactory();
             sonarrSeries.episodes = Array.from({ length: 3 }, () => sonarrSeries.episodes[0]);
             const youtubeContext = channelFactory();
@@ -32,7 +32,7 @@ describe('ActionableSeries', () => {
             );
         });
 
-        it('when no airdates', async () => {
+        it('when no airdates', () => {
             const sonarrSeries = sonarrSeriesFactory();
             sonarrSeries.episodes = sonarrSeries.episodes.map((episode) => {
                 episode.airDate = '';
@@ -61,7 +61,7 @@ describe('ActionableSeries', () => {
         });
 
         it('should throw if video counts dont match', async () => {
-            await expect(async () => {
+            await expect(() => {
                 const sonarrSeries = sonarrSeriesFactory();
                 sonarrSeries.episodes = Array.from({ length: 7 }, () => sonarrSeries.episodes[0]);
                 const tvdbSeries = tvdbSeriesFactory();
@@ -454,7 +454,7 @@ describe('ActionableSeries', () => {
     });
 
     describe('hasMissing', () => {
-        it('should return hasMissing, clear cache when missing tvdb code', async () => {
+        it('should return hasMissing, clear cache when missing tvdb code', () => {
             const actionableSeries = actionableSeriesFactory();
             const video = actionableSeries.videos[0];
             if (video.tvdbEpisode) {

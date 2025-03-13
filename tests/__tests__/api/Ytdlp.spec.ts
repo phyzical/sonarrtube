@@ -45,7 +45,7 @@ describe('Ytdlp', () => {
         it('should throw when missing sonarr', async () => {
             const video = actionableVideoFactory();
             video.sonarrEpisode = undefined;
-            await expect(async () => downloadVideos([video])).rejects
+            await expect(() => downloadVideos([video])).rejects
                 .toThrow('sonarrEpisode episode not found This shouldn\'t happen!');
             expect(execSyncSpy).not.toHaveBeenCalled();
         });
@@ -53,13 +53,13 @@ describe('Ytdlp', () => {
         it('should throw when missing youtube', async () => {
             const video = actionableVideoFactory();
             video.youtubeVideo = undefined;
-            await expect(async () => downloadVideos([video])).rejects
+            await expect(() => downloadVideos([video])).rejects
                 .toThrow('youtubeVideo episode not found This shouldn\'t happen!');
             expect(execSyncSpy).not.toHaveBeenCalled();
 
         });
 
-        it('shouldn\'t download if already downloaded', async () => {
+        it('shouldn\'t download if already downloaded', () => {
             const video = actionableVideoFactory();
             video.sonarrSeries.path = join(config().cacheDir, video.sonarrSeries.title);
             downloadVideos([video]);

@@ -82,7 +82,7 @@ describe('TvdbSubmitter', () => {
 
     it('if its successful', async () => {
       jest.spyOn(tvdbSubmitter, '_uploadEpisodeThumbnail')
-        .mockImplementation(async (_x: number | undefined) => 'asdsda');
+        .mockImplementation(async (_x: number | undefined) => Promise.resolve('asdsda'));
       const episodeTitle = 'Hasbro Proton Pack Upgrades';
       mockEpisode(episodeTitle);
       await tvdbSubmitter.uploadEpisodeImage();
@@ -94,7 +94,7 @@ describe('TvdbSubmitter', () => {
 
     it('if its successful', async () => {
       jest.spyOn(tvdbSubmitter, '_uploadEpisodeThumbnail')
-        .mockImplementation(async (_x: number | undefined) => Constants.THUMBNAIL.FAILED_TEXT);
+        .mockImplementation(async (_x: number | undefined) => Promise.resolve(Constants.THUMBNAIL.FAILED_TEXT));
       const episodeTitle = 'Hasbro Proton Pack Upgrades';
       mockEpisode(episodeTitle);
       await tvdbSubmitter.uploadEpisodeImage();

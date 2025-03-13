@@ -46,7 +46,7 @@ const processVideoInfos = (cacheKey: string): Video[] => {
         .filter(file => file.match(/.*json.*/))
         .map(file => JSON.parse(
             readFileSync(path.join(cachePath, file)).toString()
-        ))
+        ) as VideoType)
         .filter(videoInfo => videoInfo._type == 'video')
         .map(({
             title,

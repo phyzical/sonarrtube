@@ -6,21 +6,20 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 
-export const getCache = (cacheKey?: string): string | void => {
+export const getCache = (cacheKey?: string): object | void | undefined => {
     if (!cacheKey) {
         return;
     }
-    let content;
+    let json: object | undefined;
     try {
-        content = readFileSync(cachePath(cacheKey), Constants.FILES.ENCODING);
-        content = JSON.parse(content);
+        json = JSON.parse(readFileSync(cachePath(cacheKey), Constants.FILES.ENCODING)) as object;
         // eslint-disable-next-line no-empty
     } catch (_e) { }
-    if (content) {
+    if (json) {
         log(`Found ${cacheKey} in cache. Returning cached data.`, true);
     }
 
-    return content;
+    return json;
 };
 
 export const setCache = (cacheKey?: string, data?: string): void => {

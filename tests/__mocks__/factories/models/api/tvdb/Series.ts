@@ -12,8 +12,8 @@ import { remoteIDFactory } from '@sonarrTube/factories/models/api/tvdb/RemoteID'
 import { seasonFactory } from '@sonarrTube/factories/models/api/tvdb/Season';
 import { seasonTypeFactory } from '@sonarrTube/factories/models/api/tvdb/SeasonType';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const seriesFactory = (params: any = {}, videoCount: undefined | number = undefined): Series => {
+
+export const seriesFactory = (params: Partial<SeriesType> = {}, videoCount: undefined | number = undefined): Series => {
     const series = new Series(
         {
             defaultSeasonType: faker.number.int(),

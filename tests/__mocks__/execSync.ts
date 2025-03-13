@@ -8,10 +8,10 @@ export let execSyncSpy: jest.SpyInstance;
 beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     execSyncSpy = jest.spyOn(require('child_process'), 'execSync');
-    execSyncSpy.mockImplementation((commands, _options) => {
+    execSyncSpy.mockImplementation((commands: string, _options) => {
         //getAllVideoInfo
         if (commands.includes('--write-info-json')) {
-            const url = commands.split(' ').pop()
+            const url = (commands.split(' ').pop() ?? '')
                 .replace(new RegExp('http(s)*://'), '');
             const cacheDir = commands.split('-o ')[1].split(' --')[0].replace(/"/g, '').replace('/%(id)s.%(ext)s', '');
             const urlSplits = url.split('/');

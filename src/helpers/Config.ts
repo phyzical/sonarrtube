@@ -9,7 +9,7 @@ import { Config } from '@sonarrTube/types/config/Config.js';
 
 global.cachedConfig = {} as Config;
 
-export const getCachedConfig = (): Config => global.cachedConfig;
+export const getCachedConfig = (): Config => global.cachedConfig as Config;
 export const setCachedConfig = (config: Config): Config => global.cachedConfig = config;
 
 // TODO add docs around encoding correctly

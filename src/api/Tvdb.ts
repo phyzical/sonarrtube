@@ -28,7 +28,7 @@ const login = async (apiKey: string): Promise<string> => {
             Constants.TVDB.HEADERS,
             undefined,
             JSON.stringify({ apiKey })
-        )
+        ) as { data: { token: string } }
     ).data;
     log('Logged in');
 
@@ -50,7 +50,7 @@ export const series = async (sonarrSeries: SonarrSeries[]): Promise<Series[]> =>
                 `${Constants.TVDB.API_HOST}/${Constants.TVDB.SERIES_ENDPOINT}/${series.tvdbId}/extended`,
                 Constants.REQUESTS.GET,
                 { ...Constants.TVDB.HEADERS, 'Authorization': `Bearer ${token}` },
-                series.tvdbCacheKey())
+                series.tvdbCacheKey()) as { data: Series }
             ).data
         );
 
@@ -75,7 +75,7 @@ const episodes = async (sonarrEpisodes: SonarrEpisode[], series: Series): Promis
                     `${Constants.TVDB.API_HOST}/${Constants.TVDB.EPISODES_ENDPOINT}/${episode.tvdbId}/extended`,
                     Constants.REQUESTS.GET,
                     { ...Constants.TVDB.HEADERS, 'Authorization': `Bearer ${token}` },
-                    episode.tvdbCacheKey())
+                    episode.tvdbCacheKey()) as { data: Episode }
                 ).data,
                 series
             )

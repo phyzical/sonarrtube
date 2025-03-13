@@ -19,7 +19,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
         ];
 
         if (url.includes('/token/get')) {
-            request.respond({
+            void request.respond({
                 status: 200,
                 contentType: 'application/json',
                 body: JSON.stringify({
@@ -31,7 +31,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
         }
 
         if (url.includes('/tvtapi') || url.includes('/savebulkadd')) {
-            request.respond({
+            void request.respond({
                 status: 200,
                 contentType: 'application/json',
                 body: JSON.stringify({
@@ -44,7 +44,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
         }
 
         if (url.includes('/users/authenticated')) {
-            request.respond({
+            void request.respond({
                 status: 200,
                 contentType: 'application/json',
                 body: JSON.stringify({
@@ -59,7 +59,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
         }
 
         if (url.includes('/auth/getuser')) {
-            request.respond({
+            void request.respond({
                 status: 200,
                 contentType: 'application/json',
                 body: JSON.stringify({
@@ -74,7 +74,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
         }
 
         if (url.includes('/auth/checkpermissions')) {
-            request.respond({
+            void request.respond({
                 status: 200,
                 contentType: 'text/html',
                 body: '1'
@@ -84,7 +84,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
         }
 
         if (exclusions.some((exclusion) => url.includes(exclusion))) {
-            request.abort();
+            void request.abort();
 
             return;
         }
@@ -95,19 +95,19 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
                 '__mocks__',
                 'html',
                 'thetvdb.com_files',
-                `${(url.split('/').pop() || '').split('?')[0]}`
+                (url.split('/').pop() || '').split('?')[0]
             );
 
             if (!existsSync(fileName)) {
                 // console.log(`skipped ${fileName}`);
-                request.abort();
+                void request.abort();
 
                 return;
             }
 
         } else {
             if (!/tvdb\.com/g.test(url)) {
-                request.abort();
+                void request.abort();
 
                 return;
             }
@@ -123,7 +123,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
                 fileName = `${splits[0]}s_official_2023_with_episode.html`;
             }
             if (!existsSync(fileName)) {
-                request.abort();
+                void request.abort();
 
                 throw new Error(`Payload not found for ${url}, please save as ${fileName}`);
             }
@@ -151,7 +151,7 @@ export const mockPage = async (tvdbSubmitter: TvdbSubmitter | BaseSubmitter): Pr
         const headers = request.headers();
         delete headers['origin'];
         headers['Access-Control-Allow-Origin'] = '*';
-        request.respond({
+        void request.respond({
             status: 200,
             contentType,
             body,
