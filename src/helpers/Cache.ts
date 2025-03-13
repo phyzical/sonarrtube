@@ -6,13 +6,15 @@ import { log } from '@sonarrTube/helpers/Log.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
 
-export const getCache = (cacheKey?: string): object | void | undefined => {
-    if (!cacheKey) {
+export const getCache = (cacheKey?: string): object | string | undefined => {
+    if (!cacheKey || !existsSync(cachePath(cacheKey))) {
         return;
     }
-    let json: object | undefined;
+    // We get cache as string
+    let json = readFileSync(cachePath(cacheKey), Constants.FILES.ENCODING) as string | object;
     try {
-        json = JSON.parse(readFileSync(cachePath(cacheKey), Constants.FILES.ENCODING)) as object;
+        // We  try decoding it, if it fails it cant be json so we keep it as string
+        json = JSON.parse(json as string) as object;
         // eslint-disable-next-line no-empty
     } catch (_e) { }
     if (json) {

@@ -20,7 +20,7 @@ describe('Cache', () => {
             const key = randomUUID();
             const result = 'test data';
             setCache(key, result);
-            expect(getCache(key)).toBe(result);
+            expect(getCache(key)).toBe('test data');
             expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(key));
         });
 
@@ -48,9 +48,9 @@ describe('Cache', () => {
 
         it('should set cache if cache key and data are provided', () => {
             const key = randomUUID();
-            const result = 'test data';
+            const result = '{"data": "test data"}';
             setCache(key, result);
-            expect(getCache(key)).toBe(result);
+            expect((getCache(key) as { data: string }).data).toBe('test data');
         });
 
     });
@@ -65,7 +65,7 @@ describe('Cache', () => {
 
         it('should clear cache if cache key is provided', () => {
             const key = randomUUID();
-            const result = 'test data';
+            const result = '{data: "test data"}';
             setCache(key, result);
             expect(getCache(key)).toBe(result);
             clearCache(key);
@@ -99,7 +99,7 @@ describe('Cache', () => {
         it('should reset cache if cache dir exists', () => {
             const cacheDirFolder = randomUUID();
             const key = join(cacheDirFolder, randomUUID());
-            const result = 'test data';
+            const result = '{data: "test data"}';
             setCache(key, result);
             expect(getCache(key)).toBe(result);
             resetCache(config().cacheDir);
@@ -108,7 +108,7 @@ describe('Cache', () => {
 
         it('should reset cache if cache file provided exists', () => {
             const key = randomUUID();
-            const result = 'test data';
+            const result = '{data: "test data"}';
             setCache(key, result);
             expect(getCache(key)).toBe(result);
             resetCache(config().cacheDir);
@@ -127,7 +127,7 @@ describe('Cache', () => {
 
         it('should return the cached data if the cache key is found', () => {
             const key = randomUUID();
-            const result = 'test data';
+            const result = '{data: "test data"}';
             setCache(key, result);
             expect(getCache(key)).toBe(result);
         });
