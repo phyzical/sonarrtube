@@ -4,8 +4,8 @@ import { consoleSpy, doRequestSpy } from '@sonarrTube/mocks/Spies';
 
 describe('Notifications', () => {
 
-    it('should log message', () => {
-        notify('test');
+    it('should log message', async () => {
+        await notify('test');
         expect(consoleSpy).toHaveBeenCalledWith('test');
         expect(doRequestSpy).not.toHaveBeenCalled();
     });
@@ -20,8 +20,8 @@ describe('Notifications', () => {
             );
         });
 
-        it('should log message', () => {
-            notify('test');
+        it('should log message', async () => {
+            await notify('test');
             expect(consoleSpy).toHaveBeenCalledWith('test');
             expect(doRequestSpy).toHaveBeenCalledWith(notificationWebhook, 'POST',
                 { 'Content-Type': 'application/json' }, undefined,

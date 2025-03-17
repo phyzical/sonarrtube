@@ -9,8 +9,8 @@ import { Series } from '@sonarrTube/models/api/sonarr/Series';
 import { generateRandomArray } from '@sonarrTube/factories/RandomArray';
 import { Episode } from '@sonarrTube/models/api/sonarr/Episode';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const seriesFactory = (params: any = {}, videoCount: undefined | number = undefined): Series => {
+
+export const seriesFactory = (params: Partial<SeriesType> = {}, videoCount: undefined | number = undefined): Series => {
     const series = new Series(
         {
             seasons: generateRandomArray(() => seasonFactory()),

@@ -16,4 +16,6 @@ export type Episode = {
     grabbed?: boolean
     id?: number
     series: Series;
+
+    tvdbCacheKey: () => string
 }

@@ -9,7 +9,7 @@ const ignorePattern = '^_';
 export default [
   eslint.configs.recommended,
   eslintConfigPrettier,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
       globals: {
@@ -21,9 +21,14 @@ export default [
         ecmaVersion: 2022,
         sourceType: 'ESNext',
         parser: tseslint.parser,
+        projectService: {
+          allowDefaultProject: ['*.js', '*.ts', '.github/renovate-config.js'],
+        },
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       import: { rules: pluginImport.rules },
     },
     rules: {
@@ -56,6 +61,7 @@ export default [
       'no-restricted-imports': ['error', {
         'patterns': ['./', '../*']
       }],
+      '@typescript-eslint/no-unnecessary-template-expression': 'error',
       'import/prefer-default-export': 'off',
       semi: ['error', 'always'],
       '@typescript-eslint/no-unused-vars': ['error', {
@@ -72,13 +78,14 @@ export default [
       'newline-before-return': 'error',
       // "function-call-argument-newline": ["error", "always"],
       'newline-per-chained-call': ['error', { ignoreChainWithDepth: 2 }],
-    },
-    settings: {},
+    }
   },
   {
     ignores: [
       '.DS_Store', 'node_modules/', 'tmp/', 'coverage/', '.vscode/', '.env*',
-      '!.env*.dist', 'build/', 'tests/__mocks__/html'
-    ],
+      '!.env*.dist', 'build/', 'tests/__mocks__/html/', 'tests/__mocks__/images/',
+      'tests/__mocks__/requests/', 'cache/', 'downloads/', 'examples/',
+      'tests/config/testSequencer.ts'
+    ]
   },
 ];

@@ -5,7 +5,7 @@ import { Series } from '@sonarrTube/models/api/tvdb/Series.js';
 import { getVideoInfos } from '@sonarrTube/api/Ytdlp.js';
 import { Constants } from '@sonarrTube/types/config/Constants.js';
 
-export const channels = async (tvdbSeries: Series[]): Promise<Channel[]> => {
+export const channels = (tvdbSeries: Series[]): Channel[] => {
 
     const channels: Channel[] = [];
 

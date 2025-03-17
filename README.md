@@ -2,6 +2,11 @@
 
 Adapter using sonarr + youtube + tvdb
 
+<img src="./badges/badge-branches.svg" alt="Alt text" title="sonarrtube">
+<img src="./badges/badge-functions.svg" alt="Alt text" title="sonarrtube" >
+<img src="./badges/badge-lines.svg" alt="Alt text" title="sonarrtube" >
+<img src="./badges/badge-statements.svg" alt="Alt text" title="sonarrtube">
+
 ## Requirements
 
 * tvdb series must be added (can be empty for updating)

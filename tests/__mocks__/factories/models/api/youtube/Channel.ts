@@ -8,8 +8,7 @@ import { Video } from '@sonarrTube/models/api/youtube/Video';
 import { videoFactory } from '@sonarrTube/factories/models/api/youtube/Video';
 
 export const channelFactory = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    params: any = {},
+    params: Partial<ChannelType> = {},
     videoCount: undefined | number = undefined
 ): Channel => {
     const channel = new Channel({ tvdbId: params.tvdbId || faker.number.int() } as ChannelType);
