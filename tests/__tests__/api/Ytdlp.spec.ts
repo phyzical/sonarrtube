@@ -42,18 +42,18 @@ describe('Ytdlp', () => {
             expect(existsSync(expectedPath)).toBeTrue();
         });
 
-        it('should throw when missing sonarr', async () => {
+        it('should throw when missing sonarr', () => {
             const video = actionableVideoFactory();
             video.sonarrEpisode = undefined;
-            await expect(() => downloadVideos([video])).rejects
+            expect(() => downloadVideos([video]))
                 .toThrow('sonarrEpisode episode not found This shouldn\'t happen!');
             expect(execSyncSpy).not.toHaveBeenCalled();
         });
 
-        it('should throw when missing youtube', async () => {
+        it('should throw when missing youtube', () => {
             const video = actionableVideoFactory();
             video.youtubeVideo = undefined;
-            await expect(() => downloadVideos([video])).rejects
+            expect(() => downloadVideos([video]))
                 .toThrow('youtubeVideo episode not found This shouldn\'t happen!');
             expect(execSyncSpy).not.toHaveBeenCalled();
 

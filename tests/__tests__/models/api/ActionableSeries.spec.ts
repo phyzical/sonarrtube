@@ -60,21 +60,19 @@ describe('ActionableSeries', () => {
             expect(series).toBeInstanceOf(ActionableSeries);
         });
 
-        it('should throw if video counts dont match', async () => {
-            await expect(() => {
-                const sonarrSeries = sonarrSeriesFactory();
-                sonarrSeries.episodes = Array.from({ length: 7 }, () => sonarrSeries.episodes[0]);
-                const tvdbSeries = tvdbSeriesFactory();
-                tvdbSeries.episodes = Array.from({ length: 10 }, () => tvdbSeries.episodes[0]);
+        it('should throw if video counts dont match', () => {
+            const sonarrSeries = sonarrSeriesFactory();
+            sonarrSeries.episodes = Array.from({ length: 7 }, () => sonarrSeries.episodes[0]);
+            const tvdbSeries = tvdbSeriesFactory();
+            tvdbSeries.episodes = Array.from({ length: 10 }, () => tvdbSeries.episodes[0]);
 
-                return new ActionableSeries(
-                    {
-                        sonarrSeries,
-                        tvdbSeries,
-                        youtubeContext: channelFactory()
-                    }
-                );
-            }).rejects.toThrow('Mismatch between tvdb and sonarr episodes! 7 vs 10');
+            expect(() => new ActionableSeries(
+                {
+                    sonarrSeries,
+                    tvdbSeries,
+                    youtubeContext: channelFactory()
+                }
+            )).toThrow('Mismatch between tvdb and sonarr episodes! 7 vs 10');
         });
     });
     describe('unDownloadedVideos', () => {

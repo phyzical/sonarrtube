@@ -167,11 +167,11 @@ describe('BaseSubmitter', () => {
     });
 
     describe('currentYoutubeVideo', () => {
-      it('throws when no youtubeVideo', async () => {
+      it('throws when no youtubeVideo', () => {
         if (baseSubmitter.videoObj) {
           baseSubmitter.videoObj.youtubeVideo = undefined;
         }
-        await expect(() => baseSubmitter._currentYoutubeVideo()).rejects
+        expect(() => baseSubmitter._currentYoutubeVideo())
           .toThrow('Missing youtubeVideo this shouldn\'t happen!');
       });
 
@@ -184,11 +184,11 @@ describe('BaseSubmitter', () => {
     });
 
     describe('currentTvdbEpisode', () => {
-      it('throws when no tvdbEpisode', async () => {
+      it('throws when no tvdbEpisode', () => {
         if (baseSubmitter.videoObj) {
           baseSubmitter.videoObj.tvdbEpisode = undefined;
         }
-        await expect(() => baseSubmitter._currentTvdbEpisode()).rejects
+        expect(() => baseSubmitter._currentTvdbEpisode())
           .toThrow('Missing tvdbEpisode this shouldn\'t happen!');
       });
 
@@ -201,11 +201,11 @@ describe('BaseSubmitter', () => {
     });
 
     describe('currentSeason', () => {
-      it('throws when no season', async () => {
+      it('throws when no season', () => {
         if (baseSubmitter.videoObj) {
           jest.spyOn(baseSubmitter.videoObj, 'season').mockImplementation(() => undefined);
         }
-        await expect(() => baseSubmitter._currentSeason()).rejects
+        expect(() => baseSubmitter._currentSeason())
           .toThrow('Missing season this shouldn\'t happen!');
       });
 
