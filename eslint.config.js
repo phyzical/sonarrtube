@@ -84,7 +84,8 @@ export default [
     ignores: [
       '.DS_Store', 'node_modules/', 'tmp/', 'coverage/', '.vscode/', '.env*',
       '!.env*.dist', 'build/', 'tests/__mocks__/html/', 'tests/__mocks__/images/',
-      'tests/__mocks__/requests/', 'cache/', 'downloads/', 'examples/'
+      'tests/__mocks__/requests/', 'cache/', 'downloads/', 'examples/',
+      'tests/config/testSequencer.ts'
     ]
   },
 ];

@@ -17,6 +17,7 @@ const jestConfig: JestConfigWithTsJest = {
         ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>', useESM: true }),
     },
     modulePathIgnorePatterns: ['<rootDir>/build'],
+    coverageReporters: ['json-summary', 'clover', 'json', 'lcov', 'text'],
     collectCoverage: true,
     coverageDirectory: 'coverage',
     coverageThreshold: {
