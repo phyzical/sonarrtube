@@ -29,7 +29,7 @@
   "devDependencies": {
     "@faker-js/faker": "9.6.0",
     "@types/jest": "29.5.14",
-    "@types/node": "22.13.14",
+    "@types/node": "22.13.16",
     "@typescript-eslint/eslint-plugin": "8.29.0",
     "@typescript-eslint/parser": "8.29.0",
     "concurrently": "9.1.2",
