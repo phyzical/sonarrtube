@@ -34,7 +34,7 @@
     "@typescript-eslint/parser": "8.29.0",
     "concurrently": "9.1.2",
     "eslint": "9.24.0",
-    "eslint-config-prettier": "10.1.1",
+    "eslint-config-prettier": "10.1.2",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-n": "17.17.0",
     "http-request-mock": "2.0.2",
