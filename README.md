@@ -1,3 +1,5 @@
+# NOTE: ARCHIVED, tvdb's api is very  rough forcing you to use puppeteer to interact making it rougher. they block most thumbnails making it worse. ive decided to archive this and go with [pinchflat](https://github.com/kieraneglin/pinchflat) instead
+
 # sonarrtube <img src="logo.png" alt="Alt text" title="sonarrtube" width="100" height="100">
 
 Adapter using sonarr + youtube + tvdb
