@@ -27,7 +27,7 @@
     "badge": "jest-coverage-badges -output ./badges"
   },
   "devDependencies": {
-    "@faker-js/faker": "9.6.0",
+    "@faker-js/faker": "9.8.0",
     "@types/jest": "29.5.14",
     "@types/node": "22.14.0",
     "@typescript-eslint/eslint-plugin": "8.29.0",
